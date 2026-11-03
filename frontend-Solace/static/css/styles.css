@@ -1,0 +1,1124 @@
+/* ========================================================
+   SOLACE DASHBOARD DESIGN SYSTEM & STYLESHEET
+   Matching Client, Therapist, and Admin Views
+   ======================================================== */
+
+:root {
+  /* Color Palette */
+  --bg-main: #FFFFFF;
+  --sidebar-bg: #E4DAEE;
+  --sidebar-active: #C5AEE0;
+  --sidebar-text: #7B688E;
+  --sidebar-text-active: #FFFFFF;
+  
+  --text-primary: #231C2C;
+  --text-secondary: #8B8196;
+  --text-muted: #A39BAE;
+
+  --card-border: #E8E2EE;
+  --table-border: #9D94A6;
+  --table-row-divider: #C8BFD2;
+
+  /* Pastel Accent Colors */
+  --pastel-yellow: #FEF0B4;
+  --pastel-peach: #FACBB7;
+  --pastel-pinkish: #F1D3DF;
+  --pastel-lavender: #DDD3EE;
+
+  /* User pill colors */
+  --user-pill-bg: #DCD0EA;
+  --admin-pill-bg: #D4D4D8;
+  --avatar-dark: #3E3846;
+  --avatar-admin: #17161A;
+
+  /* Typography */
+  --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-serif: 'Playfair Display', Georgia, 'Times New Roman', serif;
+}
+
+/* Base Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body.dashboard-body {
+  font-family: var(--font-sans);
+  background-color: var(--bg-main);
+  color: var(--text-primary);
+  min-height: 100vh;
+  display: flex;
+  overflow-x: hidden;
+}
+
+/* App Container Layout */
+.app-layout {
+  display: flex;
+  width: 100%;
+  min-height: 100vh;
+}
+
+/* ========================================================
+   SIDEBAR
+   ======================================================== */
+.sidebar {
+  width: 230px;
+  min-width: 230px;
+  background-color: var(--sidebar-bg);
+  padding: 32px 16px 24px 20px;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+}
+
+.sidebar-logo {
+  display: flex;
+  align-items: center;
+  gap: 1px;
+  margin-bottom: 36px;
+  padding-left: 8px;
+}
+
+.logo-text {
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  color: #E8A838;
+}
+
+.logo-sun {
+  width: 22px;
+  height: 22px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logo-sun svg {
+  width: 100%;
+  height: 100%;
+}
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 14px;
+  border-radius: 8px;
+  text-decoration: none;
+  color: var(--sidebar-text);
+  font-size: 13.5px;
+  font-weight: 500;
+  transition: all 0.15s ease-in-out;
+}
+
+.nav-item:hover {
+  background-color: rgba(197, 174, 224, 0.4);
+  color: #493A57;
+}
+
+.nav-item.active {
+  background-color: var(--sidebar-active);
+  color: var(--sidebar-text-active);
+  font-weight: 600;
+}
+
+.nav-icon {
+  width: 19px;
+  height: 19px;
+  flex-shrink: 0;
+}
+
+/* ========================================================
+   MAIN CONTENT AREA
+   ======================================================== */
+.main-content {
+  flex: 1;
+  padding: 28px 44px 40px 44px;
+  background-color: #FFFFFF;
+  display: flex;
+  flex-direction: column;
+  max-width: 1200px;
+}
+
+/* Top Header Bar */
+.top-header {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 20px;
+}
+
+.user-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  background-color: var(--user-pill-bg);
+  padding: 6px 20px 6px 8px;
+  border-radius: 9999px;
+  cursor: pointer;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.user-pill.admin-pill {
+  background-color: var(--admin-pill-bg);
+}
+
+.user-avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background-color: var(--avatar-dark);
+}
+
+.user-avatar.admin-avatar {
+  background-color: var(--avatar-admin);
+}
+
+.user-details {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.25;
+}
+
+.user-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: #2F2738;
+}
+
+.user-role {
+  font-size: 11.5px;
+  color: #7A6F87;
+}
+
+/* Welcome Section */
+.welcome-section {
+  margin-bottom: 22px;
+}
+
+.welcome-title {
+  font-size: 32px;
+  font-weight: 600;
+  color: #261F2E;
+  letter-spacing: -0.01em;
+  margin-bottom: 4px;
+}
+
+.welcome-subtitle {
+  font-size: 14px;
+  color: var(--text-secondary);
+  font-weight: 400;
+}
+
+/* ========================================================
+   UPCOMING APPOINTMENT / MEETING CARD
+   ======================================================== */
+.upcoming-appointment-card {
+  background: #FFFFFF;
+  border: 1.5px solid var(--card-border);
+  border-radius: 20px;
+  padding: 18px 28px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 26px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.02);
+}
+
+.appointment-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: #241D2C;
+  margin-bottom: 5px;
+}
+
+.appointment-time,
+.appointment-provider {
+  font-size: 12.5px;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+.appointment-arrow {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.upcoming-appointment-card:hover .appointment-arrow {
+  transform: translateX(4px);
+}
+
+.appointment-arrow svg {
+  width: 28px;
+  height: 28px;
+}
+
+/* ========================================================
+   CLIENT BIG ACTION CARDS
+   ======================================================== */
+.action-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 26px;
+  margin-bottom: 32px;
+}
+
+.action-card {
+  text-decoration: none;
+  border-radius: 20px;
+  padding: 34px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.03);
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.action-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+}
+
+.card-yellow {
+  background-color: var(--pastel-yellow);
+}
+
+.card-peach {
+  background-color: var(--pastel-peach);
+}
+
+.card-icon-wrapper {
+  margin-bottom: 12px;
+}
+
+.action-icon {
+  width: 44px;
+  height: 44px;
+}
+
+.action-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #27202C;
+  margin-bottom: 4px;
+}
+
+.action-desc {
+  font-size: 12.5px;
+  color: #63576C;
+}
+
+/* ========================================================
+   CONTENTS SECTION (Pill Cards)
+   ======================================================== */
+.contents-section {
+  margin-bottom: 28px;
+}
+
+.section-heading {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: #554A62;
+  margin-bottom: 14px;
+}
+
+.content-pills-grid {
+  display: grid;
+  gap: 20px;
+}
+
+.content-pills-grid.client-grid {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.content-pills-grid.therapist-grid {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.content-card {
+  border-radius: 18px;
+  padding: 22px 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  cursor: pointer;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.02);
+  transition: transform 0.15s ease;
+}
+
+.content-card:hover {
+  transform: translateY(-2px);
+}
+
+.card-pinkish {
+  background-color: var(--pastel-pinkish);
+}
+
+.card-lavender {
+  background-color: var(--pastel-lavender);
+}
+
+.content-icon {
+  width: 28px;
+  height: 28px;
+  color: #4A3E56;
+}
+
+.content-title {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: #382C43;
+}
+
+/* ========================================================
+   THERAPIST CALENDAR STRIP
+   ======================================================== */
+.calendar-ribbon-container {
+  margin-bottom: 22px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+
+.calendar-ribbon {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  min-width: 600px;
+  padding: 0 4px;
+}
+
+.cal-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  font-size: 11.5px;
+  color: var(--text-secondary);
+}
+
+.cal-day {
+  font-weight: 500;
+  color: #8C8296;
+}
+
+.cal-date {
+  font-weight: 500;
+  color: #4C4158;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+
+.cal-col.active .cal-date {
+  background-color: #B090D2;
+  color: #FFFFFF;
+  font-weight: 600;
+}
+
+/* ========================================================
+   THERAPIST NOTIFICATION CARD
+   ======================================================== */
+.notification-card {
+  background-color: #FFFFFF;
+  border: 1.5px solid var(--card-border);
+  border-radius: 20px;
+  padding: 20px 24px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.02);
+}
+
+.notification-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.notification-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: #27202E;
+}
+
+.notification-see-all {
+  font-size: 12px;
+  color: var(--text-secondary);
+  text-decoration: none;
+}
+
+.notification-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.notification-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.notif-user-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.notif-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.notif-avatar svg {
+  width: 17px;
+  height: 17px;
+}
+
+.notif-avatar-purple {
+  background-color: #DCCCEE;
+  color: #6C5586;
+}
+
+.notif-avatar-peach {
+  background-color: #F8D3C3;
+  color: #925841;
+}
+
+.notif-avatar-yellow {
+  background-color: #FDF1B6;
+  color: #977B31;
+}
+
+.notif-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.3;
+}
+
+.notif-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: #2A2232;
+}
+
+.notif-duration {
+  font-size: 11.5px;
+  color: var(--text-secondary);
+}
+
+.status-badge {
+  font-size: 11px;
+  font-weight: 500;
+  padding: 3px 18px;
+  border-radius: 9999px;
+  background: transparent;
+}
+
+.status-approved {
+  border: 1px solid #75C277;
+  color: #499D4B;
+}
+
+.status-in-progress {
+  border: 1px solid #F5B041;
+  color: #C97E25;
+}
+
+.status-pending {
+  border: 1px solid #EF7B7B;
+  color: #D34343;
+}
+
+/* ========================================================
+   ADMIN DASHBOARD STYLES
+   ======================================================== */
+.admin-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 22px;
+  margin-bottom: 28px;
+}
+
+.stat-card {
+  background: #FFFFFF;
+  border: 1.5px solid var(--card-border);
+  border-radius: 22px;
+  padding: 24px 18px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.02);
+}
+
+.stat-label {
+  font-size: 16px;
+  font-weight: 500;
+  color: #2F2837;
+  margin-bottom: 8px;
+}
+
+.stat-value {
+  font-size: 34px;
+  font-weight: 700;
+  color: #17131C;
+  letter-spacing: -0.02em;
+}
+
+.admin-table-card {
+  background: #FFFFFF;
+  border: 1.5px solid var(--table-border);
+  border-radius: 8px;
+  padding: 16px 26px 20px 26px;
+  margin-bottom: 24px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+}
+
+.table-heading {
+  font-family: var(--font-serif);
+  font-size: 18px;
+  font-weight: 600;
+  color: #1E1A23;
+  margin-bottom: 14px;
+}
+
+.table-rows {
+  display: flex;
+  flex-direction: column;
+}
+
+.table-row {
+  display: grid;
+  grid-template-columns: 2fr 2fr 1fr;
+  align-items: center;
+  padding: 14px 4px;
+  border-top: 1px solid var(--table-row-divider);
+}
+
+.row-subject {
+  font-family: var(--font-serif);
+  font-size: 15px;
+  font-weight: 500;
+  color: #1D1825;
+}
+
+.row-date {
+  font-family: var(--font-serif);
+  font-size: 14px;
+  color: #4C4356;
+}
+
+.check-pill-btn {
+  justify-self: end;
+  background: transparent;
+  border: 1.5px solid #231E29;
+  border-radius: 9999px;
+  padding: 4px 14px;
+  font-family: var(--font-serif);
+  font-size: 13px;
+  font-weight: 500;
+  color: #1C1724;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.15s ease;
+}
+
+.check-pill-btn:hover {
+  background: #231E29;
+  color: #FFFFFF;
+}
+
+.check-pill-btn svg {
+  width: 14px;
+  height: 14px;
+}
+
+/* ========================================================
+   RESPONSIVE
+   ======================================================== */
+@media (max-width: 900px) {
+  .app-layout {
+    flex-direction: column;
+  }
+  .sidebar {
+    width: 100%;
+    min-width: 100%;
+    padding: 20px;
+  }
+  .sidebar-nav {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+  .main-content {
+    padding: 20px;
+  }
+  .action-cards-grid,
+  .admin-stats-grid {
+    grid-template-columns: 1fr;
+  }
+  .content-pills-grid.client-grid,
+  .content-pills-grid.therapist-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Header Elements */
+.page-top-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+.header-title-group { display: flex; align-items: center; gap: 14px; }
+.header-icon-badge { width: 36px; height: 36px; border-radius: 8px; background-color: #554477; color: #FFFFFF; display: flex; align-items: center; justify-content: center; }
+.header-icon-badge svg { width: 20px; height: 20px; }
+.page-main-title { font-size: 26px; font-weight: 600; color: #27212E; }
+.serif-title { font-family: var(--font-serif); font-size: 32px; font-weight: 600; color: #27212E; }
+
+/* Search & Filters */
+.search-filter-card { border: 1.5px solid #C4BDCC; border-radius: 10px; padding: 10px 14px; display: flex; align-items: center; gap: 12px; margin-bottom: 28px; }
+.search-input-wrapper { flex: 1; position: relative; display: flex; align-items: center; }
+.search-field { width: 100%; border: 1px solid #D6D0DE; border-radius: 6px; padding: 8px 36px 8px 12px; font-size: 13.5px; outline: none; color: #332B3B; font-family: var(--font-sans); }
+.search-icon-btn { position: absolute; right: 10px; background: none; border: none; cursor: pointer; color: #554A62; display: flex; align-items: center; }
+.filter-dropdown-wrapper { position: relative; display: inline-flex; align-items: center; }
+.filter-select { appearance: none; border: 1px solid #D6D0DE; border-radius: 6px; padding: 8px 32px 8px 14px; font-size: 13px; color: #332B3B; background: #FFFFFF; cursor: pointer; outline: none; }
+.select-chevron { position: absolute; right: 10px; pointer-events: none; width: 14px; height: 14px; color: #554A62; }
+.sort-dropdown .filter-select { border-color: #8C7B9E; }
+
+/* Therapist 3x2 Grid */
+.therapist-cards-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+.therapist-box-card { border: 1.5px solid #2B2633; border-radius: 18px; padding: 16px 18px; display: flex; flex-direction: column; justify-content: space-between; min-height: 230px; }
+.therapist-card-top { display: flex; align-items: center; gap: 14px; padding-bottom: 12px; border-bottom: 1px solid #2B2633; }
+.therapist-circle-avatar { width: 48px; height: 48px; border-radius: 50%; border: 1.5px solid #2B2633; flex-shrink: 0; }
+.therapist-card-name { font-size: 15px; font-weight: 600; color: #27212E; }
+.therapist-card-title { font-size: 11.5px; color: #6C6277; }
+.therapist-card-bio-section { padding: 12px 0; flex: 1; }
+.bio-label { font-size: 15px; font-weight: 600; color: #27212E; margin-bottom: 4px; }
+.bio-snippet { font-size: 12px; color: #7A7085; }
+.therapist-card-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 10px; }
+.therapist-outline-btn { border: 1.5px solid #2B2633; border-radius: 4px; background: transparent; padding: 6px 10px; font-size: 12px; font-weight: 500; color: #2B2633; cursor: pointer; text-decoration: none; text-align: center; }
+.therapist-outline-btn:hover { background: #2B2633; color: #FFFFFF; }
+
+/* Schedule Component */
+.schedule-pickers-grid { display: grid; grid-template-columns: 1.1fr 1.3fr; gap: 26px; margin-bottom: 24px; }
+.schedule-card-box { background: #FFFFFF; border: 1px solid #DFD9E6; border-radius: 12px; padding: 18px 22px; box-shadow: 0 4px 16px rgba(0,0,0,0.03); }
+.month-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+.month-title { font-size: 15px; font-weight: 600; color: #2E2738; }
+.month-nav-arrows { display: flex; gap: 8px; }
+.nav-arrow-btn { width: 24px; height: 24px; border-radius: 50%; border: 1px solid #C4BDCC; background: transparent; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #554A62; }
+.month-days-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; text-align: center; }
+.col-head { font-size: 11.5px; font-weight: 500; color: #7B7186; padding-bottom: 6px; }
+.cal-day-cell { font-size: 12.5px; color: #382E44; height: 28px; display: flex; align-items: center; justify-content: center; border-radius: 50%; cursor: pointer; }
+.cal-day-cell.active-date { background-color: #B090D2; color: #FFFFFF; font-weight: 600; }
+.time-picker-title { font-size: 15px; font-weight: 600; color: #2E2738; margin-bottom: 14px; }
+.time-slots-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+.time-slot-btn { border: 1px solid #C8BFD2; border-radius: 6px; background: #FFFFFF; padding: 8px 6px; font-size: 12px; color: #6C5F7A; cursor: pointer; }
+.time-slot-btn.active-slot { background-color: #A888C9; border-color: #A888C9; color: #FFFFFF; font-weight: 600; }
+.booking-summary-wrapper { margin-top: 6px; }
+.booking-summary-card { border: 1px solid #D6D0DE; border-radius: 18px; padding: 24px 28px; box-shadow: 0 4px 16px rgba(0,0,0,0.03); }
+.summary-card-title { font-size: 19px; font-weight: 600; color: #2E2738; margin-bottom: 16px; }
+.summary-therapist-row { display: flex; align-items: center; gap: 16px; margin-bottom: 20px; }
+.therapist-photo-circle { width: 58px; height: 58px; border-radius: 50%; border: 1px solid #C4BDCC; }
+.therapist-doctor-name { font-size: 16px; font-weight: 600; color: #2A2234; }
+.therapist-doc-title, .therapist-doc-specialty { font-size: 12.5px; color: #796E85; }
+.summary-details-flex { display: flex; justify-content: space-between; align-items: flex-end; }
+.summary-details-col { display: flex; flex-direction: column; gap: 14px; }
+.summary-detail-item { display: flex; align-items: center; gap: 12px; }
+.summary-detail-icon { width: 20px; height: 20px; color: #3B3246; }
+.detail-label { font-size: 14px; font-weight: 600; color: #2F273A; }
+.detail-value { font-size: 12.5px; color: #796E85; }
+.request-appointment-btn { background-color: #BCA3D8; color: #2D2538; font-size: 14px; font-weight: 600; border: none; border-radius: 12px; padding: 12px 28px; cursor: pointer; }
+.summary-disclaimer { display: flex; align-items: center; gap: 6px; margin-top: 10px; font-size: 11.5px; color: #8C8296; }
+
+/* Chat Component */
+.chat-page-grid { display: grid; grid-template-columns: 240px 1fr; gap: 26px; height: calc(100vh - 140px); }
+.chat-sidebar-column { display: flex; flex-direction: column; gap: 16px; }
+.new-chat-btn { border: 1.5px solid #C4BDCC; border-radius: 12px; background: #FFFFFF; padding: 12px 18px; display: flex; align-items: center; gap: 12px; font-size: 14px; font-weight: 600; color: #382E44; cursor: pointer; }
+.chat-contacts-container { border: 1.5px solid #C4BDCC; border-radius: 16px; padding: 16px 14px; display: flex; flex-direction: column; gap: 12px; flex: 1; }
+.chat-contact-pill { border-radius: 14px; padding: 12px 14px; display: flex; align-items: center; gap: 12px; cursor: pointer; }
+.pill-lavender { background-color: #C8BDE1; }
+.pill-peach { background-color: #FAD2BE; }
+.pill-pink { background-color: #ECC3D7; }
+.pill-yellow { background-color: #FCE9A9; }
+.contact-avatar { width: 32px; height: 32px; border-radius: 50%; background-color: #2B2633; }
+.contact-name { font-size: 13.5px; font-weight: 600; color: #282132; }
+.chat-window-card { border: 1.5px solid #2B2633; border-radius: 18px; display: flex; flex-direction: column; padding: 18px 22px; background: #FFFFFF; }
+.chat-window-header { padding-bottom: 12px; border-bottom: 1.5px solid #2B2633; }
+.chat-recipient-name { font-size: 17px; font-weight: 600; color: #27212E; }
+.chat-messages-container { flex: 1; overflow-y: auto; padding: 20px 8px; display: flex; flex-direction: column; gap: 18px; }
+.msg-row { display: flex; align-items: center; gap: 10px; }
+.msg-incoming { justify-content: flex-start; }
+.msg-outgoing { justify-content: flex-end; }
+.msg-avatar { width: 28px; height: 28px; border-radius: 50%; background-color: #2B2633; }
+.msg-bubble { max-width: 65%; padding: 10px 18px; border-radius: 9999px; font-size: 13px; line-height: 1.4; }
+.bubble-incoming { background-color: #D3C4ED; color: #27212E; }
+.bubble-outgoing { background-color: #BCABC8; color: #27212E; display: inline-flex; align-items: center; gap: 8px; }
+.msg-checkmarks { font-size: 11px; color: #4D4158; }
+.msg-more-dots { color: #796E85; font-weight: bold; letter-spacing: 2px; }
+.chat-date-separator { display: flex; align-items: center; gap: 12px; margin: 10px 0; }
+.date-line { flex: 1; height: 1px; background-color: #2B2633; }
+.date-label { font-size: 13px; color: #2B2633; font-weight: 500; }
+.chat-input-bar { display: flex; align-items: center; gap: 12px; margin-top: 10px; }
+.chat-text-input { flex: 1; height: 42px; border: 1.5px solid #2B2633; border-radius: 9999px; padding: 0 20px; font-size: 13.5px; outline: none; }
+.chat-send-btn { width: 38px; height: 38px; border-radius: 50%; background-color: #C1A8DB; border: none; color: #2B2633; display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; }
+.chat-send-btn svg { width: 18px; height: 18px; margin-left: -2px; }
+
+/* ========================================================
+   ADMIN PAGES - MISSING STYLES (append to styles.css)
+   ======================================================== */
+
+/* ---------- Tables (Reports, Therapist Verification, User Mgmt) ---------- */
+.admin-full-table-box {
+  background: #FFFFFF;
+  border: 1.5px solid var(--table-border);
+  border-radius: 8px;
+  padding: 8px 26px 20px 26px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+  margin-bottom: 24px;
+}
+
+.admin-data-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.admin-data-table th {
+  text-align: left;
+  font-size: 13px;
+  font-weight: 600;
+  color: #4A3E56;
+  padding: 14px 12px;
+  line-height: 1.25;
+}
+
+.admin-data-table td {
+  padding: 14px 12px;
+  border-top: 1px solid var(--table-row-divider);
+  vertical-align: middle;
+  font-size: 14px;
+  color: #1D1825;
+}
+
+.admin-data-table .check-pill-btn { justify-self: auto; }
+
+.serif-td { font-family: var(--font-serif); }
+.font-medium { font-weight: 500; }
+
+.admin-data-table .status-badge {
+  display: inline-block;
+  white-space: nowrap;
+}
+
+/* ---------- Pagination ---------- */
+.table-pagination-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 16px;
+  border-top: 1px solid var(--table-row-divider);
+}
+
+.pagination-count {
+  font-size: 12.5px;
+  color: var(--text-secondary);
+}
+
+.pagination-controls {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.page-btn {
+  min-width: 30px;
+  height: 30px;
+  padding: 0 8px;
+  border: 1px solid #D6D0DE;
+  border-radius: 6px;
+  background: #FFFFFF;
+  font-size: 12.5px;
+  color: #4A3E56;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.page-btn:hover { background: #F1EBF7; }
+
+.page-btn.active-page {
+  background: #A888C9;
+  border-color: #A888C9;
+  color: #FFFFFF;
+  font-weight: 600;
+}
+
+.page-dots { color: var(--text-muted); padding: 0 2px; }
+
+/* ---------- Status tab pills (Therapist Verification) ---------- */
+.status-tab-pills-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 22px;
+  flex-wrap: wrap;
+}
+
+.status-pill-btn {
+  border: 1.5px solid transparent;
+  border-radius: 9999px;
+  padding: 7px 22px;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 600;
+  color: #382C43;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.status-tab-pills-row .pill-purple { background: var(--pastel-lavender); }
+.status-tab-pills-row .pill-yellow { background: var(--pastel-yellow); }
+.status-tab-pills-row .pill-peach  { background: var(--pastel-peach); }
+.status-tab-pills-row .pill-green  { background: #CDE9CF; }
+.status-tab-pills-row .pill-red    { background: #F6C4C4; }
+
+.status-pill-btn:hover { transform: translateY(-1px); }
+.status-pill-btn.active-tab { border-color: #554477; }
+
+/* ---------- User Management stat cards ---------- */
+.user-mgmt-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 22px;
+  margin-bottom: 24px;
+}
+
+.um-stat-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px 24px;
+  border-radius: 20px;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.03);
+}
+
+.card-pinkish-bg { background-color: var(--pastel-pinkish); }
+.card-green-bg   { background-color: #D5EBD2; }
+.card-blue-bg    { background-color: #D3E3F4; }
+
+.um-icon-wrapper {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.65);
+  color: #4A3E56;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.um-icon-wrapper svg { width: 24px; height: 24px; }
+
+.um-stat-info { display: flex; flex-direction: column; line-height: 1.25; }
+.um-stat-label { font-size: 13px; font-weight: 500; color: #4A3E56; }
+.um-stat-value { font-size: 28px; font-weight: 700; color: #17131C; letter-spacing: -0.02em; }
+
+/* ---------- Modals ---------- */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(35, 28, 44, 0.45);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  padding: 20px;
+}
+
+.modal-overlay.modal-active { display: flex; }
+
+.modal-box {
+  background: #FFFFFF;
+  border-radius: 18px;
+  padding: 24px 28px;
+  width: 100%;
+  max-width: 540px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+}
+
+.confirm-modal-card { max-width: 420px; }
+
+.modal-header-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.modal-header-row .header-icon-badge svg { width: 18px; height: 18px; }
+
+.modal-close-x {
+  margin-left: auto;
+  background: none;
+  border: none;
+  font-size: 28px;
+  line-height: 1;
+  color: #7B7186;
+  cursor: pointer;
+}
+
+.modal-close-x:hover { color: #231C2C; }
+
+.therapist-review-profile-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.therapist-review-meta p { line-height: 1.5; }
+
+.therapist-stats-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  padding: 14px 0;
+  border-top: 1px solid var(--table-row-divider);
+  border-bottom: 1px solid var(--table-row-divider);
+  margin-bottom: 20px;
+}
+
+.t-stat-col { display: flex; flex-direction: column; gap: 3px; }
+.t-stat-label { font-size: 11.5px; color: var(--text-secondary); }
+.t-stat-val { font-size: 13.5px; font-weight: 600; color: #2B2536; }
+
+.review-credentials-section { margin-bottom: 22px; }
+
+.credentials-card-outline {
+  border: 1px solid #D6D0DE;
+  border-radius: 12px;
+  padding: 4px 16px;
+}
+
+.credential-item-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+}
+
+.credential-item-row + .credential-item-row { border-top: 1px solid var(--table-row-divider); }
+
+.cred-file-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #2B2536;
+}
+
+.cred-actions { display: flex; align-items: center; gap: 10px; }
+
+.status-badge-filled {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 14px;
+  border-radius: 9999px;
+}
+
+.badge-verified { background: #D5EBD2; color: #3C8A3E; }
+
+.preview-btn {
+  border: 1.5px solid #231E29;
+  border-radius: 9999px;
+  background: transparent;
+  padding: 3px 14px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.preview-btn:hover { background: #231E29; color: #FFFFFF; }
+
+.modal-bottom-actions,
+.modal-button-group {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.btn-action-reject,
+.btn-action-approve,
+.btn-modal-cancel,
+.btn-modal-confirm-approve,
+.btn-modal-confirm-reject {
+  border-radius: 10px;
+  padding: 10px 26px;
+  font-family: var(--font-sans);
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1.5px solid transparent;
+  transition: filter 0.15s ease;
+}
+
+.btn-action-reject,
+.btn-modal-confirm-reject { background: #F6C4C4; color: #9B2C2C; }
+
+.btn-action-approve,
+.btn-modal-confirm-approve { background: #BCA3D8; color: #2D2538; }
+
+.btn-modal-cancel { background: transparent; border-color: #C4BDCC; color: #4A3E56; }
+
+.btn-action-reject:hover,
+.btn-action-approve:hover,
+.btn-modal-confirm-approve:hover,
+.btn-modal-confirm-reject:hover { filter: brightness(0.95); }
+
+.modal-textarea {
+  width: 100%;
+  min-height: 90px;
+  border: 1px solid #D6D0DE;
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  color: #332B3B;
+  resize: vertical;
+  outline: none;
+  margin-bottom: 18px;
+}
+
+.modal-textarea:focus { border-color: #A888C9; }
+
+/* ---------- Responsive ---------- */
+@media (max-width: 900px) {
+  .user-mgmt-stats-grid { grid-template-columns: 1fr; }
+  .search-filter-card { flex-wrap: wrap; }
+  .admin-full-table-box { overflow-x: auto; }
+  .therapist-stats-row { grid-template-columns: 1fr; }
+}
