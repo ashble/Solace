@@ -2,7 +2,7 @@ import os
 import json
 import sqlite3
 from contextlib import contextmanager
-from datetime import date
+from datetime import date, datetime
 from flask import Flask, jsonify, render_template, send_from_directory, request, redirect
 
 # ==========================================
@@ -63,18 +63,6 @@ def init_db():
         columns = {row["name"] for row in db.execute("PRAGMA table_info(appointments)")}
         if "client_email" not in columns:
             db.execute("ALTER TABLE appointments ADD COLUMN client_email TEXT NOT NULL DEFAULT 'client@solace.com'")
-        if not db.execute("SELECT 1 FROM appointments LIMIT 1").fetchone():
-            sample_rows = [
-                ("Anonymous User #6767", "client6767@example.com", "2026-11-06", "9:00 AM", "Confirmed"),
-                ("Anonymous User #854", "client854@example.com", "2026-11-06", "10:30 AM", "Cancelled"),
-                ("Anonymous User #1234", "client1234@example.com", "2026-11-07", "2:00 PM", "Confirmed"),
-                ("Anonymous User #2468", "client2468@example.com", "2026-11-08", "11:00 AM", "Confirmed"),
-                ("Anonymous User #5167", "client5167@example.com", "2026-11-09", "1:30 PM", "Pending"),
-                ("Anonymous User #3247", "client3247@example.com", "2026-11-10", "3:00 PM", "Confirmed"),
-                ("Anonymous User #2048", "client2048@example.com", "2026-11-11", "9:30 AM", "Pending"),
-                ("Anonymous User #9876", "client9876@example.com", "2026-11-12", "4:00 PM", "Pending"),
-            ]
-            db.executemany("INSERT INTO appointments (client, client_email, therapist, date, time, status) VALUES (?, ?, 'Dr. Rizzler6767', ?, ?, ?)", sample_rows)
 
 init_db()
 
@@ -83,6 +71,10 @@ init_db()
 @app.route("/<path:subpath>/styles.css")
 def serve_css(subpath=None):
     return send_from_directory(STATIC_DIR, "styles.css")
+
+@app.route("/sean-pages.js")
+def serve_sean_page_scripts():
+    return send_from_directory(os.path.join(FRONTEND_DIR, "static", "js"), "sean-pages.js")
 
 
 # ==========================================
@@ -93,3 +85,114 @@ def serve_css(subpath=None):
 def client_dashboard():
     user = {"name": "Binibirocha", "display_name": "User, name", "role": "Client"}
     return render_template("index.html", role="client", active_tab="dashboard", user=user)
+
+PROFILE_DEFAULTS = {
+    "client": {"name":"CalmCloud27", "email":"Client@example.com", "profile_type":"Anonymous Profile", "bio":"I enjoy quiet moments, meaningful conversations, and finding small ways to grow each day. I’m using Solace to make space for my wellbeing and connect with the right support.", "privacy":"Anonymous to other users", "timezone":"Asia/Manila", "contact_preference":"Email"},
+    "therapist": {"name":"Dr. BBno$", "email":"Therapist@example.com", "title":"Psychologist", "bio":"No introduction added yet. Let clients know a little about your approach and the support you offer.", "education":"Doctorate in Clinical Psychology", "specialty":"Psychological wellness", "certifications":"Licensed professional", "availability":"Online and in person", "license":"", "session_format":"Online and in person"},
+    "admin": {"name":"Solace Administrator", "email":"admin@solace.com", "title":"System Administrator", "bio":"Responsible for keeping the Solace community safe, supportive, and running smoothly.", "department":"Trust and Safety", "access_level":"Full platform administration", "security_status":"Two-step verification enabled", "notification_email":True, "notification_security":True, "notification_reports":True}
+}
+
+def saved_profile(role):
+    with get_db() as db:
+        row = db.execute("SELECT data FROM profiles WHERE role = ?", (role,)).fetchone()
+    return {**PROFILE_DEFAULTS[role], **(json.loads(row["data"]) if row else {})}
+
+def display_appointment_date(value):
+    try:
+        parsed = date.fromisoformat(value)
+        return f"{parsed.strftime('%B')} {parsed.day}, {parsed.year}"
+    except (TypeError, ValueError):
+        return value
+
+def appointment_sort_key(date_value, time_value):
+    try:
+        return datetime.strptime(f"{date_value} {time_value}", "%Y-%m-%d %I:%M %p").timestamp()
+    except (TypeError, ValueError):
+        return 0
+
+@app.route("/therapist/bookings")
+def therapist_bookings():
+    with get_db() as db:
+        bookings = [dict(row) for row in db.execute("SELECT * FROM appointments ORDER BY date, time")]
+    for booking in bookings:
+        booking["display_date"] = display_appointment_date(booking["date"])
+        booking["sort_key"] = appointment_sort_key(booking["date"], booking["time"])
+    return render_template("Bookings.html", role="therapist", active_page="bookings", bookings=bookings,
+        user={"name":"Dr. BBno$", "display_name":"Dr. BBno$", "role":"Therapist"})
+
+@app.route("/therapist/appointments")
+def therapist_appointments():
+    with get_db() as db:
+        appointments = [dict(row) for row in db.execute("SELECT * FROM appointments ORDER BY date, time")]
+        stats = {
+            "upcoming": db.execute("SELECT COUNT(*) FROM appointments WHERE status = 'Confirmed' AND date >= ?", (date.today().isoformat(),)).fetchone()[0],
+            "pending": db.execute("SELECT COUNT(*) FROM appointments WHERE status = 'Pending'").fetchone()[0],
+            "active_users": db.execute("SELECT COUNT(DISTINCT client) FROM appointments WHERE status != 'Cancelled'").fetchone()[0],
+            "next_session": next((row["time"] for row in appointments if row["status"] == "Confirmed" and row["date"] >= date.today().isoformat()), "—")
+        }
+    for appointment in appointments:
+        appointment["display_date"] = display_appointment_date(appointment["date"])
+        appointment["sort_key"] = appointment_sort_key(appointment["date"], appointment["time"])
+    return render_template("Appointments.html", role="therapist", active_page="appointments", appointments=appointments, stats=stats,
+        user={"name":"Dr. BBno$", "display_name":"Dr. BBno$", "role":"Therapist"})
+
+@app.route("/profile")
+def profile_page():
+    role = request.args.get("role", "client").lower()
+    if role not in PROFILE_DEFAULTS:
+        role = "client"
+    profile = saved_profile(role)
+    user = {"name":profile["name"], "display_name":profile["name"], "role":"Administrator" if role == "admin" else role.capitalize()}
+    templates = {"client":"userprofile.html", "therapist":"therapistprofile.html", "admin":"adminprofile.html"}
+    return render_template(templates[role], role=role, active_page="profile", profile=profile, user=user)
+
+@app.route("/settings")
+def settings_page():
+    role = request.args.get("role", "client").lower()
+    if role not in PROFILE_DEFAULTS:
+        role = "client"
+    profile = saved_profile(role)
+    user = {"name":profile["name"], "display_name":profile["name"], "role":"Administrator" if role == "admin" else role.capitalize()}
+    return render_template("index.html", role=role, active_tab="settings", profile=profile, user=user)
+
+@app.route("/api/profile/<role>", methods=["PUT"])
+def update_profile(role):
+    if role not in PROFILE_DEFAULTS:
+        return jsonify(error="Unknown profile role."), 404
+    payload = request.get_json(silent=True) or {}
+    profile = saved_profile(role)
+    profile.update({key:value for key, value in payload.items() if key in PROFILE_DEFAULTS[role]})
+    with get_db() as db:
+        db.execute("INSERT INTO profiles (role, data) VALUES (?, ?) ON CONFLICT(role) DO UPDATE SET data=excluded.data", (role, json.dumps(profile)))
+    return jsonify(profile)
+
+@app.route("/api/appointments", methods=["POST"])
+def create_appointment():
+    payload = request.get_json(silent=True) or {}
+    required = ("client", "therapist", "date", "time")
+    if any(not str(payload.get(key, "")).strip() for key in required):
+        return jsonify(error="Client, therapist, date, and time are required."), 400
+    with get_db() as db:
+        cursor = db.execute("INSERT INTO appointments (client, client_email, therapist, date, time, session_type) VALUES (?, ?, ?, ?, ?, ?)",
+            (str(payload["client"]).strip(), str(payload.get("client_email", "client@solace.com")).strip(), str(payload["therapist"]).strip(), str(payload["date"]).strip(), str(payload["time"]).strip(), str(payload.get("session_type", "Online consultation"))))
+        created = dict(db.execute("SELECT * FROM appointments WHERE id = ?", (cursor.lastrowid,)).fetchone())
+    return jsonify(created), 201
+
+@app.route("/api/appointments/<int:appointment_id>", methods=["PATCH"])
+def update_appointment(appointment_id):
+    payload = request.get_json(silent=True) or {}
+    status = payload.get("status")
+    if status not in ("Pending", "Confirmed", "Completed", "Cancelled"):
+        return jsonify(error="Invalid appointment status."), 400
+    with get_db() as db:
+        cursor = db.execute("UPDATE appointments SET status = ? WHERE id = ?", (status, appointment_id))
+        if not cursor.rowcount:
+            return jsonify(error="Appointment not found."), 404
+    return jsonify(id=appointment_id, status=status)
+
+@app.route("/therapist")
+def therapist_home():
+    return redirect("/therapist/appointments")
+
+if __name__ == "__main__":
+    app.run(debug=True, port=5000)

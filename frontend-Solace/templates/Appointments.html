@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Appointments | Solace</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/styles.css">
+</head>
+<body class="dashboard-body">
+<div class="app-layout">
+<aside class="sidebar">
+<div class="sidebar-logo">
+<span class="logo-text">S</span>
+<span class="logo-sun">
+<svg viewBox="0 0 24 24" fill="none" stroke="#E9A844" stroke-width="2">
+<circle cx="12" cy="12" r="4.5" fill="#E9A844" stroke="none"/>
+<path d="M12 2v3m0 14v3M2 12h3m14 0h3M4.9 4.9 7 7m10 10 2.1 2.1m0-14.2L17 7M7 17l-2.1 2.1"/>
+</svg>
+</span>
+<span class="logo-text">LACE</span>
+</div>
+<div class="sean-nav-caption">Main Menu</div>
+<nav class="sidebar-nav">
+<a href="/therapist" class="nav-item">
+<svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+<path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2h-5v-7h-4v7H5a2 2 0 0 1-2-2z"/>
+</svg>
+<span>Dashboard</span>
+</a>
+<a href="/therapist/sessions" class="nav-item">
+<svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+<rect x="2" y="3" width="20" height="14" rx="2"/>
+<path d="M8 21h8m-4-4v4"/>
+<circle cx="12" cy="10" r="2.5"/>
+</svg>
+<span>My Sessions</span>
+</a>
+<a href="/therapist/bookings" class="nav-item">
+<svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+<rect x="3" y="4" width="18" height="17" rx="2"/>
+<path d="M16 2v4M8 2v4M3 10h18m-13 5 2 2 5-5"/>
+</svg>
+<span>Bookings</span>
+</a>
+<a href="/therapist/appointments" class="nav-item active">
+<svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+<rect x="3" y="4" width="18" height="17" rx="2"/>
+<path d="M16 2v4M8 2v4M3 10h18"/>
+</svg>
+<span>Appointments</span>
+</a>
+<a href="/therapist/history" class="nav-item">
+<svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+<path d="M14 2v6h6m-8 3v4l3 2"/>
+</svg>
+<span>Session History</span>
+</a>
+</nav>
+<div class="sean-nav-caption account-caption">Account</div>
+<nav class="sidebar-nav account-nav">
+<a href="/profile?role=therapist" class="nav-item">
+<svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+<circle cx="12" cy="7" r="4"/>
+</svg>
+<span>Profile</span>
+</a>
+<a href="/settings?role=therapist" class="nav-item">
+<svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+<circle cx="12" cy="12" r="3"/>
+<path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1-2.8 2.8-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5v.2h-4v-.2a1.7 1.7 0 0 0-1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1-2.8-2.8.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3v-4h.2a1.7 1.7 0 0 0 1.5-1 1.7 1.7 0 0 0-.3-1.8l-.1-.1 2.8-2.8.1.1a1.7 1.7 0 0 0 1.8.3 1.7 1.7 0 0 0 1-1.5V3h4v.2a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1 2.8 2.8-.1.1a1.7 1.7 0 0 0-.3 1.8 1.7 1.7 0 0 0 1.5 1h.2v4h-.2a1.7 1.7 0 0 0-1.5 1z"/>
+</svg>
+<span>Settings</span>
+</a>
+</nav>
+<a class="sean-logout" href="/">
+<svg class="logout-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+<path d="M10 17l5-5-5-5m5 5H3"/>
+<path d="M12 3h7a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-7"/>
+</svg> Log Out</a>
+</aside>
+<main class="main-content sean-main-content">
+<header class="sean-topbar">
+<div>
+</div>
+<div class="user-pill">
+<div class="user-avatar">D</div>
+<div class="user-details">
+<span class="user-name">{{ user.display_name }}</span>
+<span class="user-role">Therapist</span>
+</div>
+</div>
+</header>
+<section class="appointment-stat-grid sean-stats">
+<article class="appointment-stat-card stat-upcoming">
+<span>Upcoming</span>
+<strong>{{ stats.upcoming }}</strong>
+</article>
+<article class="appointment-stat-card stat-pending">
+<span>Pending</span>
+<strong>{{ stats.pending }}</strong>
+</article>
+<article class="appointment-stat-card stat-users">
+<span>Active Users</span>
+<strong>{{ stats.active_users }}</strong>
+</article>
+<article class="appointment-stat-card stat-next">
+<span>Next Session</span>
+<strong>{{ stats.next_session }}</strong>
+</article>
+</section>
+<section class="booking-list-card sean-table-page">
+<div class="booking-list-heading">
+<div class="header-icon-badge">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+<rect x="3" y="4" width="18" height="17" rx="2"/>
+<line x1="16" y1="2" x2="16" y2="6"/>
+<line x1="8" y1="2" x2="8" y2="6"/>
+</svg>
+</div>
+<h1>Appointment List</h1>
+</div>
+<section class="search-filter-card booking-toolbar">
+<div class="search-input-wrapper">
+<input class="search-field booking-search" type="search" placeholder="Search by name or email" aria-label="Search appointments">
+</div>
+<div class="filter-dropdown-wrapper">
+<select class="filter-select booking-filter" aria-label="Filter by status">
+<option value="all">All Statuses</option>
+<option value="Pending">Pending</option>
+<option value="Confirmed">Confirmed</option>
+<option value="Cancelled">Cancelled</option>
+<option value="Completed">Completed</option>
+</select>
+<svg class="select-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+<polyline points="6 9 12 15 18 9"/>
+</svg>
+</div>
+<div class="filter-dropdown-wrapper sort-dropdown">
+<select class="filter-select booking-sort" aria-label="Sort appointments">
+<option value="desc">Sort By: Newest</option>
+<option value="asc">Sort By: Oldest</option>
+</select>
+<svg class="select-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+<polyline points="6 9 12 15 18 9"/>
+</svg>
+</div>
+</section>
+<div class="admin-full-table-box appointment-table-wrap">
+<table class="admin-data-table appointment-table">
+<thead>
+<tr>
+<th>Appointment List</th>
+<th>Email</th>
+<th>Schedule</th>
+<th>Action</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+{% for item in appointments %}
+<tr data-appointment-id="{{ item.id }}" data-status="{{ item.status }}" data-schedule="{{ item.sort_key }}" data-client="{{ item.client }}" data-email="{{ item.client_email }}" data-schedule-label="{{ item.display_date }} · {{ item.time }}" data-session="{{ item.session_type }}" data-search="{{ item.client|lower }} {{ item.client_email|lower }}">
+<td class="serif-td font-medium">{{ item.client }}</td>
+<td class="serif-td">{{ item.client_email }}</td>
+<td class="serif-td">{{ item.display_date }} · {{ item.time }}</td>
+<td>
+<button class="booking-action review-action" type="button" data-review="{{ item.id }}">Review</button>
+</td>
+<td>
+<span class="status-badge status-{{ item.status|lower }}">{{ item.status }}</span>
+</td>
+</tr>
+{% else %}
+<tr class="no-appointments-row">
+<td colspan="5">No appointments yet.</td>
+</tr>
+{% endfor %}
+<tr class="no-filter-results" hidden>
+<td colspan="5">No results match your search.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="table-pagination-footer booking-table-footer">
+<span class="pagination-count">Showing <strong id="visibleAppointmentCount">{{ appointments|length }}</strong> of <span id="totalAppointmentCount">{{ appointments|length }}</span> appointments</span>
+<div class="pagination-controls booking-pagination">
+<button type="button" class="page-btn previous-page" aria-label="Previous page">&larr;</button>
+<button type="button" class="page-btn next-page" aria-label="Next page">&rarr;</button>
+</div>
+</div>
+</section>
+<dialog class="profile-editor-dialog" id="appointmentReview">
+<div class="appointment-review-content">
+<button class="editor-close" type="button" onclick="document.getElementById('appointmentReview').close()" aria-label="Close">×</button>
+<span class="profile-eyebrow">APPOINTMENT DETAILS</span>
+<h2 id="reviewClient">
+</h2>
+<p id="reviewEmail">
+</p>
+<p id="reviewSchedule">
+</p>
+<p id="reviewSession">
+</p>
+<p>Status: <strong id="reviewStatus">
+</strong>
+</p>
+<div class="editor-actions">
+<button class="editor-cancel" type="button" onclick="document.getElementById('appointmentReview').close()">Close</button>
+<button id="reviewConfirm" class="profile-save-btn" type="button">Confirm Appointment</button>
+</div>
+</div>
+</dialog>
+</section>
+</main>
+</div>
+<script src="/sean-pages.js">
+</script>
+</body>
+</html>

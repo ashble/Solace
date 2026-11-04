@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Administrator Profile | Solace</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/styles.css">
+</head>
+<body class="dashboard-body">
+<div class="app-layout">
+<aside class="sidebar">
+<div class="sidebar-logo">
+<span class="logo-text">S</span>
+<span class="logo-sun">
+<svg viewBox="0 0 24 24" fill="none" stroke="#E9A844" stroke-width="2">
+<circle cx="12" cy="12" r="4.5" fill="#E9A844" stroke="none"/>
+<path d="M12 2v3m0 14v3M2 12h3m14 0h3M4.9 4.9 7 7m10 10 2.1 2.1m0-14.2L17 7M7 17l-2.1 2.1"/>
+</svg>
+</span>
+<span class="logo-text">LACE</span>
+</div>
+<div class="sean-nav-caption">Main Menu</div>
+<nav class="sidebar-nav">
+<a href="/admin" class="nav-item">
+<svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+<path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2h-5v-7h-4v7H5a2 2 0 0 1-2-2z"/>
+</svg>
+<span>Dashboard</span>
+</a>
+<a href="/admin/therapist-verification" class="nav-item">
+<svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+<path d="m9 12 2 2 4-4"/>
+</svg>
+<span>Therapist Verification</span>
+</a>
+<a href="/admin/user-management" class="nav-item">
+<svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+<circle cx="9" cy="7" r="4"/>
+<path d="M23 21v-2a4 4 0 0 0-3-3.9M16 3.1a4 4 0 0 1 0 7.8"/>
+</svg>
+<span>User Management</span>
+</a>
+<a href="/admin/reports" class="nav-item">
+<svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+<path d="M14 2v6h6M8 13h8m-8 4h8"/>
+</svg>
+<span>Reports</span>
+</a>
+</nav>
+<div class="sean-nav-caption account-caption">Account</div>
+<nav class="sidebar-nav account-nav">
+<a href="/profile?role=admin" class="nav-item active">
+<svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+<circle cx="12" cy="7" r="4"/>
+</svg>
+<span>Profile</span>
+</a>
+<a href="/settings?role=admin" class="nav-item">
+<svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+<circle cx="12" cy="12" r="3"/>
+<path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1-2.8 2.8-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5v.2h-4v-.2a1.7 1.7 0 0 0-1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1-2.8-2.8.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3v-4h.2a1.7 1.7 0 0 0 1.5-1 1.7 1.7 0 0 0-.3-1.8l-.1-.1 2.8-2.8.1.1a1.7 1.7 0 0 0 1.8.3 1.7 1.7 0 0 0 1-1.5V3h4v.2a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1 2.8 2.8-.1.1a1.7 1.7 0 0 0-.3 1.8 1.7 1.7 0 0 0 1.5 1h.2v4h-.2a1.7 1.7 0 0 0-1.5 1z"/>
+</svg>
+<span>Settings</span>
+</a>
+</nav>
+<a class="sean-logout" href="/">
+<svg class="logout-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+<path d="M10 17l5-5-5-5m5 5H3"/>
+<path d="M12 3h7a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-7"/>
+</svg> Log Out</a>
+</aside>
+<main class="main-content sean-main-content">
+<header class="sean-topbar">
+<div class="profile-page-heading">
+<span class="profile-heading-icon">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+<circle cx="12" cy="7" r="4"/>
+</svg>
+</span>
+<h1>My Profile</h1>
+</div>
+<div class="user-pill">
+<div class="user-avatar">{{ profile.name[:1] }}</div>
+<div class="user-details">
+<span class="user-name">{{ user.display_name }}</span>
+<span class="user-role">Administrator</span>
+</div>
+</div>
+</header>
+<section class="showcase-profile">
+<div class="showcase-cover">
+</div>
+<div class="showcase-body">
+<div class="showcase-person-row">
+<div class="showcase-avatar">{{ profile.name[:1] }}</div>
+<div class="showcase-person">
+<h2>{{ profile.name }}</h2>
+<p>{{ profile.title }}</p>
+<a href="mailto:{{ profile.email }}">{{ profile.email }}</a>
+</div>
+<div class="showcase-links">
+<button type="button" class="edit-profile-btn" onclick="document.getElementById('profileEditor').showModal()">Edit Profile</button>
+<a href="/settings?role=admin">Privacy Settings <span>↗</span>
+</a>
+</div>
+</div>
+<div class="showcase-info-grid">
+<section class="showcase-info-card">
+<h3>About me</h3>
+<p>{{ profile.bio }}</p>
+<small>🛡 &nbsp; Solace administration</small>
+</section>
+<section class="showcase-info-card">
+<h3>Administrator Information</h3>
+<div class="profile-detail-row">
+<span>Role</span>
+<strong>{{ profile.title }}</strong>
+</div>
+<div class="profile-detail-row">
+<span>Department</span>
+<strong>{{ profile.department }}</strong>
+</div>
+<div class="profile-detail-row">
+<span>Platform access</span>
+<strong>{{ profile.access_level }}</strong>
+</div>
+<div class="profile-detail-row">
+<span>Account security</span>
+<strong>{{ profile.security_status }}</strong>
+</div>
+</section>
+</div>
+</div>
+</section>
+<p class="profile-save-notice" id="profileNotice" role="status">
+</p>
+<dialog class="profile-editor-dialog" id="profileEditor">
+<form id="profileForm" data-role="admin">
+<div class="editor-heading">
+<div>
+<span class="profile-eyebrow">ADMIN ACCOUNT</span>
+<h2>Edit Profile</h2>
+</div>
+<button type="button" class="editor-close" onclick="document.getElementById('profileEditor').close()" aria-label="Close">×</button>
+</div>
+<div class="profile-fields">
+<label>Display name<input name="name" value="{{ profile.name }}" required>
+</label>
+<label>Email address<input type="email" name="email" value="{{ profile.email }}" required>
+</label>
+<label>Administrator role<input name="title" value="{{ profile.title }}">
+</label>
+<label>Department<input name="department" value="{{ profile.department }}">
+</label>
+<label>Platform access<input name="access_level" value="{{ profile.access_level }}">
+</label>
+<label>Account security<input name="security_status" value="{{ profile.security_status }}">
+</label>
+<label class="profile-field-wide">About me<textarea name="bio" rows="4">{{ profile.bio }}</textarea>
+</label>
+</div>
+<div class="editor-actions">
+<span id="profileEditorNotice" role="status">
+</span>
+<button type="button" class="editor-cancel" onclick="document.getElementById('profileEditor').close()">Cancel</button>
+<button type="submit" class="profile-save-btn">Save changes</button>
+</div>
+</form>
+</dialog>
+</main>
+</div>
+<script src="/sean-pages.js">
+</script>
+</body>
+</html>
