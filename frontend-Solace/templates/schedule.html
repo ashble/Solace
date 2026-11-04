@@ -41,12 +41,12 @@
           <span>My Chats</span>
         </a>
 
-        <a href="#" class="nav-item">
+        <a href="/profile?role=client" class="nav-item">
           <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
           <span>Profile</span>
         </a>
 
-        <a href="#" class="nav-item">
+        <a href="/settings?role=client" class="nav-item">
           <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
           <span>Settings</span>
         </a>
@@ -170,7 +170,7 @@
                 <svg class="summary-detail-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
                 <div class="summary-text-block">
                   <span class="detail-label">Date</span>
-                  <span class="detail-value">January 7, 2027</span>
+              <span class="detail-value" id="selectedDate">January 7, 2027</span>
                 </div>
               </div>
 
@@ -178,7 +178,7 @@
                 <svg class="summary-detail-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
                 <div class="summary-text-block">
                   <span class="detail-label">Time</span>
-                  <span class="detail-value">10:00 AM</span>
+              <span class="detail-value" id="selectedTime">10:00 AM</span>
                 </div>
               </div>
 
@@ -192,7 +192,7 @@
             </div>
 
             <div class="summary-action-col">
-              <button class="request-appointment-btn">Request Appointment</button>
+              <button class="request-appointment-btn" id="requestAppointment">Request Appointment</button>
             </div>
           </div>
         </div>
@@ -204,5 +204,26 @@
       </section>
     </main>
   </div>
+  <script>
+    let chosenDate = '2027-01-07';
+    let chosenTime = '10:00 AM';
+    document.querySelectorAll('.cal-day-cell').forEach((cell) => cell.addEventListener('click', () => {
+      document.querySelector('.cal-day-cell.active-date')?.classList.remove('active-date');
+      cell.classList.add('active-date');
+      chosenDate = `2027-01-${String(cell.textContent.trim()).padStart(2, '0')}`;
+      document.getElementById('selectedDate').textContent = `January ${cell.textContent.trim()}, 2027`;
+    }));
+    document.querySelectorAll('.time-slot-btn').forEach((button) => button.addEventListener('click', () => {
+      document.querySelector('.time-slot-btn.active-slot')?.classList.remove('active-slot');
+      button.classList.add('active-slot'); chosenTime = button.textContent.trim();
+      document.getElementById('selectedTime').textContent = chosenTime;
+    }));
+    document.getElementById('requestAppointment').addEventListener('click', async (event) => {
+      const button = event.currentTarget; button.disabled = true;
+      const response = await fetch('/api/appointments', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({client:'Binibirocha', therapist:'Dr. Zayne Li', date:chosenDate, time:chosenTime, session_type:'Online consultation'})});
+      if (response.ok) { button.textContent = 'Request sent'; button.closest('.summary-action-col').insertAdjacentHTML('beforeend', '<p class="booking-confirmation">Your request is waiting for therapist approval.</p>'); }
+      else { button.disabled = false; button.textContent = 'Try again'; }
+    });
+  </script>
 </body>
 </html>
