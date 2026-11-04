@@ -1458,3 +1458,21 @@ body.dashboard-body {
   .admin-full-table-box { overflow-x: auto; }
   .therapist-stats-row { grid-template-columns: 1fr; }
 }
+
+/* Typography and palette drawn from the supplied page HTML, scoped to Sean's pages. */
+body.therapist-bookings-page,
+body.therapist-appointments-page,
+body.client-profile-page,
+body.therapist-profile-page,
+body.admin-profile-page {
+  --sidebar-bg: #d8c6e5;
+  --sidebar-active: #c49acd;
+  --sidebar-text: #6750a4;
+  --user-pill-bg: #c49acd;
+  --font-sans: "Roboto", Arial, sans-serif;
+  --font-serif: "Rufina", Georgia, serif;
+}
+
+body.therapist-bookings-page .booking-list-heading { display:none; }
+body.therapist-appointments-page .booking-list-heading { gap:8px; margin:0 0 10px; }
+body.therapist-appointments-page .booking-list-heading h1 { font-size:20px; }

@@ -143,7 +143,7 @@ def profile_page():
         role = "client"
     profile = saved_profile(role)
     user = {"name":profile["name"], "display_name":profile["name"], "role":"Administrator" if role == "admin" else role.capitalize()}
-    templates = {"client":"userprofile.html", "therapist":"therapistprofile.html", "admin":"adminprofile.html"}
+    templates = {"client":"User-profile.html", "therapist":"Therapist-profile.html", "admin":"Admin-profile.html"}
     return render_template(templates[role], role=role, active_page="profile", profile=profile, user=user)
 
 @app.route("/settings")
