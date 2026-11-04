@@ -816,6 +816,215 @@ body.dashboard-body {
 @media(max-width:800px) { .appointment-stat-grid { grid-template-columns:repeat(2,1fr); }.showcase-info-grid { grid-template-columns:1fr; } }
 @media(max-width:520px) { .showcase-cover { height:90px; }.showcase-body { padding:0 12px 14px; }.showcase-person-row { min-height:78px; padding-left:0; }.showcase-avatar { flex-basis:55px; width:55px; height:55px; margin-top:-31px; }.showcase-person { margin-left:6px; }.showcase-person h2 { font-size:20px; }.showcase-links { gap:7px; }.client-about-card { margin-left:0; }.profile-page-heading h1 { font-size:22px; }.booking-table-footer { flex-wrap:wrap; gap:10px; } }
 
+/* Compact layouts for Sean's assigned pages, matching the narrow Figma frames. */
+@media (max-width: 600px) {
+  body.therapist-bookings-page,
+  body.therapist-appointments-page,
+  body.client-profile-page,
+  body.therapist-profile-page,
+  body.admin-profile-page { min-width: 0; overflow-x: hidden; }
+
+  body.therapist-bookings-page .app-layout,
+  body.therapist-appointments-page .app-layout,
+  body.client-profile-page .app-layout,
+  body.therapist-profile-page .app-layout,
+  body.admin-profile-page .app-layout { display:flex; flex-direction:row; min-height:100vh; }
+
+  body.therapist-bookings-page .sidebar,
+  body.therapist-appointments-page .sidebar,
+  body.client-profile-page .sidebar,
+  body.therapist-profile-page .sidebar,
+  body.admin-profile-page .sidebar {
+    flex:0 0 70px; width:70px; min-width:70px; height:100vh; min-height:100vh;
+    padding:10px 5px 9px; gap:8px; overflow:hidden;
+  }
+  body.therapist-bookings-page .sidebar-logo,
+  body.therapist-appointments-page .sidebar-logo,
+  body.client-profile-page .sidebar-logo,
+  body.therapist-profile-page .sidebar-logo,
+  body.admin-profile-page .sidebar-logo { min-height:24px; padding:0 1px 6px; margin-bottom:2px; }
+  body.therapist-bookings-page .logo-text,
+  body.therapist-appointments-page .logo-text,
+  body.client-profile-page .logo-text,
+  body.therapist-profile-page .logo-text,
+  body.admin-profile-page .logo-text { font-size:9px; letter-spacing:-.5px; }
+  body.therapist-bookings-page .logo-sun,
+  body.therapist-appointments-page .logo-sun,
+  body.client-profile-page .logo-sun,
+  body.therapist-profile-page .logo-sun,
+  body.admin-profile-page .logo-sun { width:8px; height:8px; }
+  body.therapist-bookings-page .sidebar-nav,
+  body.therapist-appointments-page .sidebar-nav,
+  body.client-profile-page .sidebar-nav,
+  body.therapist-profile-page .sidebar-nav,
+  body.admin-profile-page .sidebar-nav { display:flex; flex:1; flex-direction:column; flex-wrap:nowrap; gap:2px; overflow:hidden; }
+  body.therapist-bookings-page .sean-nav-caption,
+  body.therapist-appointments-page .sean-nav-caption,
+  body.client-profile-page .sean-nav-caption,
+  body.therapist-profile-page .sean-nav-caption,
+  body.admin-profile-page .sean-nav-caption { margin:4px 0 2px; font-size:5px; line-height:1.2; }
+  body.therapist-bookings-page .nav-item,
+  body.therapist-appointments-page .nav-item,
+  body.client-profile-page .nav-item,
+  body.therapist-profile-page .nav-item,
+  body.admin-profile-page .nav-item { min-height:17px; gap:4px; padding:3px 4px; border-radius:4px; font-size:6px; line-height:1.1; }
+  body.therapist-bookings-page .nav-icon,
+  body.therapist-appointments-page .nav-icon,
+  body.client-profile-page .nav-icon,
+  body.therapist-profile-page .nav-icon,
+  body.admin-profile-page .nav-icon { flex:0 0 9px; width:9px; height:9px; }
+  body.therapist-bookings-page .sean-logout,
+  body.therapist-appointments-page .sean-logout,
+  body.client-profile-page .sean-logout,
+  body.therapist-profile-page .sean-logout,
+  body.admin-profile-page .sean-logout { margin: auto 0 0; padding:4px 2px; font-size:6px; }
+
+  body.therapist-bookings-page .main-content,
+  body.therapist-appointments-page .main-content,
+  body.client-profile-page .main-content,
+  body.therapist-profile-page .main-content,
+  body.admin-profile-page .main-content { width:calc(100% - 70px); max-width:none; min-width:0; padding:7px 7px 10px; }
+
+  body.therapist-bookings-page .sean-topbar,
+  body.therapist-appointments-page .sean-topbar,
+  body.client-profile-page .sean-topbar,
+  body.therapist-profile-page .sean-topbar,
+  body.admin-profile-page .sean-topbar { min-height:22px; margin-bottom:6px; }
+  body.therapist-bookings-page .sean-topbar .user-pill,
+  body.therapist-appointments-page .sean-topbar .user-pill { padding:2px 5px; }
+  body.therapist-bookings-page .sean-topbar .user-avatar,
+  body.therapist-appointments-page .sean-topbar .user-avatar { width:15px; height:15px; font-size:7px; }
+  body.therapist-bookings-page .sean-topbar .user-name,
+  body.therapist-appointments-page .sean-topbar .user-name { font-size:6px; }
+  body.therapist-bookings-page .sean-topbar .user-role,
+  body.therapist-appointments-page .sean-topbar .user-role { font-size:5px; }
+
+  body.therapist-appointments-page .appointment-stat-grid { grid-template-columns:repeat(4,minmax(0,1fr)); gap:4px; margin:0 0 7px; }
+  body.therapist-appointments-page .appointment-stat-card { min-height:37px; gap:2px; padding:5px 4px; border-radius:7px; }
+  body.therapist-appointments-page .appointment-stat-card span { font-size:5.5px; }
+  body.therapist-appointments-page .appointment-stat-card strong { font-size:11px; }
+
+  body.therapist-bookings-page .booking-list-heading,
+  body.therapist-appointments-page .booking-list-heading { gap:5px; margin:0 0 6px; }
+  body.therapist-bookings-page .booking-list-heading h1,
+  body.therapist-appointments-page .booking-list-heading h1 { font-size:12px; }
+  body.therapist-bookings-page .header-icon-badge,
+  body.therapist-appointments-page .header-icon-badge { width:20px; height:20px; flex-basis:20px; border-radius:6px; }
+  body.therapist-bookings-page .header-icon-badge svg,
+  body.therapist-appointments-page .header-icon-badge svg { width:12px; height:12px; }
+  body.therapist-bookings-page .booking-toolbar,
+  body.therapist-appointments-page .booking-toolbar { display:grid; grid-template-columns:minmax(0,1fr) 58px 43px; gap:3px; margin-bottom:6px; padding:4px; border-radius:7px; }
+  body.therapist-bookings-page .booking-toolbar .search-input-wrapper,
+  body.therapist-appointments-page .booking-toolbar .search-input-wrapper { min-width:0; }
+  body.therapist-bookings-page .booking-toolbar input,
+  body.therapist-appointments-page .booking-toolbar input { min-width:0; height:19px; padding:3px 5px; font-size:5.5px; }
+  body.therapist-bookings-page .booking-toolbar .filter-dropdown-wrapper,
+  body.therapist-appointments-page .booking-toolbar .filter-dropdown-wrapper { min-width:0; }
+  body.therapist-bookings-page .booking-toolbar .filter-select,
+  body.therapist-appointments-page .booking-toolbar .filter-select { width:100%; min-width:0; height:19px; padding:3px 10px 3px 4px; font-size:5.5px; }
+  body.therapist-bookings-page .booking-toolbar .select-chevron,
+  body.therapist-appointments-page .booking-toolbar .select-chevron { right:3px; width:7px; height:7px; }
+
+  body.therapist-bookings-page .admin-full-table-box,
+  body.therapist-appointments-page .admin-full-table-box { min-width:0; overflow:hidden; border-radius:7px; }
+  body.therapist-bookings-page .appointment-table-wrap,
+  body.therapist-appointments-page .appointment-table-wrap { min-width:0; overflow:hidden; }
+  body.therapist-bookings-page .appointment-table,
+  body.therapist-appointments-page .appointment-table { width:100%; min-width:0; table-layout:fixed; }
+  body.therapist-bookings-page .appointment-table th,
+  body.therapist-appointments-page .appointment-table th { padding:4px 2px; font-size:5.5px; line-height:1.1; }
+  body.therapist-bookings-page .appointment-table td,
+  body.therapist-appointments-page .appointment-table td { padding:3px 2px; font-size:5px; line-height:1.15; white-space:normal; overflow-wrap:anywhere; }
+  body.therapist-bookings-page .appointment-table th:nth-child(1) { width:24%; }
+  body.therapist-bookings-page .appointment-table th:nth-child(2) { width:25%; }
+  body.therapist-bookings-page .appointment-table th:nth-child(3) { width:29%; }
+  body.therapist-bookings-page .appointment-table th:nth-child(4) { width:22%; }
+  body.therapist-appointments-page .appointment-table th:nth-child(1) { width:25%; }
+  body.therapist-appointments-page .appointment-table th:nth-child(2) { width:23%; }
+  body.therapist-appointments-page .appointment-table th:nth-child(3) { width:28%; }
+  body.therapist-appointments-page .appointment-table th:nth-child(4) { width:12%; }
+  body.therapist-appointments-page .appointment-table th:nth-child(5) { width:12%; }
+  body.therapist-bookings-page .booking-action,
+  body.therapist-bookings-page .booking-action-label,
+  body.therapist-appointments-page .booking-action,
+  body.therapist-appointments-page .booking-action-label { min-width:0; padding:2px 3px; font-size:4.5px; }
+  body.therapist-bookings-page .no-filter-results td,
+  body.therapist-bookings-page .no-appointments-row td,
+  body.therapist-appointments-page .no-filter-results td,
+  body.therapist-appointments-page .no-appointments-row td { padding:8px 2px; font-size:6px; }
+  body.therapist-bookings-page .booking-table-footer,
+  body.therapist-appointments-page .booking-table-footer { gap:4px; padding-top:6px; font-size:6px; }
+
+  body.client-profile-page .sean-topbar .user-pill,
+  body.therapist-profile-page .sean-topbar .user-pill,
+  body.admin-profile-page .sean-topbar .user-pill { display:none; }
+  body.client-profile-page .sean-topbar .profile-page-heading h1,
+  body.therapist-profile-page .sean-topbar .profile-page-heading h1,
+  body.admin-profile-page .sean-topbar .profile-page-heading h1 { font-size:12px; }
+  body.client-profile-page .sean-topbar .profile-heading-icon,
+  body.therapist-profile-page .sean-topbar .profile-heading-icon,
+  body.admin-profile-page .sean-topbar .profile-heading-icon { width:22px; height:22px; flex-basis:22px; border-radius:7px; font-size:12px; }
+  body.client-profile-page .sean-topbar .profile-heading-icon svg,
+  body.therapist-profile-page .sean-topbar .profile-heading-icon svg,
+  body.admin-profile-page .sean-topbar .profile-heading-icon svg { width:13px; height:13px; }
+  body.client-profile-page .showcase-profile,
+  body.therapist-profile-page .showcase-profile,
+  body.admin-profile-page .showcase-profile { width:100%; max-width:none; margin:0; border-radius:10px; }
+  body.client-profile-page .showcase-cover,
+  body.therapist-profile-page .showcase-cover,
+  body.admin-profile-page .showcase-cover { height:67px; margin:6px 6px 0; border-radius:7px; }
+  body.client-profile-page .showcase-body,
+  body.therapist-profile-page .showcase-body,
+  body.admin-profile-page .showcase-body { padding:0 7px 8px; }
+  body.client-profile-page .showcase-person-row,
+  body.therapist-profile-page .showcase-person-row,
+  body.admin-profile-page .showcase-person-row { min-height:53px; padding:0 0 5px 2px; }
+  body.client-profile-page .showcase-avatar,
+  body.therapist-profile-page .showcase-avatar,
+  body.admin-profile-page .showcase-avatar { flex-basis:43px; width:43px; height:43px; margin-top:-23px; border-width:2px; font-size:17px; }
+  body.client-profile-page .showcase-person,
+  body.therapist-profile-page .showcase-person,
+  body.admin-profile-page .showcase-person { margin:0 0 0 4px; }
+  body.client-profile-page .showcase-person h2,
+  body.therapist-profile-page .showcase-person h2,
+  body.admin-profile-page .showcase-person h2 { margin:0; font-size:15px; line-height:1.05; }
+  body.client-profile-page .showcase-person p,
+  body.client-profile-page .showcase-person a,
+  body.therapist-profile-page .showcase-person p,
+  body.therapist-profile-page .showcase-person a,
+  body.admin-profile-page .showcase-person p,
+  body.admin-profile-page .showcase-person a { margin:1px 0; font-size:6px; }
+  body.client-profile-page .showcase-links,
+  body.therapist-profile-page .showcase-links,
+  body.admin-profile-page .showcase-links { gap:5px; margin:3px 0 0 auto; }
+  body.client-profile-page .edit-profile-btn,
+  body.therapist-profile-page .edit-profile-btn,
+  body.admin-profile-page .edit-profile-btn { padding:4px 7px; font-size:6px; }
+  body.client-profile-page .showcase-links>a,
+  body.therapist-profile-page .showcase-links>a,
+  body.admin-profile-page .showcase-links>a { font-size:5px; }
+  body.client-profile-page .showcase-info-card,
+  body.therapist-profile-page .showcase-info-card,
+  body.admin-profile-page .showcase-info-card { padding:5px 6px; border-radius:7px; }
+  body.client-profile-page .showcase-info-card h3,
+  body.therapist-profile-page .showcase-info-card h3,
+  body.admin-profile-page .showcase-info-card h3 { margin-bottom:3px; font-size:8px; }
+  body.client-profile-page .showcase-info-card p,
+  body.client-profile-page .showcase-info-card small,
+  body.therapist-profile-page .showcase-info-card p,
+  body.therapist-profile-page .showcase-info-card small,
+  body.admin-profile-page .showcase-info-card p,
+  body.admin-profile-page .showcase-info-card small { margin-bottom:3px; font-size:5px; line-height:1.35; }
+  body.client-profile-page .client-about-card { margin:0; padding:6px; }
+  body.client-profile-page .client-about-card p { font-size:5.5px; line-height:1.4; }
+  body.therapist-profile-page .showcase-info-grid,
+  body.admin-profile-page .showcase-info-grid { grid-template-columns:minmax(0,.8fr) minmax(0,1.3fr); gap:5px; }
+  body.therapist-profile-page .profile-detail-row,
+  body.admin-profile-page .profile-detail-row { gap:3px; margin:3px 0; font-size:5px; }
+  body.therapist-profile-page .profile-detail-row span,
+  body.admin-profile-page .profile-detail-row span { padding:2px 4px; }
+}
+
 /* Header Elements */
 .page-top-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
 .header-title-group { display: flex; align-items: center; gap: 14px; }
