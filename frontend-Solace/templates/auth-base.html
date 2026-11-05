@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Solace{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/auth.css') }}">
+</head>
+<body class="auth-body">
+  <main class="page">
+    <section class="glass-card">
+      <img class="logo" src="{{ url_for('static', filename='img/auth-logo.png') }}" alt="Solace">
+      {% block content %}{% endblock %}
+    </section>
+  </main>
+  <script src="{{ url_for('static', filename='js/auth.js') }}"></script>
+</body>
+</html>
