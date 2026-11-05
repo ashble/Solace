@@ -2,7 +2,7 @@ import os
 import json
 import sqlite3
 from contextlib import contextmanager
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 
 from flask import (
     Flask,
@@ -29,7 +29,8 @@ if os.path.isdir(os.path.join(FRONTEND_DIR, "templates")):
 else:
     TEMPLATES_DIR = os.path.join(CURRENT_DIR, "templates")
 
-# Auto-detect the directory containing styles.css.
+# Auto-detect the directory containing styles.css (used by the old pages
+# through the /styles.css route below).
 if os.path.isfile(os.path.join(FRONTEND_DIR, "static", "css", "styles.css")):
     STATIC_DIR = os.path.join(FRONTEND_DIR, "static", "css")
 elif os.path.isfile(os.path.join(FRONTEND_DIR, "static", "styles.css")):
@@ -39,10 +40,17 @@ elif os.path.isdir(os.path.join(CURRENT_DIR, "static")):
 else:
     STATIC_DIR = CURRENT_DIR
 
+# The Flask static folder is the whole frontend static directory, so
+# url_for('static', filename='css/solace.css') resolves correctly.
+if os.path.isdir(os.path.join(FRONTEND_DIR, "static")):
+    FLASK_STATIC_DIR = os.path.join(FRONTEND_DIR, "static")
+else:
+    FLASK_STATIC_DIR = STATIC_DIR
+
 app = Flask(
     __name__,
     template_folder=TEMPLATES_DIR,
-    static_folder=STATIC_DIR,
+    static_folder=FLASK_STATIC_DIR,
     static_url_path="/static",
 )
 
@@ -123,7 +131,7 @@ init_db()
 # 3. STATIC FILE ROUTES
 # ==========================================
 
-# Supports pages that use href="styles.css".
+# Supports older pages that use href="styles.css".
 @app.route("/styles.css")
 @app.route("/<path:subpath>/styles.css")
 def serve_css(subpath=None):
@@ -137,10 +145,58 @@ def serve_sean_page_scripts():
 
 
 # ==========================================
-# 4. CLIENT ROUTES
+# 4. HELPERS
+# ==========================================
+
+def display_appointment_date(value):
+    try:
+        parsed = date.fromisoformat(value)
+        return f"{parsed.strftime('%B')} {parsed.day}, {parsed.year}"
+    except (TypeError, ValueError):
+        return value
+
+
+def appointment_sort_key(date_value, time_value):
+    try:
+        parsed = datetime.strptime(
+            f"{date_value} {time_value}",
+            "%Y-%m-%d %I:%M %p",
+        )
+        return parsed.timestamp()
+    except (TypeError, ValueError):
+        return 0
+
+
+def next_appointment():
+    """Return the soonest non-cancelled appointment from today on, or None."""
+    with get_db() as db:
+        row = db.execute(
+            """
+            SELECT * FROM appointments
+            WHERE status != 'Cancelled' AND date >= ?
+            ORDER BY date, time
+            LIMIT 1
+            """,
+            (date.today().isoformat(),),
+        ).fetchone()
+
+    if not row:
+        return None
+
+    item = dict(row)
+    item["display_date"] = display_appointment_date(item["date"])
+    return item
+
+
+# ==========================================
+# 5. STARTER AND CLIENT ROUTES
 # ==========================================
 
 @app.route("/")
+def starter():
+    return render_template("starter.html")
+
+
 @app.route("/client")
 def client_dashboard():
     user = {
@@ -150,15 +206,16 @@ def client_dashboard():
     }
 
     return render_template(
-        "index.html",
+        "Client-dashboard.html",
         role="client",
         active_tab="dashboard",
         user=user,
+        upcoming=next_appointment(),
     )
 
 
 # ==========================================
-# 5. PROFILE DEFAULTS AND HELPERS
+# 6. PROFILE DEFAULTS AND HELPERS
 # ==========================================
 
 PROFILE_DEFAULTS = {
@@ -220,28 +277,60 @@ def saved_profile(role):
     return {**PROFILE_DEFAULTS[role], **saved_data}
 
 
-def display_appointment_date(value):
-    try:
-        parsed = date.fromisoformat(value)
-        return f"{parsed.strftime('%B')} {parsed.day}, {parsed.year}"
-    except (TypeError, ValueError):
-        return value
+# ==========================================
+# 7. THERAPIST ROUTES
+# ==========================================
 
+@app.route("/therapist")
+def therapist_home():
+    today = date.today()
 
-def appointment_sort_key(date_value, time_value):
-    try:
-        parsed = datetime.strptime(
-            f"{date_value} {time_value}",
-            "%Y-%m-%d %I:%M %p",
+    calendar_days = []
+    for offset in range(-3, 11):
+        day = today + timedelta(days=offset)
+        calendar_days.append(
+            {
+                "day": day.strftime("%a"),
+                "date": day.day,
+                "iso": day.isoformat(),
+                "active": offset == 0,
+            }
         )
-        return parsed.timestamp()
-    except (TypeError, ValueError):
-        return 0
 
+    status_map = {"Confirmed": "Approved", "Pending": "Pending"}
 
-# ==========================================
-# 6. THERAPIST ROUTES
-# ==========================================
+    with get_db() as db:
+        rows = db.execute(
+            "SELECT * FROM appointments ORDER BY created_at DESC LIMIT 3"
+        ).fetchall()
+
+    notifications = [
+        {
+            "id": row["client"],
+            "duration": (
+                f"{display_appointment_date(row['date'])}, {row['time']}"
+            ),
+            "status": status_map.get(row["status"], "In Progress"),
+        }
+        for row in rows
+    ]
+
+    user = {
+        "name": "Dr. Rizzler",
+        "display_name": "Dr. BBno$",
+        "role": "Therapist",
+    }
+
+    return render_template(
+        "Therapist-dashboard.html",
+        role="therapist",
+        active_tab="dashboard",
+        user=user,
+        upcoming=next_appointment(),
+        calendar_days=calendar_days,
+        notifications=notifications,
+    )
+
 
 @app.route("/therapist/bookings")
 def therapist_bookings():
@@ -346,13 +435,8 @@ def therapist_appointments():
     )
 
 
-@app.route("/therapist")
-def therapist_home():
-    return redirect("/therapist/appointments")
-
-
 # ==========================================
-# 7. PROFILE AND SETTINGS ROUTES
+# 8. PROFILE AND SETTINGS ROUTES
 # ==========================================
 
 @app.route("/profile")
@@ -441,7 +525,7 @@ def update_profile(role):
 
 
 # ==========================================
-# 8. APPOINTMENT API ROUTES
+# 9. APPOINTMENT API ROUTES
 # ==========================================
 
 @app.route("/api/appointments", methods=["POST"])
@@ -536,7 +620,7 @@ def update_appointment(appointment_id):
 
 
 # ==========================================
-# 9. RUN THE APPLICATION
+# 10. RUN THE APPLICATION
 # ==========================================
 
 if __name__ == "__main__":
