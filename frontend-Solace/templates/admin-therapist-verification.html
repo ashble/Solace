@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Solace - Therapist Verification (Admin)</title>
+<!-- Google Fonts: Playfair Display (Serif) & Plus Jakarta Sans (Sans-serif) -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<style data-purpose="custom-scrollbars-and-accents">
+    /* Page colours and fonts - edit the page background, text colour and typefaces here */
+    body {
+      background-color: #FAF8FC;
+      color: #2C2738;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+    .serif-title {
+      font-family: 'Playfair Display', Georgia, serif;
+    }
+    /* Popup background (dark blur) - modals are shown by adding .modal-active */
+    .modal-backdrop-custom {
+      display: none;
+      background-color: rgba(44, 39, 56, 0.45);
+      backdrop-filter: blur(3px);
+    }
+    .modal-active {
+      display: flex !important;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.97); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    .animate-modal-pop {
+      animation: fadeIn 0.18s ease-out forwards;
+    }
+  </style>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><link rel="stylesheet" href="../static/css/admin-therapist-verification.css"/>
+</head>
+<body class="h-screen w-screen overflow-hidden flex select-none text-sm">
+<!-- BEGIN: Sidebar -->
+<aside class="w-[230px] flex-shrink-0 bg-[#E6DBED] flex flex-col justify-between py-6 px-4 border-r border-[#D9CBE4]" data-purpose="sidebar-navigation">
+<div>
+<!-- Brand Logo -->
+<div class="px-3 mb-8 flex items-center justify-start gap-1.5" data-purpose="brand-logo">
+<h1 class="serif-title text-2xl tracking-[0.2em] font-bold text-[#3B3045] flex items-center">
+          S<span class="text-[#D39E42] text-xl mx-0.5 inline-block -translate-y-0.5">☼</span>LACE
+        </h1>
+</div>
+<!-- Nav Items -->
+<nav aria-label="Main Navigation" class="space-y-1.5 font-medium text-[13px] text-[#4F445B]">
+<!-- Dashboard -->
+<a class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl hover:bg-white/40 transition-colors" href="#">
+<svg class="w-4 h-4 opacity-80" fill="none" stroke="currentColor" stroke-width="1.8" viewbox="0 0 24 24">
+<path d="M3 10.5l9-7 9 7v9.5a1 1 0 01-1 1h-5v-6h-6v6H4a1 1 0 01-1-1v-9.5z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+          Dashboard
+        </a>
+<!-- My Sessions -->
+<a class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl hover:bg-white/40 transition-colors" href="#">
+<svg class="w-4 h-4 opacity-80" fill="none" stroke="currentColor" stroke-width="1.8" viewbox="0 0 24 24">
+<path d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+          My Sessions
+        </a>
+<!-- My Clients -->
+<a class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl hover:bg-white/40 transition-colors" href="#">
+<svg class="w-4 h-4 opacity-80" fill="none" stroke="currentColor" stroke-width="1.8" viewbox="0 0 24 24">
+<path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+          My Clients
+        </a>
+<!-- My Schedule -->
+<a class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl hover:bg-white/40 transition-colors" href="#">
+<svg class="w-4 h-4 opacity-80" fill="none" stroke="currentColor" stroke-width="1.8" viewbox="0 0 24 24">
+<path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+          My Schedule
+        </a>
+<!-- Session History -->
+<a class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl hover:bg-white/40 transition-colors" href="#">
+<svg class="w-4 h-4 opacity-80" fill="none" stroke="currentColor" stroke-width="1.8" viewbox="0 0 24 24">
+<path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+          Session History
+        </a>
+<!-- Therapist Verification (Active) -->
+<a class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl bg-[#C5AEE0] font-semibold text-[#2C2138] shadow-sm" href="#">
+<svg class="w-4 h-4 text-[#432A60]" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+          Therapist Verification
+        </a>
+<!-- Profile -->
+<a class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl hover:bg-white/40 transition-colors" href="#">
+<svg class="w-4 h-4 opacity-80" fill="none" stroke="currentColor" stroke-width="1.8" viewbox="0 0 24 24">
+<path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+          Profile
+        </a>
+<!-- Settings -->
+<a class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl hover:bg-white/40 transition-colors" href="#">
+<svg class="w-4 h-4 opacity-80" fill="none" stroke="currentColor" stroke-width="1.8" viewbox="0 0 24 24">
+<path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" stroke-linecap="round" stroke-linejoin="round"></path>
+<path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+          Settings
+        </a>
+</nav>
+</div>
+<!-- Bottom Logout -->
+<div class="px-3 pt-4 border-t border-[#D9CBE4]/60">
+<button class="flex items-center gap-2 text-[#E05252] hover:text-[#C73E3E] font-medium transition-colors text-xs uppercase tracking-wider">
+<svg class="w-4 h-4 rotate-180" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+        LOG OUT
+      </button>
+</div>
+</aside>
+<!-- END: Sidebar -->
+<!-- BEGIN: MainContent Area -->
+<main class="flex-1 flex flex-col h-full bg-[#FAF8FC] overflow-y-auto" data-purpose="primary-workspace">
+<!-- Top Header Bar -->
+<header class="h-16 px-8 flex items-center justify-between flex-shrink-0" data-purpose="page-header">
+<!-- Title & Icon -->
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-[#E5D7EE] flex items-center justify-center text-[#553C6E]">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</div>
+<h2 class="serif-title text-xl font-semibold text-[#2D2338]">Therapist Verification</h2>
+</div>
+<!-- User Capsule Badge -->
+<div class="flex items-center gap-2.5 bg-[#DDD0E8] py-1 pl-1.5 pr-4 rounded-full shadow-sm" data-purpose="current-user-card">
+<div class="avatar avatar-sm border border-white/60" data-avatar-from="current-user-name"></div>
+<div class="flex flex-col leading-tight">
+<span class="text-xs font-semibold text-[#30253B]" id="current-user-name">Sylus Qin</span>
+<span class="text-[10px] text-[#5E516C] -mt-0.5">Admin</span>
+</div>
+</div>
+</header>
+<!-- Main View Canvas -->
+<div class="p-8 pt-2 flex-1 flex flex-col space-y-5">
+<!-- Filter Status Pills: each button filters the table by status (see "Status Filter Tabs Logic" in the script) -->
+<div class="flex items-center gap-3.5" data-purpose="status-filters" id="status-filter-group">
+<button class="filter-pill px-6 py-2 rounded-xl text-xs font-medium cursor-pointer transition shadow-sm bg-[#B89ECC] text-white border border-[#B89ECC]" data-filter="all" onclick="filterByStatus('all')">All</button>
+<button class="filter-pill px-6 py-2 rounded-xl text-xs font-medium cursor-pointer transition bg-white text-[#705615] border border-[#E9C369]/40 hover:bg-[#FCECB8]/30" data-filter="Pending" onclick="filterByStatus('Pending')">Pending</button>
+<button class="filter-pill px-6 py-2 rounded-xl text-xs font-medium cursor-pointer transition bg-white text-[#864A1F] border border-[#FDE2CF] hover:bg-[#FDE2CF]/40" data-filter="In Review" onclick="filterByStatus('In Review')">In Review</button>
+<button class="filter-pill px-6 py-2 rounded-xl text-xs font-medium cursor-pointer transition bg-white text-[#246332] border border-[#D3EED8] hover:bg-[#D3EED8]/40" data-filter="Approved" onclick="filterByStatus('Approved')">Approved</button>
+<button class="filter-pill px-6 py-2 rounded-xl text-xs font-medium cursor-pointer transition bg-white text-[#8A2929] border border-[#F9C3C3] hover:bg-[#F9C3C3]/40" data-filter="Rejected" onclick="filterByStatus('Rejected')">Rejected</button>
+</div>
+<!-- Verification Table Card Container -->
+<div class="bg-white rounded-2xl border border-[#ECE5F2] shadow-sm flex-1 flex flex-col justify-between overflow-hidden" data-purpose="verification-table-card">
+<!-- Table Area: each row's data-id links to therapistsData in the script, and data-status drives the filters -->
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse text-xs">
+<thead>
+<tr class="border-b border-[#ECE5F2] text-[#857B94] font-medium">
+<th class="py-4 px-6 font-medium">User</th>
+<th class="py-4 px-6 font-medium">Specialty</th>
+<th class="py-4 px-6 font-medium text-center">Status</th>
+<th class="py-4 px-6 font-medium">Verification Status</th>
+<th class="py-4 px-6 font-medium text-center">Action</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-[#F3EDF8] text-[#342A42]" id="therapist-table-body">
+<tr class="therapist-row hover:bg-[#FAF8FC]/70 transition-colors" data-id="1" data-status="Pending">
+<td class="py-4 px-6 font-medium text-[13px] text-[#2B2337] flex items-center gap-3">
+<div class="avatar avatar-md border border-[#DDD0E8]" data-avatar-auto></div>
+<span>Dr. Zayne Li</span>
+</td>
+<td class="py-4 px-6 text-[#6B6179]">Anxiety, Depression</td>
+<td class="py-4 px-6 text-center status-badge-cell">
+<span class="inline-block px-3 py-0.5 rounded-full text-[11px] font-medium border border-[#E9C369] text-[#785918] bg-[#FFFBF0]">Pending</span>
+</td>
+<td class="py-4 px-6 text-[#584D67] verification-status-cell">Ongoing</td>
+<td class="py-4 px-6 text-center">
+<button class="action-btn px-4 py-1 rounded-full text-[11px] font-medium border border-[#3A2D4A] text-[#2E233E] hover:bg-[#2E233E] hover:text-white transition-all shadow-xs cursor-pointer" onclick="openReviewModal(1)">Review</button>
+</td>
+</tr>
+<tr class="therapist-row hover:bg-[#FAF8FC]/70 transition-colors" data-id="2" data-status="Pending">
+<td class="py-4 px-6 font-medium text-[13px] text-[#2B2337] flex items-center gap-3">
+<div class="avatar avatar-md border border-[#DDD0E8]" data-avatar-auto></div>
+<span>Dr. Clara Oswald</span>
+</td>
+<td class="py-4 px-6 text-[#6B6179]">Trauma &amp; PTSD</td>
+<td class="py-4 px-6 text-center status-badge-cell">
+<span class="inline-block px-3 py-0.5 rounded-full text-[11px] font-medium border border-[#E9C369] text-[#785918] bg-[#FFFBF0]">Pending</span>
+</td>
+<td class="py-4 px-6 text-[#584D67] verification-status-cell">Ongoing</td>
+<td class="py-4 px-6 text-center">
+<button class="action-btn px-4 py-1 rounded-full text-[11px] font-medium border border-[#3A2D4A] text-[#2E233E] hover:bg-[#2E233E] hover:text-white transition-all shadow-xs cursor-pointer" onclick="openReviewModal(2)">Review</button>
+</td>
+</tr>
+<tr class="therapist-row hover:bg-[#FAF8FC]/70 transition-colors" data-id="3" data-status="In Review">
+<td class="py-4 px-6 font-medium text-[13px] text-[#2B2337] flex items-center gap-3">
+<div class="avatar avatar-md border border-[#DDD0E8]" data-avatar-auto></div>
+<span>Dr. Heinz Doofenshmirtz</span>
+</td>
+<td class="py-4 px-6 text-[#6B6179]">Behavioral Therapy</td>
+<td class="py-4 px-6 text-center status-badge-cell">
+<span class="inline-block px-3 py-0.5 rounded-full text-[11px] font-medium border border-[#FDE2CF] text-[#864A1F] bg-[#FFFBF0]">In Review</span>
+</td>
+<td class="py-4 px-6 text-[#584D67] verification-status-cell">Under Evaluation</td>
+<td class="py-4 px-6 text-center">
+<button class="action-btn px-4 py-1 rounded-full text-[11px] font-medium border border-[#3A2D4A] text-[#2E233E] hover:bg-[#2E233E] hover:text-white transition-all shadow-xs cursor-pointer" onclick="openReviewModal(3)">Review</button>
+</td>
+</tr>
+<tr class="therapist-row hover:bg-[#FAF8FC]/70 transition-colors" data-id="4" data-status="In Review">
+<td class="py-4 px-6 font-medium text-[13px] text-[#2B2337] flex items-center gap-3">
+<div class="avatar avatar-md border border-[#DDD0E8]" data-avatar-auto></div>
+<span>Dr. Meredith Grey</span>
+</td>
+<td class="py-4 px-6 text-[#6B6179]">Clinical Psychiatry</td>
+<td class="py-4 px-6 text-center status-badge-cell">
+<span class="inline-block px-3 py-0.5 rounded-full text-[11px] font-medium border border-[#FDE2CF] text-[#864A1F] bg-[#FFFBF0]">In Review</span>
+</td>
+<td class="py-4 px-6 text-[#584D67] verification-status-cell">Under Evaluation</td>
+<td class="py-4 px-6 text-center">
+<button class="action-btn px-4 py-1 rounded-full text-[11px] font-medium border border-[#3A2D4A] text-[#2E233E] hover:bg-[#2E233E] hover:text-white transition-all shadow-xs cursor-pointer" onclick="openReviewModal(4)">Review</button>
+</td>
+</tr>
+<tr class="therapist-row hover:bg-[#FAF8FC]/70 transition-colors" data-id="5" data-status="Approved">
+<td class="py-4 px-6 font-medium text-[13px] text-[#2B2337] flex items-center gap-3">
+<div class="avatar avatar-md border border-[#DDD0E8]" data-avatar-auto></div>
+<span>Dr. Shaun Murphy</span>
+</td>
+<td class="py-4 px-6 text-[#6B6179]">Youth Psychology</td>
+<td class="py-4 px-6 text-center status-badge-cell">
+<span class="inline-block px-3 py-0.5 rounded-full text-[11px] font-medium border border-[#BCE1C4] text-[#246332] bg-[#D4F1DA]">Approved</span>
+</td>
+<td class="py-4 px-6 text-[#584D67] verification-status-cell">Verified</td>
+<td class="py-4 px-6 text-center">
+<button class="action-btn px-4 py-1 rounded-full text-[11px] font-medium border border-[#CEC3D9] text-[#4E3F63] hover:bg-[#F2EDF8] transition-all shadow-xs cursor-pointer" onclick="openReviewModal(5)">View Details</button>
+</td>
+</tr>
+<tr class="therapist-row hover:bg-[#FAF8FC]/70 transition-colors" data-id="6" data-status="Approved">
+<td class="py-4 px-6 font-medium text-[13px] text-[#2B2337] flex items-center gap-3">
+<div class="avatar avatar-md border border-[#DDD0E8]" data-avatar-auto></div>
+<span>Dr. Gregory House</span>
+</td>
+<td class="py-4 px-6 text-[#6B6179]">Diagnostics &amp; Neuropsychology</td>
+<td class="py-4 px-6 text-center status-badge-cell">
+<span class="inline-block px-3 py-0.5 rounded-full text-[11px] font-medium border border-[#BCE1C4] text-[#246332] bg-[#D4F1DA]">Approved</span>
+</td>
+<td class="py-4 px-6 text-[#584D67] verification-status-cell">Verified</td>
+<td class="py-4 px-6 text-center">
+<button class="action-btn px-4 py-1 rounded-full text-[11px] font-medium border border-[#CEC3D9] text-[#4E3F63] hover:bg-[#F2EDF8] transition-all shadow-xs cursor-pointer" onclick="openReviewModal(6)">View Details</button>
+</td>
+</tr>
+<tr class="therapist-row hover:bg-[#FAF8FC]/70 transition-colors" data-id="7" data-status="Rejected">
+<td class="py-4 px-6 font-medium text-[13px] text-[#2B2337] flex items-center gap-3">
+<div class="avatar avatar-md border border-[#DDD0E8]" data-avatar-auto></div>
+<span>Dr. Hannibal Lecter</span>
+</td>
+<td class="py-4 px-6 text-[#6B6179]">Forensic Psychology</td>
+<td class="py-4 px-6 text-center status-badge-cell">
+<span class="inline-block px-3 py-0.5 rounded-full text-[11px] font-medium border border-[#E9AFAF] text-[#8A2929] bg-[#F9C3C3]/40">Rejected</span>
+</td>
+<td class="py-4 px-6 text-[#584D67] verification-status-cell">Failed Verification</td>
+<td class="py-4 px-6 text-center">
+<button class="action-btn px-4 py-1 rounded-full text-[11px] font-medium border border-[#CEC3D9] text-[#4E3F63] hover:bg-[#F2EDF8] transition-all shadow-xs cursor-pointer" onclick="openReviewModal(7)">View Reason</button>
+</td>
+</tr>
+<tr class="therapist-row hover:bg-[#FAF8FC]/70 transition-colors" data-id="8" data-status="Rejected">
+<td class="py-4 px-6 font-medium text-[13px] text-[#2B2337] flex items-center gap-3">
+<div class="avatar avatar-md border border-[#DDD0E8]" data-avatar-auto></div>
+<span>Dr. Walter White</span>
+</td>
+<td class="py-4 px-6 text-[#6B6179]">Substance Abuse &amp; Pharmacology</td>
+<td class="py-4 px-6 text-center status-badge-cell">
+<span class="inline-block px-3 py-0.5 rounded-full text-[11px] font-medium border border-[#E9AFAF] text-[#8A2929] bg-[#F9C3C3]/40">Rejected</span>
+</td>
+<td class="py-4 px-6 text-[#584D67] verification-status-cell">Failed Verification</td>
+<td class="py-4 px-6 text-center">
+<button class="action-btn px-4 py-1 rounded-full text-[11px] font-medium border border-[#CEC3D9] text-[#4E3F63] hover:bg-[#F2EDF8] transition-all shadow-xs cursor-pointer" onclick="openReviewModal(8)">View Reason</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Table Footer / Pagination -->
+<div class="px-6 py-4 border-t border-[#ECE5F2] flex items-center justify-between text-xs text-[#7B708A]" data-purpose="table-pagination">
+<div><span id="pagination-summary">Showing 1–8 of 8 users</span></div>
+<div class="flex items-center gap-1.5 font-medium text-[#463955]">
+<button class="w-7 h-7 flex items-center justify-center rounded-md border border-[#E6DEEE] hover:bg-[#F2EDF8] transition">←</button>
+<button class="w-7 h-7 flex items-center justify-center rounded-md border border-[#C5AEE0] bg-[#F5F0FA] text-[#2F243E] font-semibold">1</button>
+<button class="w-7 h-7 flex items-center justify-center rounded-md border border-[#E6DEEE] hover:bg-[#F2EDF8] transition">2</button>
+<button class="w-7 h-7 flex items-center justify-center rounded-md border border-[#E6DEEE] hover:bg-[#F2EDF8] transition">3</button>
+<button class="w-7 h-7 flex items-center justify-center rounded-md border border-[#E6DEEE] hover:bg-[#F2EDF8] transition">4</button>
+<span class="px-1 text-gray-400">...</span>
+<button class="w-7 h-7 flex items-center justify-center rounded-md border border-[#E6DEEE] hover:bg-[#F2EDF8] transition">→</button>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- END: MainContent Area -->
+<!-- BEGIN: Therapist Detail Review Modal (#reviewModalOverlay) - filled in by openReviewModal(); holds the Approve / Reject buttons -->
+<div class="fixed inset-0 modal-backdrop-custom z-[9999] items-center justify-center p-4" id="reviewModalOverlay" onclick="handleOverlayClick(event, 'reviewModalOverlay')">
+<div class="bg-white rounded-3xl w-full max-w-4xl max-h-[92vh] overflow-y-auto shadow-2xl border border-[#E9E1F0] flex flex-col p-8 relative animate-modal-pop" data-purpose="therapist-verification-detail" onclick="event.stopPropagation()">
+<!-- Modal Header -->
+<div class="flex items-center justify-between border-b border-[#F0EAF5] pb-5">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-[#E5D7EE] flex items-center justify-center text-[#553C6E]">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</div>
+<h3 class="serif-title text-xl font-semibold text-[#2D2338]">Therapist Verification Review</h3>
+</div>
+<button class="text-gray-400 hover:text-gray-600 transition p-1.5 rounded-full hover:bg-gray-100 cursor-pointer" onclick="closeModal('reviewModalOverlay')">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</button>
+</div>
+<!-- Modal Profile Info -->
+<div class="pt-6 pb-4">
+<div class="flex items-center justify-between mb-6">
+<div class="flex items-center gap-5">
+<div class="avatar avatar-xl border-2 border-[#DDD0E8] shadow-sm" id="modal-avatar"></div>
+<div>
+<h4 class="serif-title text-xl font-bold text-[#2A2036]" id="modal-name">Dr. Zayne Li</h4>
+<p class="text-xs text-[#7A6F87] font-medium mt-0.5" id="modal-role">Licensed Clinical Therapist</p>
+<p class="text-xs text-[#7A6F87]" id="modal-specialty">Anxiety · Depression</p>
+</div>
+</div>
+<div id="modal-status-badge">
+<span class="inline-block px-3.5 py-1 rounded-full text-xs font-medium border border-[#E9C369] text-[#785918] bg-[#FFFBF0]">Pending Review</span>
+</div>
+</div>
+<!-- Rejection Reason Banner (Shown if rejected) -->
+<div class="hidden mb-6 p-4 rounded-2xl bg-[#FDECEC] border border-[#E9AFAF] text-xs text-[#8A2929]" id="modal-rejection-banner">
+<div class="font-semibold flex items-center gap-1.5 mb-1">
+<span class="material-symbols-outlined text-[17px]">warning</span> Verification Notice / Reason
+        </div>
+<p class="text-[#A63030]" id="modal-rejection-text">Credentials expired or unverified by board registrar.</p>
+</div>
+<!-- Detail Metric Chips -->
+<div class="grid grid-cols-3 gap-6 py-4 px-6 bg-[#FAF7FC] rounded-2xl border border-[#EFE8F5] mb-8 text-center sm:text-left">
+<div>
+<div class="text-[11px] text-[#867B94] font-medium">License No.</div>
+<div class="text-xs font-semibold text-[#2C213B] mt-0.5" id="modal-license">LIC-12345</div>
+</div>
+<div>
+<div class="text-[11px] text-[#867B94] font-medium">Experience</div>
+<div class="text-xs font-semibold text-[#2C213B] mt-0.5" id="modal-experience">6 Years</div>
+</div>
+<div>
+<div class="text-[11px] text-[#867B94] font-medium">Office Hours</div>
+<div class="text-xs font-semibold text-[#2C213B] mt-0.5" id="modal-hours">8:00 AM - 5:00 PM</div>
+</div>
+</div>
+<!-- Uploaded Credentials Area -->
+<div class="space-y-3">
+<h5 class="text-xs font-semibold text-[#483B5A] mb-3 flex items-center justify-between">
+<span>Uploaded Credentials &amp; Board Certificates</span>
+<span class="text-[11px] font-normal text-[#7A6F87]">Click 'Preview' to view verified official documents</span>
+</h5>
+<div class="flex items-center justify-between p-3.5 rounded-xl border border-[#EDE5F4] bg-[#FCFBFD] hover:bg-white transition-all">
+<div class="flex items-center gap-3">
+<svg class="w-5 h-5 text-[#6D5D82]" fill="none" stroke="currentColor" stroke-width="1.8" viewbox="0 0 24 24">
+<path d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<div>
+<span class="text-xs font-medium text-[#372B47] block" id="modal-doc1-name">Professional License.pdf</span>
+<span class="text-[10px] text-[#867B94]">State Clinical Board Seal · Certified PDF · 2.4 MB</span>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<span class="px-2.5 py-0.5 rounded-full text-[10px] font-semibold text-[#276435] bg-[#D4F1DA] border border-[#BCE1C4]" id="modal-doc1-status">Attached</span>
+<button class="px-3.5 py-1 text-xs rounded-full border border-[#CEC3D9] text-[#4E3F63] hover:bg-[#F2EDF8] transition cursor-pointer font-medium" onclick="previewDoc('license')">Preview</button>
+</div>
+</div>
+<div class="flex items-center justify-between p-3.5 rounded-xl border border-[#EDE5F4] bg-[#FCFBFD] hover:bg-white transition-all">
+<div class="flex items-center gap-3">
+<svg class="w-5 h-5 text-[#6D5D82]" fill="none" stroke="currentColor" stroke-width="1.8" viewbox="0 0 24 24">
+<path d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<div>
+<span class="text-xs font-medium text-[#372B47] block" id="modal-doc2-name">Degree Certification.pdf</span>
+<span class="text-[10px] text-[#867B94]">Doctoral Accreditation · University Registry · 4.1 MB</span>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<span class="px-2.5 py-0.5 rounded-full text-[10px] font-semibold text-[#276435] bg-[#D4F1DA] border border-[#BCE1C4]" id="modal-doc2-status">Attached</span>
+<button class="px-3.5 py-1 text-xs rounded-full border border-[#CEC3D9] text-[#4E3F63] hover:bg-[#F2EDF8] transition cursor-pointer font-medium" onclick="previewDoc('degree')">Preview</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Actions Footer -->
+<div class="mt-8 pt-5 border-t border-[#F0EAF5] flex items-center justify-between" id="modal-action-bar">
+<div>
+<span class="text-xs text-[#8A7F99]" id="modal-decision-state">Status: Under Review</span>
+</div>
+<div class="flex items-center gap-3">
+<button class="px-6 py-2 rounded-xl text-xs font-semibold border border-[#E9AFAF] text-[#C13A3A] hover:bg-[#FDECEC] transition cursor-pointer" onclick="openRejectDialog()">Reject Application</button>
+<button class="px-6 py-2 rounded-xl text-xs font-semibold bg-[#CCE8CE] hover:bg-[#BFDEC1] text-[#246633] transition shadow-xs cursor-pointer" onclick="openApproveDialog()">Approve Application</button>
+</div>
+</div>
+</div>
+</div>
+<!-- END: Therapist Detail Review Modal -->
+<!-- BEGIN: Document Preview Modal -->
+<div class="fixed inset-0 modal-backdrop-custom z-[10002] items-center justify-center p-4" id="docPreviewModal" onclick="handleOverlayClick(event, 'docPreviewModal')">
+<div class="bg-white rounded-3xl w-full max-w-2xl shadow-2xl border border-[#E7DEEF] flex flex-col overflow-hidden animate-modal-pop" onclick="event.stopPropagation()">
+<!-- Header -->
+<div class="px-6 py-4 border-b border-[#ECE4F2] flex items-center justify-between bg-[#FAF7FC]">
+<div class="flex items-center gap-2.5">
+<div class="w-8 h-8 rounded-full bg-[#E5D7EE] flex items-center justify-center text-[#553C6E]">
+<span class="material-symbols-outlined text-[18px]">verified</span>
+</div>
+<div>
+<h4 class="font-semibold text-sm text-[#2C2138]" id="preview-doc-title">State Board Medical License</h4>
+<p class="text-[11px] text-[#7E738C]" id="preview-doc-subtitle">Official Credential Verification Record</p>
+</div>
+</div>
+<button class="text-gray-400 hover:text-gray-600 transition p-1.5 rounded-full hover:bg-gray-100 cursor-pointer" onclick="closeModal('docPreviewModal')">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</button>
+</div>
+<!-- Certificate Visual Preview -->
+<div class="p-8 bg-[#F6F4F9] flex items-center justify-center">
+<div class="w-full bg-[#FFFEFA] rounded-2xl border-4 border-double border-[#D4C3A3] p-8 shadow-md relative text-center">
+<!-- Corner embellishment -->
+<div class="absolute top-3 left-3 text-[#C9A96E] text-xs">❖</div>
+<div class="absolute top-3 right-3 text-[#C9A96E] text-xs">❖</div>
+<div class="absolute bottom-3 left-3 text-[#C9A96E] text-xs">❖</div>
+<div class="absolute bottom-3 right-3 text-[#C9A96E] text-xs">❖</div>
+<div class="uppercase tracking-[0.25em] text-[11px] text-[#8C764E] font-semibold mb-1">State Board of Behavioral Health &amp; Sciences</div>
+<h3 class="serif-title text-xl font-bold text-[#352842] mb-3" id="preview-doc-certname">Certificate of Professional Licensure</h3>
+<p class="text-xs text-[#736A7D] max-w-md mx-auto mb-4 leading-relaxed">
+          This is to certify that
+          <span class="font-semibold text-[#2C2138] block text-sm my-1 serif-title" id="preview-doc-therapist">Dr. Zayne Li</span>
+          has fulfilled all state statutory clinical prerequisites and examinations in
+          <span class="font-semibold text-[#4A3B5D]" id="preview-doc-specialty">Psychiatry &amp; Mental Health Counseling</span>.
+        </p>
+<div class="grid grid-cols-3 gap-4 pt-4 border-t border-[#EFE5D3] text-left text-xs text-[#5E5569] mb-4">
+<div>
+<span class="block text-[10px] text-[#9A8B73] uppercase">Credential ID</span>
+<span class="font-mono font-bold text-[#2E243A]" id="preview-doc-license-id">LIC-98421-MD</span>
+</div>
+<div>
+<span class="block text-[10px] text-[#9A8B73] uppercase">Issue Date</span>
+<span class="font-medium text-[#2E243A]">May 14, 2021</span>
+</div>
+<div>
+<span class="block text-[10px] text-[#9A8B73] uppercase">Expiration</span>
+<span class="font-medium text-[#2E243A]">May 14, 2027</span>
+</div>
+</div>
+<!-- Gold Seal Stamp Mock -->
+<div class="flex items-center justify-between pt-2">
+<div class="text-left text-[10px] text-[#867894]">
+            Official Electronic Validation • Solace Healthcare Network
+          </div>
+<div class="w-14 h-14 rounded-full border-2 border-[#CBB070] bg-[#FFF8E7] flex flex-col items-center justify-center text-[#957427] text-[8px] font-bold uppercase shadow-inner rotate-[-6deg]">
+<span class="text-xs">★</span>
+            VERIFIED
+          </div>
+</div>
+</div>
+</div>
+<!-- Modal Footer -->
+<div class="px-6 py-3.5 border-t border-[#ECE4F2] flex items-center justify-between bg-white">
+<span class="text-xs text-[#81768E]">Document ID: <strong class="font-mono text-[#433654]">DOC-VER-2025</strong></span>
+<button class="px-5 py-2 text-xs font-semibold rounded-xl bg-[#DDD0E8] hover:bg-[#D0BFDC] text-[#342742] transition cursor-pointer" onclick="closeModal('docPreviewModal')">
+        Close Document Preview
+      </button>
+</div>
+</div>
+</div>
+<!-- END: Document Preview Modal -->
+<!-- BEGIN: Approve Confirmation Modal -->
+<div class="fixed inset-0 modal-backdrop-custom z-[10001] items-center justify-center p-4" id="approveConfirmModal" onclick="handleOverlayClick(event, 'approveConfirmModal')">
+<div class="bg-white rounded-3xl w-full max-w-md p-7 shadow-2xl border border-[#ECE4F2] text-center transform transition-all animate-modal-pop" data-purpose="approve-dialog" onclick="event.stopPropagation()">
+<div class="w-12 h-12 rounded-full bg-[#D4F1DA] text-[#246633] flex items-center justify-center mx-auto mb-3 text-xl font-bold">✓</div>
+<h3 class="serif-title text-xl font-bold text-[#2E233C] mb-2">Approve Application</h3>
+<p class="text-xs text-[#6F647E] leading-relaxed mb-6 px-4">
+      Approve this therapist application for <strong class="text-[#2C2138]" id="approve-therapist-name">Dr. Zayne Li</strong>?<br/>
+      The therapist will be notified and verified on the public directory.
+    </p>
+<div class="flex items-center justify-center gap-3">
+<button class="w-32 py-2 rounded-xl text-xs font-medium border border-[#D5C9E0] text-[#55466A] hover:bg-[#F7F4FA] transition cursor-pointer" onclick="closeModal('approveConfirmModal')">
+        Cancel
+      </button>
+<button class="w-32 py-2 rounded-xl text-xs font-semibold bg-[#CCE8CE] text-[#246633] hover:bg-[#BFDFC1] transition shadow-xs cursor-pointer" onclick="confirmApproval()">
+        Approve
+      </button>
+</div>
+</div>
+</div>
+<!-- END: Approve Confirmation Modal -->
+<!-- BEGIN: Reject Confirmation Modal -->
+<div class="fixed inset-0 modal-backdrop-custom z-[10001] items-center justify-center p-4" id="rejectConfirmModal" onclick="handleOverlayClick(event, 'rejectConfirmModal')">
+<div class="bg-white rounded-3xl w-full max-w-md p-7 shadow-2xl border border-[#ECE4F2] text-center transform transition-all animate-modal-pop" data-purpose="reject-dialog" onclick="event.stopPropagation()">
+<div class="w-12 h-12 rounded-full bg-[#FCEAEA] text-[#C13A3A] flex items-center justify-center mx-auto mb-3 text-lg font-bold">✕</div>
+<h3 class="serif-title text-xl font-bold text-[#2E233C] mb-2">Reject Application</h3>
+<p class="text-xs text-[#6F647E] leading-relaxed mb-4">
+      Reject application for <strong class="text-[#2C2138]" id="reject-therapist-name">Dr. Zayne Li</strong>.<br/>
+      Please specify the rejection grounds:
+    </p>
+<div class="mb-6 text-left">
+<textarea class="w-full text-xs rounded-xl border border-[#DACFE3] bg-[#FCFBFD] p-3 text-[#372A47] placeholder:text-[#AAA0B7] focus:ring-1 focus:ring-[#9E7BBF] focus:border-[#9E7BBF] outline-none" id="rejection-reason-input" placeholder="e.g. Expired license certification, clinical discrepancies..." rows="3"></textarea>
+</div>
+<div class="flex items-center justify-center gap-3">
+<button class="w-32 py-2 rounded-xl text-xs font-medium border border-[#D5C9E0] text-[#55466A] hover:bg-[#F7F4FA] transition cursor-pointer" onclick="closeModal('rejectConfirmModal')">
+        Cancel
+      </button>
+<button class="w-32 py-2 rounded-xl text-xs font-semibold bg-[#F9C6C6] text-[#A63030] hover:bg-[#F1B6B6] transition shadow-xs cursor-pointer" onclick="confirmRejection()">
+        Confirm Reject
+      </button>
+</div>
+</div>
+</div>
+<!-- END: Reject Confirmation Modal -->
+<!-- BEGIN: Robust Vanilla JS Interactivity -->
+<script data-purpose="robust-vanilla-interactivity">
+  // ---- Avatar helpers ----
+  // Titles skipped when picking an initial, so "Dr. Zayne Li" shows "Z". Set to [] to use the very first letter instead.
+  const NAME_TITLES = ['dr', 'dr.', 'mr', 'mr.', 'mrs', 'mrs.', 'ms', 'ms.', 'prof', 'prof.'];
+
+  // First letter of a person's name, uppercased
+  function getInitial(name) {
+    const words = (name || '').trim().split(/\s+/);
+    const word = words.find(w => !NAME_TITLES.includes(w.toLowerCase())) || words[0] || '';
+    return word.charAt(0).toUpperCase() || '?';
+  }
+
+  // Fills every avatar in the page with its initial. Avatars get their name from either:
+  //   data-avatar-from="someElementId"  -> text of that element
+  //   data-avatar-auto                  -> text of the element right after the avatar
+  function renderAvatars() {
+    document.querySelectorAll('[data-avatar-from], [data-avatar-auto]').forEach(el => {
+      const source = el.dataset.avatarFrom ? document.getElementById(el.dataset.avatarFrom) : el.nextElementSibling;
+      el.textContent = getInitial(source ? source.textContent : '');
+    });
+  }
+  renderAvatars();
+
+  // Therapist Data Registry - edit names, specialties, license details and hours here (the avatar letter comes from "name")
+  const therapistsData = {
+    1: {
+      id: 1,
+      name: "Dr. Zayne Li",
+      specialty: "Anxiety, Depression",
+      role: "Licensed Clinical Psychologist",
+      status: "Pending",
+      verificationStatus: "Ongoing",
+      license: "LIC-12345-CA",
+      experience: "2 Years",
+      hours: "8:00 AM - 5:00 PM",
+      rejectionReason: ""
+    },
+    2: {
+      id: 2,
+      name: "Dr. Clara Oswald",
+      specialty: "Trauma & PTSD",
+      role: "Trauma Recovery Specialist",
+      status: "Pending",
+      verificationStatus: "Ongoing",
+      license: "LIC-48291-NY",
+      experience: "5 Years",
+      hours: "9:00 AM - 6:00 PM",
+      rejectionReason: ""
+    },
+    3: {
+      id: 3,
+      name: "Dr. Heinz Doofenshmirtz",
+      specialty: "Behavioral Therapy",
+      role: "Cognitive Behavioral Analyst",
+      status: "In Review",
+      verificationStatus: "Under Evaluation",
+      license: "LIC-77120-DE",
+      experience: "12 Years",
+      hours: "10:00 AM - 4:00 PM",
+      rejectionReason: ""
+    },
+    4: {
+      id: 4,
+      name: "Dr. Meredith Grey",
+      specialty: "Clinical Psychiatry",
+      role: "Board-Certified Psychiatrist",
+      status: "In Review",
+      verificationStatus: "Under Evaluation",
+      license: "LIC-94022-WA",
+      experience: "16 Years",
+      hours: "7:00 AM - 3:00 PM",
+      rejectionReason: ""
+    },
+    5: {
+      id: 5,
+      name: "Dr. Shaun Murphy",
+      specialty: "Youth Psychology",
+      role: "Pediatric & Neurodevelopmental Specialist",
+      status: "Approved",
+      verificationStatus: "Verified",
+      license: "LIC-55018-CA",
+      experience: "8 Years",
+      hours: "8:30 AM - 4:30 PM",
+      rejectionReason: ""
+    },
+    6: {
+      id: 6,
+      name: "Dr. Gregory House",
+      specialty: "Diagnostics & Neuropsychology",
+      role: "Chief of Diagnostic Neuropsychiatry",
+      status: "Approved",
+      verificationStatus: "Verified",
+      license: "LIC-30219-NJ",
+      experience: "22 Years",
+      hours: "11:00 AM - 7:00 PM",
+      rejectionReason: ""
+    },
+    7: {
+      id: 7,
+      name: "Dr. Hannibal Lecter",
+      specialty: "Forensic Psychology",
+      role: "Forensic Clinical Evaluator",
+      status: "Rejected",
+      verificationStatus: "Failed Verification",
+      license: "LIC-00666-MD",
+      experience: "25 Years",
+      hours: "9:00 AM - 5:00 PM",
+      rejectionReason: "License revoked due to severe ethical violations and irregular clinical conduct."
+    },
+    8: {
+      id: 8,
+      name: "Dr. Walter White",
+      specialty: "Substance Abuse & Pharmacology",
+      role: "Chemical Dependency Counselor",
+      status: "Rejected",
+      verificationStatus: "Failed Verification",
+      license: "LIC-99014-NM",
+      experience: "18 Years",
+      hours: "8:00 AM - 6:00 PM",
+      rejectionReason: "Discrepancy in pharmacology accreditation; unauthorized DEA chemical dispensation records."
+    }
+  };
+
+  let currentActiveTherapistId = 1;
+  let currentActiveFilter = 'all';
+
+  // POPUPS: open/close helpers used by all the modals on this page
+  window.openModal = function(modalId) {
+    const el = document.getElementById(modalId);
+    if (el) {
+      el.classList.add('modal-active');
+    }
+  };
+
+  window.closeModal = function(modalId) {
+    const el = document.getElementById(modalId);
+    if (el) {
+      el.classList.remove('modal-active');
+    }
+  };
+
+  window.handleOverlayClick = function(event, modalId) {
+    if (event.target.id === modalId) {
+      window.closeModal(modalId);
+    }
+  };
+
+  // FILTERS: show only rows matching the selected status and update the "Showing x of y" text
+  window.filterByStatus = function(status) {
+    currentActiveFilter = status;
+    const filterButtons = document.querySelectorAll('#status-filter-group .filter-pill');
+    
+    filterButtons.forEach(btn => {
+      const btnFilter = btn.getAttribute('data-filter');
+      if (btnFilter === status) {
+        // Active visual state
+        btn.className = "filter-pill px-6 py-2 rounded-xl text-xs font-semibold cursor-pointer transition shadow-sm bg-[#B89ECC] text-white border border-[#B89ECC]";
+      } else {
+        // Inactive visual state matching Solace palette
+        let defaultClasses = "filter-pill px-6 py-2 rounded-xl text-xs font-medium cursor-pointer transition bg-white ";
+        if (btnFilter === 'Pending') defaultClasses += "text-[#705615] border border-[#E9C369]/40 hover:bg-[#FCECB8]/30";
+        else if (btnFilter === 'In Review') defaultClasses += "text-[#864A1F] border border-[#FDE2CF] hover:bg-[#FDE2CF]/40";
+        else if (btnFilter === 'Approved') defaultClasses += "text-[#246332] border border-[#D3EED8] hover:bg-[#D3EED8]/40";
+        else if (btnFilter === 'Rejected') defaultClasses += "text-[#8A2929] border border-[#F9C3C3] hover:bg-[#F9C3C3]/40";
+        else defaultClasses += "text-[#4F445B] border border-[#ECE5F2] hover:bg-[#F2EDF8]";
+        btn.className = defaultClasses;
+      }
+    });
+
+    const rows = document.querySelectorAll('#therapist-table-body .therapist-row');
+    let visibleCount = 0;
+    const totalCount = rows.length;
+
+    rows.forEach(row => {
+      const rowStatus = row.getAttribute('data-status');
+      if (status === 'all' || rowStatus.toLowerCase() === status.toLowerCase()) {
+        row.style.display = '';
+        visibleCount++;
+      } else {
+        row.style.display = 'none';
+      }
+    });
+
+    // Update Pagination Display Text
+    const paginationSummary = document.getElementById('pagination-summary');
+    if (paginationSummary) {
+      if (visibleCount === 0) {
+        paginationSummary.textContent = `Showing 0 of 0 users`;
+      } else if (visibleCount === totalCount && status === 'all') {
+        paginationSummary.textContent = `Showing 1–${totalCount} of ${totalCount} users`;
+      } else {
+        paginationSummary.textContent = `Showing 1–${visibleCount} of ${visibleCount} users`;
+      }
+    }
+  };
+
+  // CREDENTIAL REVIEW: fills the review popup with the selected therapist's details
+  window.openReviewModal = function(id) {
+    const data = therapistsData[id];
+    if (!data) return;
+
+    currentActiveTherapistId = id;
+
+    // Populate Modal Elements
+    document.getElementById('modal-avatar').textContent = getInitial(data.name); // avatar = first letter of the name
+    document.getElementById('modal-name').textContent = data.name;
+    document.getElementById('modal-role').textContent = data.role;
+    document.getElementById('modal-specialty').textContent = data.specialty;
+    document.getElementById('modal-license').textContent = data.license;
+    document.getElementById('modal-experience').textContent = data.experience;
+    document.getElementById('modal-hours').textContent = data.hours;
+
+    // Badge styling in modal
+    const badgeContainer = document.getElementById('modal-status-badge');
+    const decisionState = document.getElementById('modal-decision-state');
+    const rejectionBanner = document.getElementById('modal-rejection-banner');
+    const rejectionText = document.getElementById('modal-rejection-text');
+
+    if (data.status === 'Approved') {
+      badgeContainer.innerHTML = `<span class="inline-block px-3.5 py-1 rounded-full text-xs font-semibold border border-[#BCE1C4] text-[#246332] bg-[#D4F1DA]">Approved</span>`;
+      decisionState.textContent = 'Status: Approved & Verified';
+      rejectionBanner.classList.add('hidden');
+    } else if (data.status === 'Rejected') {
+      badgeContainer.innerHTML = `<span class="inline-block px-3.5 py-1 rounded-full text-xs font-semibold border border-[#E9AFAF] text-[#8A2929] bg-[#F9C3C3]/40">Rejected</span>`;
+      decisionState.textContent = 'Status: Application Rejected';
+      rejectionBanner.classList.remove('hidden');
+      rejectionText.textContent = data.rejectionReason || 'Credentials unverified or rejected by regulatory committee.';
+    } else if (data.status === 'In Review') {
+      badgeContainer.innerHTML = `<span class="inline-block px-3.5 py-1 rounded-full text-xs font-semibold border border-[#FDE2CF] text-[#864A1F] bg-[#FFFBF0]">In Review</span>`;
+      decisionState.textContent = 'Status: Under Committee Evaluation';
+      rejectionBanner.classList.add('hidden');
+    } else {
+      badgeContainer.innerHTML = `<span class="inline-block px-3.5 py-1 rounded-full text-xs font-semibold border border-[#E9C369] text-[#785918] bg-[#FFFBF0]">Pending Review</span>`;
+      decisionState.textContent = 'Status: Pending Verification';
+      rejectionBanner.classList.add('hidden');
+    }
+
+    window.openModal('reviewModalOverlay');
+  };
+
+  // DOCUMENT PREVIEW: shows the mock certificate for a credential
+  window.previewDoc = function(docType) {
+    const data = therapistsData[currentActiveTherapistId] || therapistsData[1];
+    const previewDocTitle = document.getElementById('preview-doc-title');
+    const previewDocSubtitle = document.getElementById('preview-doc-subtitle');
+    const previewDocCertName = document.getElementById('preview-doc-certname');
+    const previewDocTherapist = document.getElementById('preview-doc-therapist');
+    const previewDocSpecialty = document.getElementById('preview-doc-specialty');
+    const previewDocLicenseId = document.getElementById('preview-doc-license-id');
+
+    previewDocTherapist.textContent = data.name;
+    previewDocSpecialty.textContent = data.specialty;
+    previewDocLicenseId.textContent = data.license;
+
+    if (docType === 'license') {
+      previewDocTitle.textContent = 'State Board Clinical License';
+      previewDocSubtitle.textContent = 'State Regulatory Practitioner Certificate';
+      previewDocCertName.textContent = 'Certificate of Professional Licensure';
+    } else {
+      previewDocTitle.textContent = 'Doctoral Degree Certification';
+      previewDocSubtitle.textContent = 'University School of Medicine & Psychology';
+      previewDocCertName.textContent = 'Doctor of Psychology (Psy.D) Diploma';
+    }
+
+    window.openModal('docPreviewModal');
+  };
+
+  // APPROVE ACTION: confirm dialog, then marks the therapist as Approved
+  window.openApproveDialog = function() {
+    const data = therapistsData[currentActiveTherapistId];
+    if (data) {
+      document.getElementById('approve-therapist-name').textContent = data.name;
+    }
+    window.openModal('approveConfirmModal');
+  };
+
+  window.confirmApproval = function() {
+    const data = therapistsData[currentActiveTherapistId];
+    if (data) {
+      data.status = 'Approved';
+      data.verificationStatus = 'Verified';
+      data.rejectionReason = '';
+
+      updateTableRowUI(data.id, 'Approved', 'Verified');
+      // Re-trigger modal render
+      openReviewModal(data.id);
+    }
+    window.closeModal('approveConfirmModal');
+    // Refresh table filter view if needed
+    window.filterByStatus(currentActiveFilter);
+  };
+
+  // REJECT ACTION: asks for a reason, then marks the therapist as Rejected
+  window.openRejectDialog = function() {
+    const data = therapistsData[currentActiveTherapistId];
+    if (data) {
+      document.getElementById('reject-therapist-name').textContent = data.name;
+      document.getElementById('rejection-reason-input').value = data.rejectionReason || '';
+    }
+    window.openModal('rejectConfirmModal');
+  };
+
+  window.confirmRejection = function() {
+    const reasonInput = document.getElementById('rejection-reason-input').value.trim();
+    const data = therapistsData[currentActiveTherapistId];
+    if (data) {
+      data.status = 'Rejected';
+      data.verificationStatus = 'Failed Verification';
+      data.rejectionReason = reasonInput || 'Verification denied by board administrative review.';
+
+      updateTableRowUI(data.id, 'Rejected', 'Failed Verification');
+      // Re-trigger modal render
+      openReviewModal(data.id);
+    }
+    window.closeModal('rejectConfirmModal');
+    window.filterByStatus(currentActiveFilter);
+  };
+
+  // Keeps the table row (status badge + action button) in sync after approve/reject
+  function updateTableRowUI(id, newStatus, newVerificationText) {
+    const row = document.querySelector(`.therapist-row[data-id="${id}"]`);
+    if (!row) return;
+
+    row.setAttribute('data-status', newStatus);
+
+    const badgeCell = row.querySelector('.status-badge-cell');
+    const verifCell = row.querySelector('.verification-status-cell');
+    const actionBtn = row.querySelector('.action-btn');
+
+    if (verifCell) {
+      verifCell.textContent = newVerificationText;
+    }
+
+    if (badgeCell) {
+      if (newStatus === 'Approved') {
+        badgeCell.innerHTML = `<span class="inline-block px-3 py-0.5 rounded-full text-[11px] font-medium border border-[#BCE1C4] text-[#246332] bg-[#D4F1DA]">Approved</span>`;
+      } else if (newStatus === 'Rejected') {
+        badgeCell.innerHTML = `<span class="inline-block px-3 py-0.5 rounded-full text-[11px] font-medium border border-[#E9AFAF] text-[#8A2929] bg-[#F9C3C3]/40">Rejected</span>`;
+      } else if (newStatus === 'In Review') {
+        badgeCell.innerHTML = `<span class="inline-block px-3 py-0.5 rounded-full text-[11px] font-medium border border-[#FDE2CF] text-[#864A1F] bg-[#FFFBF0]">In Review</span>`;
+      } else {
+        badgeCell.innerHTML = `<span class="inline-block px-3 py-0.5 rounded-full text-[11px] font-medium border border-[#E9C369] text-[#785918] bg-[#FFFBF0]">Pending</span>`;
+      }
+    }
+
+    if (actionBtn) {
+      if (newStatus === 'Approved') {
+        actionBtn.textContent = 'View Details';
+        actionBtn.className = 'action-btn px-4 py-1 rounded-full text-[11px] font-medium border border-[#CEC3D9] text-[#4E3F63] hover:bg-[#F2EDF8] transition-all shadow-xs cursor-pointer';
+      } else if (newStatus === 'Rejected') {
+        actionBtn.textContent = 'View Reason';
+        actionBtn.className = 'action-btn px-4 py-1 rounded-full text-[11px] font-medium border border-[#CEC3D9] text-[#4E3F63] hover:bg-[#F2EDF8] transition-all shadow-xs cursor-pointer';
+      } else {
+        actionBtn.textContent = 'Review';
+        actionBtn.className = 'action-btn px-4 py-1 rounded-full text-[11px] font-medium border border-[#3A2D4A] text-[#2E233E] hover:bg-[#2E233E] hover:text-white transition-all shadow-xs cursor-pointer';
+      }
+    }
+  }
+
+  // DOM ready hook to guarantee fail-safe event binding
+  document.addEventListener('DOMContentLoaded', () => {
+    // Initial Filter Setup
+    filterByStatus('all');
+
+    // Escape Key Modal Dismissal
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        window.closeModal('docPreviewModal');
+        window.closeModal('approveConfirmModal');
+        window.closeModal('rejectConfirmModal');
+        window.closeModal('reviewModalOverlay');
+      }
+    });
+  });
+</script>
+<!-- END: Robust Vanilla JS Interactivity -->
+</body></html>
