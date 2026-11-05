@@ -1,0 +1,30 @@
+{% extends "auth-base.html" %}
+{% block title %}Sign in · Solace{% endblock %}
+
+{% block content %}
+<h1 class="card-title">Welcome back</h1>
+<p class="card-subtitle">Sign in to continue your journey.</p>
+
+<form class="form-panel" id="login-form" novalidate>
+  <div class="field">
+    <label for="email">Email</label>
+    <input type="email" id="email" name="email" placeholder="you@example.com" autocomplete="email" required>
+    <small class="error" aria-live="polite"></small>
+  </div>
+
+  <div class="field">
+    <label for="password">Password</label>
+    <div class="input-wrap">
+      <input type="password" id="password" name="password" placeholder="Enter your password" autocomplete="current-password" required>
+      <button type="button" class="toggle-pw" aria-label="Show password">Show</button>
+    </div>
+    <small class="error" aria-live="polite"></small>
+  </div>
+
+  <button type="submit" class="btn-primary">Sign In</button>
+
+  <a href="#" class="link">Forgot password?</a>
+
+  <p class="switch">New to Solace? <a href="{{ url_for('register') }}" class="link strong">Create an account</a></p>
+</form>
+{% endblock %}

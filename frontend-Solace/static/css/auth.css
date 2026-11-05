@@ -1,0 +1,261 @@
+/* Solace auth pages (login / register). Everything is scoped to .auth-body
+   so it cannot affect other pages. Variables are prefixed --auth-. */
+.auth-body {
+  /* Single-colour background for now. Swap for an image later:
+     --auth-bg: url("../img/background.jpg") center / cover no-repeat; */
+  --auth-bg: #c79fc8;
+
+  --auth-ink: #4a3560;
+  --auth-ink-soft: #7a6690;
+  --auth-placeholder: #b79cc9;
+  --auth-peach: #f8dfc0;
+  --auth-lilac: #e4bfdc;
+  --auth-field-border: #ece4f0;
+  --auth-dark: #2b2b2b;
+  --auth-error: #b3354f;
+  --auth-radius-card: 28px;
+  --auth-radius-field: 10px;
+}
+
+.auth-body,
+.auth-body *,
+.auth-body *::before,
+.auth-body *::after { box-sizing: border-box; }
+
+.auth-body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: "Inter", system-ui, sans-serif;
+  color: var(--auth-ink);
+  background: var(--auth-bg);
+  background-attachment: fixed;
+  -webkit-font-smoothing: antialiased;
+}
+
+.auth-body .page {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 32px 16px;
+}
+
+/* ---------- Glass card ---------- */
+.auth-body .glass-card {
+  width: 100%;
+  max-width: 470px;
+  padding: 28px 24px 24px;
+  border-radius: var(--auth-radius-card);
+  background: rgba(255, 255, 255, 0.22);
+  backdrop-filter: blur(18px) saturate(140%);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  box-shadow:
+    0 12px 36px rgba(74, 53, 96, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.55);
+  text-align: center;
+}
+
+.auth-body .logo {
+  display: block;
+  width: 230px;
+  max-width: 70%;
+  height: auto;
+  margin: 0 auto 2px;
+  /* The supplied logo is brown on white. This drops the white and tints it
+     peach. With a transparent PNG you can remove these two lines. */
+  filter: invert(1) grayscale(1) sepia(1) saturate(1.6) brightness(1.15);
+  mix-blend-mode: screen;
+}
+
+.auth-body .card-title {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  color: var(--auth-ink);
+}
+
+.auth-body .card-subtitle {
+  margin: 6px 0 18px;
+  font-size: 0.8rem;
+  color: var(--auth-ink-soft);
+}
+
+/* ---------- Tabs ---------- */
+.auth-body .tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px;
+  margin: 18px 0 14px;
+  padding: 4px;
+  background: var(--auth-lilac);
+  border-radius: 8px;
+}
+
+.auth-body .tab {
+  padding: 10px;
+  font: inherit;
+  font-size: 1rem;
+  color: var(--auth-ink);
+  background: transparent;
+  border: 0;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.auth-body .tab.active { background: var(--auth-peach); }
+
+.auth-body .tab:not(.active):hover { background: rgba(255, 255, 255, 0.3); }
+
+/* ---------- Form panel ---------- */
+.auth-body .form-panel {
+  padding: 18px 14px 16px;
+  background: #fff;
+  border-radius: 8px;
+  text-align: left;
+}
+
+.auth-body .field { margin-bottom: 14px; }
+
+.auth-body .field label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--auth-ink);
+}
+
+.auth-body input[type="text"],
+.auth-body input[type="email"],
+.auth-body input[type="password"] {
+  width: 100%;
+  padding: 9px 12px;
+  font: inherit;
+  font-size: 0.8rem;
+  color: var(--auth-ink);
+  background: #fff;
+  border: 1px solid var(--auth-field-border);
+  border-radius: var(--auth-radius-field);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.auth-body input::placeholder { color: var(--auth-placeholder); }
+
+.auth-body input:focus-visible {
+  outline: none;
+  border-color: #a77fc0;
+  box-shadow: 0 0 0 3px rgba(167, 127, 192, 0.25);
+}
+
+.auth-body .field.invalid input[type="text"],
+.auth-body .field.invalid input[type="email"],
+.auth-body .field.invalid input[type="password"] { border-color: var(--auth-error); }
+
+.auth-body .error {
+  display: block;
+  margin-top: 4px;
+  font-size: 0.7rem;
+  color: var(--auth-error);
+}
+
+.auth-body .error:empty { display: none; }
+
+/* Password show/hide */
+.auth-body .input-wrap { position: relative; }
+
+.auth-body .input-wrap input { padding-right: 58px; }
+
+.auth-body .toggle-pw {
+  position: absolute;
+  top: 50%;
+  right: 8px;
+  transform: translateY(-50%);
+  padding: 4px 6px;
+  font: inherit;
+  font-size: 0.7rem;
+  color: var(--auth-ink-soft);
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+
+.auth-body .toggle-pw:hover { color: var(--auth-ink); }
+
+/* Checkbox */
+.auth-body .field.checkbox {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  column-gap: 8px;
+  align-items: center;
+}
+
+.auth-body .field.checkbox label { margin: 0; font-weight: 400; }
+
+.auth-body .field.checkbox .error { grid-column: 1 / -1; }
+
+.auth-body .field.checkbox input { width: 15px; height: 15px; accent-color: var(--auth-dark); margin: 0; }
+
+/* Upload */
+.auth-body .upload-link {
+  display: inline-flex !important;
+  align-items: center;
+  gap: 8px;
+  margin: 0 !important;
+  font-weight: 600 !important;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.auth-body .upload-link:hover { color: #000; }
+
+.auth-body [hidden] { display: none !important; }
+
+/* Buttons & links */
+.auth-body .btn-primary {
+  width: 100%;
+  padding: 10px;
+  margin-top: 4px;
+  font: inherit;
+  font-size: 0.8rem;
+  color: #fff;
+  background: var(--auth-dark);
+  border: 0;
+  border-radius: var(--auth-radius-field);
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.1s ease;
+}
+
+.auth-body .btn-primary:hover { background: #000; }
+
+.auth-body .btn-primary:active { transform: translateY(1px); }
+
+.auth-body .btn-primary:focus-visible { outline: 3px solid rgba(167, 127, 192, 0.5); outline-offset: 2px; }
+
+.auth-body .link {
+  font-size: 0.75rem;
+  color: var(--auth-ink);
+  text-decoration: underline;
+}
+
+.auth-body .link.strong { font-weight: 600; color: #000; }
+
+.auth-body .link:hover { color: #000; }
+
+.auth-body .form-panel > .link { display: inline-block; margin-top: 14px; }
+
+.auth-body .switch {
+  margin: 14px 0 2px;
+  font-size: 0.75rem;
+  text-align: center;
+  color: #111;
+}
+
+@media (max-width: 480px) {.auth-body .glass-card { padding: 22px 14px 18px; }
+
+.auth-body .logo { width: 190px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .auth-body * { transition: none !important; }
+}
