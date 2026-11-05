@@ -4,148 +4,302 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Search Therapist - Solace</title>
+  <!-- Google Fonts: Rufina, Istok Web, Oxanium, Roboto, Inter -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Istok+Web:wght@400;700&family=Oxanium:wght@400;500;600;700&family=Roboto:wght@400;500;700&family=Rufina:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body class="dashboard-body">
   <div class="app-layout">
-    <!-- Sidebar -->
+    <!-- ==========================================
+         LEFT NAVBAR: Color #D8C6E5, Rufina 20px, Icons 30x30
+         ========================================== -->
     <aside class="sidebar">
       <div class="sidebar-logo">
-        <span class="logo-text">S</span>
-        <span class="logo-sun">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#E9A844" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="12" r="4.5" fill="#E9A844" stroke="none"/>
-            <line x1="12" y1="2" x2="12" y2="5"/>
-            <line x1="12" y1="19" x2="12" y2="22"/>
-            <line x1="4.93" y1="4.93" x2="7.05" y2="7.05"/>
-            <line x1="16.95" y1="16.95" x2="19.07" y2="19.07"/>
-            <line x1="2" y1="12" x2="5" y2="12"/>
-            <line x1="19" y1="12" x2="22" y2="12"/>
-            <line x1="4.93" y1="19.07" x2="7.05" y2="16.95"/>
-            <line x1="16.95" y1="7.05" x2="19.07" y2="4.93"/>
-          </svg>
-        </span>
-        <span class="logo-text">LACE</span>
-      </div>
+  <img src="{{ url_for('static', filename='solace-logo-pnjee.png') }}" alt="Solace" class="sidebar-logo-img">
+</div>
 
+      <div class="nav-section-title">Main Menu</div>
       <nav class="sidebar-nav">
-        <a href="{{ url_for('client_dashboard') }}" class="nav-item">
-          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        <a href="/client" class="nav-item">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2h-5v-7h-4v7H5a2 2 0 0 1-2-2z"/></svg>
           <span>Dashboard</span>
         </a>
-
-        <a href="{{ url_for('search_therapist') }}" class="nav-item active">
-          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <a href="/search-therapist" class="nav-item active">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
           <span>Search Therapist</span>
         </a>
-
-        <a href="{{ url_for('client_schedule') }}" class="nav-item">
-          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-          <span>Schedule</span>
+        <a href="/schedule" class="nav-item">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+          <span>Appointments</span>
         </a>
-
-        <a href="{{ url_for('client_chats') }}" class="nav-item">
+        <a href="/chats" class="nav-item">
           <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
           <span>My Chats</span>
         </a>
+        <a href="/schedule" class="nav-item">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6m-8 3v4l3 2"/></svg>
+          <span>Session History</span>
+        </a>
+      </nav>
 
+      <div class="nav-section-title account-title" style="margin-top: 24px;">Account</div>
+      <nav class="sidebar-nav">
         <a href="/profile?role=client" class="nav-item">
           <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
           <span>Profile</span>
         </a>
-
         <a href="/settings?role=client" class="nav-item">
-          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l-2.8 2.8a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5h-4a1.7 1.7 0 0 0-2.8-1.2l-2.8-2.8a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1v-4a1.7 1.7 0 0 0 1.2-2.8l2.8-2.8a1.7 1.7 0 0 0 2.8-1.2h4a1.7 1.7 0 0 0 2.8 1.2l2.8 2.8a1.7 1.7 0 0 0 1.2 2.8v4a1.7 1.7 0 0 0-1.2 1.8z"/></svg>
           <span>Settings</span>
         </a>
       </nav>
+
+      <a class="logout-btn" href="/">
+        <span>↪ Log Out</span>
+      </a>
     </aside>
 
-    <!-- Main Content Area -->
+    <!-- ==========================================
+         MAIN CONTENT: Concept 1 Horizontal Cards Feed
+         ========================================== -->
     <main class="main-content">
-      <!-- Top Bar -->
-      <header class="page-top-header">
+      <!-- Top Bar: Matches wireframe header & user pill -->
+      <header class="page-header">
         <div class="header-title-group">
-          <div class="header-icon-badge">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          <div class="title-icon-badge">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
           </div>
-          <h1 class="page-main-title">Search Therapist</h1>
+          <!-- Title: Roboto 30 -->
+          <h1 class="search-therapist-title">Search Therapist</h1>
         </div>
 
-        <div class="user-pill admin-pill">
-          <div class="user-avatar admin-avatar"></div>
-          <div class="user-details">
+        <div class="profile-chip">
+          <div class="profile-chip-avatar">👤</div>
+          <div class="profile-info">
             <span class="user-name">User, name</span>
-            <span class="user-role">Administrator</span>
+            <span class="user-role">Client</span>
           </div>
         </div>
       </header>
 
-      <!-- Search & Filters Bar -->
-      <section class="search-filter-card">
-        <div class="search-input-wrapper">
-          <input type="text" placeholder="Search therapist by name or email" class="search-field">
-          <button class="search-icon-btn" aria-label="Search">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-          </button>
+      <!-- Search & Filter Controls: Matches wireframe inputs -->
+      <section class="search-filter-row">
+        <div class="search-input-wrap">
+          <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="search" placeholder="Search therapist by name or email" class="search-input" id="therapistSearch">
         </div>
 
-        <div class="filter-dropdown-wrapper">
-          <select class="filter-select">
-            <option selected>Availability</option>
-            <option>Today</option>
-            <option>This Week</option>
-          </select>
-          <svg class="select-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
-        </div>
+        <select class="filter-select" id="availFilter">
+          <option value="all">Availability</option>
+          <option value="today">Available Today</option>
+          <option value="this-week">This Week</option>
+          <option value="weekend">Weekend</option>
+        </select>
 
-        <div class="filter-dropdown-wrapper">
-          <select class="filter-select">
-            <option selected>Session Type</option>
-            <option>Online Consultation</option>
-            <option>In-Person</option>
-          </select>
-          <svg class="select-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
-        </div>
+        <select class="filter-select" id="sessionTypeFilter">
+          <option value="all">Session Type</option>
+          <option value="video">Video Call</option>
+          <option value="in-person">In-Person</option>
+          <option value="chat">Chat / Audio</option>
+        </select>
 
-        <div class="filter-dropdown-wrapper sort-dropdown">
-          <select class="filter-select">
-            <option selected>Sort By...</option>
-            <option>Highest Rated</option>
-            <option>Experience</option>
-          </select>
-          <svg class="select-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
-        </div>
+        <select class="filter-select" id="sortByFilter">
+          <option value="recommended">Sort By...</option>
+          <option value="highest-rated">Highest Rated</option>
+          <option value="most-experience">Most Experience</option>
+          <option value="earliest">Earliest Available</option>
+        </select>
       </section>
 
-      <!-- Therapist Cards Grid -->
-      <section class="therapist-cards-grid">
-        {% for therapist in therapists %}
-        <div class="therapist-box-card">
-          <div class="therapist-card-top">
-            <div class="therapist-circle-avatar"></div>
-            <div class="therapist-meta">
-              <h3 class="therapist-card-name">{{ therapist.name }}</h3>
-              <p class="therapist-card-title">{{ therapist.title }}</p>
+      <!-- ==========================================
+           THERAPIST CARDS: Horizontal Modern Feed (Concept 1)
+           ========================================== -->
+      <section class="therapists-list" id="therapistCardsList">
+        <!-- Card 1: Dr. Sarah Chen -->
+        <article class="therapist-card-horizontal" data-name="sarah chen" data-avail="this-week" data-type="video chat">
+          <div class="card-left-col">
+            <div class="avatar-wrapper">
+              <div class="therapist-avatar">SC</div>
+              <span class="status-dot" title="Available"></span>
+            </div>
+            <span class="availability-pill">Available</span>
+          </div>
+
+          <div class="card-center-col">
+            <div class="therapist-name-row">
+              <h2 class="therapist-name">Dr. Sarah Chen, PsyD</h2>
+              <span class="therapist-credentials">Clinical Psychologist · 10+ Yrs Exp</span>
+            </div>
+
+            <div class="specialty-chips-row">
+              <span class="specialty-chip chip-anxiety">Anxiety</span>
+              <span class="specialty-chip chip-cbt">CBT</span>
+              <span class="specialty-chip chip-burnout">Burnout</span>
+            </div>
+
+            <p class="therapist-quote">"I work collaboratively with clients to build everyday cognitive resilience and stress reduction skills."</p>
+
+            <div class="therapist-meta-row">
+              <span>🌐 English, Filipino</span>
+              <span>💻 Video & Chat</span>
             </div>
           </div>
 
-          <div class="therapist-card-bio-section">
-            <h4 class="bio-label">Bio</h4>
-            <p class="bio-snippet">{{ therapist.bio }}</p>
+          <div class="card-right-col">
+            <div class="next-slot-pill">Next: Tomorrow, 2:00 PM</div>
+            <button class="book-session-btn" onclick="alert('Booking appointment with Dr. Sarah Chen')">Book Session</button>
+            <a href="#" class="view-profile-link">View profile →</a>
+          </div>
+        </article>
+
+        <!-- Card 2: Dr. Zayne Li -->
+        <article class="therapist-card-horizontal" data-name="zayne li" data-avail="today" data-type="video">
+          <div class="card-left-col">
+            <div class="avatar-wrapper">
+              <div class="therapist-avatar" style="background: #E5D9E1; color: #5C2B4E;">ZL</div>
+              <span class="status-dot" title="Available"></span>
+            </div>
+            <span class="availability-pill">Available</span>
           </div>
 
-          <div class="therapist-card-buttons">
-            <button class="therapist-outline-btn">View Profile</button>
-            <a href="{{ url_for('client_schedule') }}" class="therapist-outline-btn">Book Session</a>
+          <div class="card-center-col">
+            <div class="therapist-name-row">
+              <h2 class="therapist-name">Dr. Zayne Li, MD</h2>
+              <span class="therapist-credentials">Licensed Psychiatrist · 8 Yrs Exp</span>
+            </div>
+
+            <div class="specialty-chips-row">
+              <span class="specialty-chip chip-anxiety">Anxiety</span>
+              <span class="specialty-chip chip-mindfulness">Mindfulness</span>
+              <span class="specialty-chip chip-cbt">Depression</span>
+            </div>
+
+            <p class="therapist-quote">"Creating a calm, structured space to help you understand personal patterns and regain emotional balance."</p>
+
+            <div class="therapist-meta-row">
+              <span>🌐 English, Mandarin</span>
+              <span>💻 Video Call</span>
+            </div>
           </div>
-        </div>
-        {% endfor %}
+
+          <div class="card-right-col">
+            <div class="next-slot-pill">Next: Today, 4:30 PM</div>
+            <button class="book-session-btn" onclick="alert('Booking appointment with Dr. Zayne Li')">Book Session</button>
+            <a href="#" class="view-profile-link">View profile →</a>
+          </div>
+        </article>
+
+        <!-- Card 3: Dr. Elena Gilbert -->
+        <article class="therapist-card-horizontal" data-name="elena gilbert" data-avail="this-week" data-type="video in-person chat">
+          <div class="card-left-col">
+            <div class="avatar-wrapper">
+              <div class="therapist-avatar" style="background: #D9E1D9; color: #1D5C26;">EG</div>
+              <span class="status-dot" title="Available"></span>
+            </div>
+            <span class="availability-pill">Available</span>
+          </div>
+
+          <div class="card-center-col">
+            <div class="therapist-name-row">
+              <h2 class="therapist-name">Dr. Elena Gilbert, LMFT</h2>
+              <span class="therapist-credentials">Family & Relationship Counselor · 12 Yrs Exp</span>
+            </div>
+
+            <div class="specialty-chips-row">
+              <span class="specialty-chip chip-relationships">Relationships</span>
+              <span class="specialty-chip chip-burnout">Burnout & Stress</span>
+              <span class="specialty-chip chip-anxiety">Life Transitions</span>
+            </div>
+
+            <p class="therapist-quote">"Dedicated to healing relationships, building communication channels, and personal alignment."</p>
+
+            <div class="therapist-meta-row">
+              <span>🌐 English, Tagalog</span>
+              <span>💻 Video, Voice & In-Person</span>
+            </div>
+          </div>
+
+          <div class="card-right-col">
+            <div class="next-slot-pill">Next: Thursday, 10:00 AM</div>
+            <button class="book-session-btn" onclick="alert('Booking appointment with Dr. Elena Gilbert')">Book Session</button>
+            <a href="#" class="view-profile-link">View profile →</a>
+          </div>
+        </article>
+
+        <!-- Card 4: Dr. Shaun Murphy -->
+        <article class="therapist-card-horizontal" data-name="shaun murphy" data-avail="this-week" data-type="video in-person">
+          <div class="card-left-col">
+            <div class="avatar-wrapper">
+              <div class="therapist-avatar" style="background: #D6E6F2; color: #1E4E79;">SM</div>
+              <span class="status-dot" title="Available"></span>
+            </div>
+            <span class="availability-pill">Available</span>
+          </div>
+
+          <div class="card-center-col">
+            <div class="therapist-name-row">
+              <h2 class="therapist-name">Dr. Shaun Murphy, PhD</h2>
+              <span class="therapist-credentials">Behavioral Health Specialist · 6 Yrs Exp</span>
+            </div>
+
+            <div class="specialty-chips-row">
+              <span class="specialty-chip chip-cbt">CBT</span>
+              <span class="specialty-chip chip-burnout">Workplace Stress</span>
+              <span class="specialty-chip chip-mindfulness">Mindfulness</span>
+            </div>
+
+            <p class="therapist-quote">"Evidence-based cognitive behavioral techniques designed for high-stress work environments."</p>
+
+            <div class="therapist-meta-row">
+              <span>🌐 English</span>
+              <span>💻 Video Call & In-Person</span>
+            </div>
+          </div>
+
+          <div class="card-right-col">
+            <div class="next-slot-pill">Next: Friday, 1:00 PM</div>
+            <button class="book-session-btn" onclick="alert('Booking appointment with Dr. Shaun Murphy')">Book Session</button>
+            <a href="#" class="view-profile-link">View profile →</a>
+          </div>
+        </article>
       </section>
     </main>
   </div>
+
+  <script>
+    const searchInput = document.getElementById('therapistSearch');
+    const availFilter = document.getElementById('availFilter');
+    const sessionTypeFilter = document.getElementById('sessionTypeFilter');
+    const cards = Array.from(document.querySelectorAll('#therapistCardsList .therapist-card-horizontal'));
+
+    function filterTherapists() {
+      const q = (searchInput.value || '').trim().toLowerCase();
+      const avail = availFilter.value;
+      const sessionType = sessionTypeFilter.value;
+
+      cards.forEach(card => {
+        const text = card.textContent.toLowerCase();
+        const cardAvail = card.dataset.avail || '';
+        const cardType = card.dataset.type || '';
+
+        const matchesQuery = !q || text.includes(q);
+        const matchesAvail = avail === 'all' || cardAvail.includes(avail);
+        const matchesType = sessionType === 'all' || cardType.includes(sessionType);
+
+        if (matchesQuery && matchesAvail && matchesType) {
+          card.style.display = 'grid';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    }
+
+    searchInput.addEventListener('input', filterTherapists);
+    availFilter.addEventListener('change', filterTherapists);
+    sessionTypeFilter.addEventListener('change', filterTherapists);
+  </script>
 </body>
 </html>
