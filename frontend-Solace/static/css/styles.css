@@ -2046,3 +2046,39 @@ body:not(.therapist-bookings-page):not(.therapist-appointments-page):not(.client
   margin: 0 auto;          /* 👈 Centers image perfectly */
   mix-blend-mode: multiply;
 }
+
+/* Keep Sean's assigned pages aligned with the dashboard sidebar and prevent
+   the active state from changing label weight or shifting nearby items. */
+body.therapist-bookings-page .sidebar,
+body.therapist-appointments-page .sidebar,
+body.client-profile-page .sidebar,
+body.therapist-profile-page .sidebar,
+body.admin-profile-page .sidebar {
+  flex-shrink: 0;
+  box-sizing: border-box;
+}
+
+body.therapist-bookings-page .nav-item,
+body.therapist-appointments-page .nav-item,
+body.client-profile-page .nav-item,
+body.therapist-profile-page .nav-item,
+body.admin-profile-page .nav-item,
+body.therapist-bookings-page .nav-item.active,
+body.therapist-appointments-page .nav-item.active,
+body.client-profile-page .nav-item.active,
+body.therapist-profile-page .nav-item.active,
+body.admin-profile-page .nav-item.active {
+  font-weight: 500 !important;
+  transition-property: background-color, color, box-shadow;
+}
+
+@media (max-width: 900px) {
+  body.admin-profile-page .sidebar {
+    position: relative !important;
+    top: auto !important;
+    width: 100% !important;
+    min-width: 100% !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+}

@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -7,204 +7,181 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Roboto:wght@400;500&family=Rufina:wght@400;700&display=swap" rel="stylesheet">
-<style>
-
-:root{--lavender:#d8c6e5;--purple:#6750a4;--ink:#5a4763;--accent:#c49acd;--pale:#ebdff2;--line:#cbc8ca}
-*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:#fff;color:#000}body{font-family:"Rufina",Georgia,serif}
-button,input,select{font:inherit}.app{min-height:100dvh}.sidebar{position:fixed;inset:0 auto 0 0;width:260px;background:var(--lavender);padding:25px 7px 22px;display:flex;flex-direction:column;z-index:5}
-.brand{width:220px;height:112px;object-fit:cover;object-position:center;margin:-4px auto 12px;border-bottom:2px solid var(--purple)}
-.nav-title{font-family:"Rufina";font-size:24px;color:var(--ink);margin:8px 18px}.nav{display:grid;gap:3px}.nav a{height:46px;display:flex;align-items:center;gap:26px;padding:0 12px;border-radius:15px;color:var(--purple);font-family:"Rufina";font-size:20px;text-decoration:none}
-.nav a.active{background:rgba(255,255,255,.57);box-shadow:0 0 4px #0004}.nav img{width:30px;height:30px;object-fit:contain}.logout{margin:auto 16px 0;height:48px;border:0;border-radius:14px;background:var(--pale);color:#df1f1f;font-family:"Rufina";font-size:20px;display:flex;align-items:center;justify-content:center;gap:14px;box-shadow:0 0 4px #0003;cursor:pointer}.logout img{width:22px}
-.main{margin-left:260px;min-height:100dvh;padding:29px 34px 43px 62px}.topbar{height:81px;display:flex;align-items:center;gap:16px;margin-bottom:28px}.title-icon{width:90px;height:81px;border-radius:30px;background:var(--accent);display:grid;place-items:center;flex:none}.title-icon img{width:60px;height:60px;object-fit:contain}.topbar h1{margin:0;font-family:"Rufina";font-size:40px;font-weight:400;color:var(--ink)}.profile-chip{margin-left:auto;width:246px;height:63px;border-radius:30px;background:var(--accent);display:flex;align-items:center;padding:6px 12px;gap:12px;font-family:"Roboto";font-size:16px}.profile-chip i{width:51px;height:51px;border-radius:50%;background:#000;display:block}.profile-chip small{display:block;color:#666;font-size:16px}
-.panel{background:#fff;box-shadow:0 4px 10px 3px #0004;border-radius:25px}.toolbar{display:grid;grid-template-columns:minmax(240px,1fr) 145px 108px;gap:18px;align-items:center;margin:10px 20px 26px}.search{height:49px;border:1px solid #d9d9d9;border-radius:999px;box-shadow:0 4px 1px #0004;padding:0 20px;color:#333;min-width:0}.toolbar select{height:41px;background:#fff;border:1px solid #856fc5;padding:0 12px;color:#333}
-.table-panel{padding:16px 26px 30px;min-height:820px;border-radius:0;box-shadow:2px 4px 8px #0004}.data-table{width:100%;border-collapse:collapse;font-size:17px}.data-table th{background:var(--lavender);font-size:20px;font-weight:400;padding:9px}.data-table th:first-child{border-radius:14px 0 0 14px}.data-table th:last-child{border-radius:0 14px 14px 0}.data-table td{height:61px;padding:7px 18px;border-bottom:1px solid var(--line);vertical-align:middle}.data-table td:last-child{text-align:right;white-space:nowrap}.pill,.action{display:inline-block;border:0;border-radius:25px;padding:2px 10px;font-family:"Rufina";font-size:16px;line-height:1.15}.confirmed,.accept{background:#62ee72}.declined,.reject{background:#ff879c}.pending{background:#ffed57}.action{cursor:pointer;margin-left:10px}.review{background:#fff;border:1px solid #000}.section-label{font-size:20px;margin:0 0 -14px 20px}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:55px;margin:18px 8px 14px}.stat{height:158px;border-radius:30px;padding:18px 21px}.stat:nth-child(1){background:#e5d9e1}.stat:nth-child(2){background:#d6e6f2}.stat:nth-child(3){background:#d9e1d9}.stat:nth-child(4){background:#e0d7eb}.stat b{display:block;font-size:20px;margin-bottom:20px}.stat strong{font-family:"Roboto";font-size:40px;font-weight:500;white-space:nowrap}
-.profile-panel{min-height:842px;padding:33px 42px 31px}.cover{height:319px;border-radius:25px;background:linear-gradient(180deg,#d8c6e5 0%,#fff 100%);position:relative}.avatar{position:absolute;width:160px;height:154px;border:5px solid #fff;border-radius:50%;background:#d8c6e5;left:28px;bottom:-73px}.identity{margin:74px 28px 8px;display:flex;align-items:end;justify-content:space-between;gap:20px}.identity h2{font-size:64px;font-weight:400;line-height:1;margin:0 0 4px}.identity p{font-size:24px;margin:3px 0}.profile-actions{text-align:right;align-self:center}.edit{width:152px;height:49px;border:0;border-radius:20px;background:var(--lavender);font-size:20px;cursor:pointer}.privacy{display:block;margin-top:16px;font-size:20px}.profile-grid{display:grid;grid-template-columns:285px 1fr;gap:16px;margin:16px 12px 0}.info-card{border:2px solid #dac9e6;border-radius:25px;padding:15px 20px;min-height:168px}.info-card h3{font-size:24px;font-weight:400;margin:0 0 12px}.info-card p{margin:4px 0;font-size:15px}.info-card .rule{height:1px;background:#ddd;margin:18px 0 10px}.fact{display:grid;grid-template-columns:max-content 1fr;align-items:center;gap:12px;margin:10px 0;font-size:15px}.fact b{background:var(--lavender);border-radius:20px;padding:4px 10px;font-weight:400}.bio{grid-column:1/-1;min-height:147px;font-size:16px;line-height:1.25;padding:28px 36px}.admin-grid{grid-template-columns:repeat(2,1fr)}.admin-grid .info-card{min-height:205px}.admin-grid .bio{min-height:auto}.role-badge{display:inline-block;background:var(--lavender);border-radius:20px;padding:4px 12px;font-size:15px}
-.empty-note{display:none}.toast{position:fixed;right:28px;bottom:28px;background:#302536;color:#fff;padding:12px 20px;border-radius:10px;opacity:0;transform:translateY(12px);transition:.2s;z-index:20}.toast.show{opacity:1;transform:none}
-@media(max-width:1000px){.sidebar{width:210px}.main{margin-left:210px;padding:24px}.brand{width:185px}.nav a{gap:14px;font-size:17px}.stats{gap:12px}.profile-grid,.admin-grid{grid-template-columns:1fr}.bio{grid-column:auto}.data-table{min-width:850px}.table-wrap{overflow:auto}.topbar h1{font-size:32px}.profile-chip{display:none}}
-@media(max-width:680px){.sidebar{position:static;width:100%;height:auto;padding:10px}.brand{height:70px;margin:0 auto}.nav-title,.account-title,.logout{display:none}.nav{grid-template-columns:repeat(3,1fr)}.nav a{justify-content:center;height:42px;padding:0;font-size:0}.nav img{width:25px;height:25px}.main{margin:0;padding:18px 12px}.topbar{height:60px;margin-bottom:16px}.title-icon{width:60px;height:58px;border-radius:20px}.title-icon img{width:44px;height:44px}.topbar h1{font-size:27px}.table-panel{padding:14px 10px}.toolbar{grid-template-columns:1fr 1fr;margin:6px 0 18px;gap:8px}.search{grid-column:1/-1}.stats{grid-template-columns:1fr 1fr}.stat{height:120px}.stat strong{font-size:30px}.profile-panel{padding:18px;min-height:auto}.cover{height:210px}.avatar{width:112px;height:112px;bottom:-50px}.identity{margin:56px 8px 8px;display:block}.identity h2{font-size:42px}.identity p{font-size:19px}.profile-actions{text-align:left;margin-top:18px}.profile-grid{margin:18px 0 0}.admin-grid{grid-template-columns:1fr}}
-
-/* Keep the supplied design responsive and remove fixed demo-sized panels. */
-.main { min-width:0; }
-.table-panel,.profile-panel { min-height:0; }
-.table-wrap { max-width:100%; overflow-x:auto; }
-.data-table { min-width:0; }
-.nav svg { width:24px; height:24px; flex:none; }
-.brand { display:flex; align-items:center; justify-content:center; color:#5a4763; font-size:22px; letter-spacing:1px; }
-.brand .sun { color:#e9a844; font-size:18px; }
-.title-icon svg { width:60px; height:60px; }
-.profile-chip { flex:none; }
-.profile-panel { padding:18px; }
-.cover { height:190px; }
-.avatar { width:90px; height:90px; bottom:-43px; }
-.identity { margin-top:50px; }
-.identity h2 { font-size:clamp(24px,4vw,42px); overflow-wrap:anywhere; }
-.identity p { font-size:clamp(12px,1.5vw,17px); }
-.profile-grid { grid-template-columns:minmax(0,1fr) minmax(0,1.6fr); }
-.info-card { min-height:0; }
-.bio { min-height:0; }
-.fact { grid-template-columns:minmax(0,max-content) minmax(0,1fr); }
-.fact span { overflow-wrap:anywhere; }
-.table-panel { padding:12px 16px 18px; }
-.data-table { font-size:12px; }
-.data-table th { font-size:13px; }
-.data-table td { height:auto; padding:9px 8px; }
-.toolbar { grid-template-columns:minmax(0,1fr) 130px 105px; }
-.action { margin-left:3px; font-size:11px; }
-.action-group { display:inline-flex; gap:4px; }
-.action-group .action { margin:0; }
-.empty-note { display:table-row; }
-.dialog { width:min(560px,calc(100vw - 32px)); border:0; border-radius:16px; padding:24px; box-shadow:0 12px 40px #0004; }
-.dialog::backdrop { background:#1b152c66; }
-.dialog h2 { margin:0 0 12px; color:#342b40; }
-.dialog p { margin:8px 0; overflow-wrap:anywhere; }
-.profile-fields { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; margin-top:18px; }
-.profile-fields label { display:flex; flex-direction:column; gap:5px; color:#5a4763; font:500 13px Inter,Arial,sans-serif; }
-.profile-fields input,.profile-fields textarea { width:100%; border:1px solid #d9d0df; border-radius:7px; padding:9px; font:400 14px Roboto,Arial,sans-serif; }
-.profile-fields textarea { min-height:80px; resize:vertical; }
-.profile-fields .wide { grid-column:1/-1; }
-.dialog-actions { display:flex; justify-content:flex-end; gap:8px; margin-top:18px; }
-.dialog-actions button { border:0; border-radius:8px; padding:9px 14px; cursor:pointer; }
-.dialog-actions .save { background:#6750a4; color:white; }
-.toast { position:fixed; right:18px; bottom:18px; z-index:20; padding:10px 16px; border-radius:9px; background:#302536; color:white; opacity:0; transition:opacity .2s; }
-.toast.show { opacity:1; }
-@media(max-width:1000px) { .profile-grid,.admin-grid { grid-template-columns:minmax(0,1fr) minmax(0,1fr); } .bio { grid-column:1/-1; } }
-@media(max-width:680px) {
-  .table-wrap { overflow-x:auto; }
-  .data-table { min-width:650px; }
-  .toolbar { grid-template-columns:minmax(0,1fr) minmax(85px,1fr); }
-  .toolbar .search { grid-column:1/-1; }
-  .stats { grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; }
-  .stat { height:auto; min-height:78px; padding:10px; }
-  .stat b { margin-bottom:8px; font-size:13px; }
-  .stat strong { font-size:22px; }
-  .profile-grid,.admin-grid { grid-template-columns:1fr; }
-  .profile-grid .bio { grid-column:auto; }
-  .identity { margin:55px 8px 8px; display:flex; align-items:flex-start; }
-  .identity h2 { font-size:28px; }
-  .identity p { font-size:13px; }
-  .profile-actions { margin-top:4px; }
-  .edit { width:auto; height:auto; padding:8px 12px; font-size:13px; }
-  .privacy { margin-top:8px; font-size:12px; }
-  .profile-fields { grid-template-columns:1fr; }
-  .profile-fields .wide { grid-column:auto; }
-  .topbar h1 { font-size:25px; }
-  .title-icon { width:58px; height:58px; border-radius:18px; }
-  .title-icon svg { width:40px; height:40px; }
-}
-</style>
+<link rel="stylesheet" href="/styles.css">
 </head>
-<body data-page="bookings" data-page-data='{{ {"bookings": bookings|default([]), "appointments": appointments|default([]), "stats": stats|default({}), "profile": profile|default({}), "userName": user.display_name|default("")}|tojson }}'>
-<div id="app" class="app"></div>
-<dialog class="dialog" id="reviewDialog">
-<button class="close-dialog" type="button" aria-label="Close">×</button>
-<h2 id="reviewTitle">Appointment details</h2>
-<p id="reviewEmail"></p><p id="reviewSchedule"></p><p id="reviewSession"></p><p id="reviewStatus"></p>
-<div class="dialog-actions"><button type="button" class="cancel-review">Close</button><button type="button" id="confirmReview" class="save">Confirm appointment</button></div>
-</dialog>
-<dialog class="dialog" id="profileDialog">
-<button class="close-dialog" type="button" aria-label="Close">×</button>
-<h2>Edit Profile</h2><form id="profileForm"><div class="profile-fields" id="profileFields"></div>
-<div class="dialog-actions"><button type="button" class="cancel-profile">Cancel</button><button type="submit" class="save">Save changes</button></div></form>
-</dialog>
-<div class="toast" role="status" aria-live="polite"></div>
-<script>
-(() => {
-const page=document.body.dataset.page;
-const pageData=JSON.parse(document.body.dataset.pageData);
-const bookings=pageData.bookings;
-const appointments=pageData.appointments;
-const stats=pageData.stats;
-const profile=pageData.profile;
-const role=page==="user"?"client":page==="admin"?"admin":"therapist";
-const userName=pageData.userName;
-const $=s=>document.querySelector(s);
-const esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-const iconPaths={
- home:'<path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2h-5v-7h-4v7H5a2 2 0 0 1-2-2z"/>',
- sessions:'<rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8m-4-4v4"/><circle cx="12" cy="10" r="2.5"/>',
- bookings:'<rect x="3" y="4" width="18" height="17" rx="2"/><path d="M16 2v4M8 2v4M3 10h18m-13 5 2 2 5-5"/>',
- appointments:'<rect x="3" y="4" width="18" height="17" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>',
- history:'<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6m-8 3v4l3 2"/>',
- profile:'<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>',
- settings:'<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l-2.8 2.8a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5h-4a1.7 1.7 0 0 0-2.8-1.2l-2.8-2.8a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1v-4a1.7 1.7 0 0 0 1.2-2.8l2.8-2.8a1.7 1.7 0 0 0 2.8-1.2h4a1.7 1.7 0 0 0 2.8 1.2l2.8 2.8a1.7 1.7 0 0 0 1.2 2.8v4a1.7 1.7 0 0 0-1.2 1.8z"/>',
- dashboard:'<path d="M4 4h7v7H4zm9 0h7v4h-7zm0 6h7v10h-7zm-9 3h7v7H4z"/>',
- users:'<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.9M16 3.1a4 4 0 0 1 0 7.8"/>',
- reports:'<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8m-8 4h8"/>',
- search:'<circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>',
- messages:'<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>'
-};
-function svg(name){return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">'+iconPaths[name]+'</svg>'}
-function navLink(label,path,name,active){return '<a href="'+path+'" class="'+(active?'active':'')+'">'+svg(name)+'<span>'+label+'</span></a>'}
-function sidebar(){
- let rows=[];
- if(role==="therapist") rows=[["Dashboard","/therapist","home"],["My Sessions","/therapist/sessions","sessions"],["Bookings","/therapist/bookings","bookings"],["Appointments","/therapist/appointments","appointments"],["Session History","/therapist/history","history"]];
- else if(role==="admin") rows=[["Dashboard","/admin","dashboard"],["Therapist Verification","/admin/therapist-verification","sessions"],["User Management","/admin/user-management","users"],["Reports","/admin/reports","reports"]];
- else rows=[["Dashboard","/client","home"],["Search Therapist","/search-therapist","search"],["Appointments","/schedule","appointments"],["Messages","/chats","messages"],["Session History","/schedule","history"]];
- const active=page==="bookings"?"Bookings":page==="appointments"?"Appointments":"Profile";
- return '<aside class="sidebar"><div class="brand">S<span class="sun">☼</span>LACE</div><div class="nav-title">Main Menu</div><nav class="nav">'+rows.map(r=>navLink(r[0],r[1],r[2],r[0]===active)).join("")+'</nav><div class="nav-title account-title">Account</div><nav class="nav">'+navLink("Profile","/profile?role="+role,"profile",active==="Profile")+navLink("Settings","/settings?role="+role,"settings",false)+'</nav><a class="logout" href="/">↪ Log Out</a></aside>';
-}
-function topbar(title,withChip){
- const icon=page==="bookings"?"bookings":page==="appointments"?"appointments":"profile";
- return '<header class="topbar"><span class="title-icon">'+svg(icon)+'</span><h1>'+esc(title)+'</h1>'+(withChip?'<div class="profile-chip"><i>'+esc((userName||"T").slice(0,1))+'</i><span>'+esc(userName)+'<small>Therapist</small></span></div>':'')+'</header>';
-}
-function statusClass(status){return String(status||"pending").toLowerCase().replace(/[^a-z]+/g,"-")}
-function statusPill(status){return '<span class="pill '+statusClass(status)+'">'+esc(status)+'</span>'}
-function controls(kind){return '<div class="toolbar"><input class="search" type="search" aria-label="Search by name or email" placeholder="Search by name or email"><select class="status" aria-label="Filter by status"><option value="">All Statuses</option><option>Pending</option><option>Confirmed</option><option>Cancelled</option><option>Completed</option></select><select class="sort" aria-label="Sort by date"><option value="desc">Sort By: Newest</option><option value="asc">Sort By: Oldest</option></select></div>'}
-function tablePage(items,isAppointments){
- const rows=items.map(item=>{
-  const schedule=esc((item.display_date||item.date||"")+" · "+(item.time||""));
-  const status=esc(item.status||"Pending"), shownStatus=status==="Cancelled"?"Declined":status;
-  const buttons=isAppointments?'<button type="button" class="action review" data-review="'+esc(item.id)+'">Review</button>':(status==="Pending"?'<span class="action-group"><button type="button" class="action accept" data-update="'+esc(item.id)+'" data-status="Confirmed">Accept</button><button type="button" class="action reject" data-update="'+esc(item.id)+'" data-status="Cancelled">Decline</button></span>':"");
-  const actionCell=isAppointments?buttons:(status==="Pending"?buttons:statusPill(shownStatus));
-  return '<tr data-id="'+esc(item.id)+'" data-status="'+status+'" data-sort="'+esc(item.sort_key||0)+'" data-search="'+esc((item.client||"")+" "+(item.client_email||"")).toLowerCase()+'"><td>'+esc(item.client||"")+'</td><td>'+esc(item.client_email||"")+'</td><td>'+schedule+'</td><td>'+actionCell+'</td>'+(isAppointments?'<td>'+statusPill(status)+'</td>':"")+'</tr>'; }).join("");
- const noItems=items.length===0?'<tr class="empty-note"><td colspan="'+(isAppointments?5:4)+'">'+(isAppointments?"No appointments yet.":"No bookings yet.")+'</td></tr>':"";
- return topbar(isAppointments?"Appointments":"Bookings",true)+(isAppointments?'<div class="stats"><div class="stat"><b>Upcoming</b><strong>'+esc(stats.upcoming??0)+'</strong></div><div class="stat"><b>Pending</b><strong>'+esc(stats.pending??0)+'</strong></div><div class="stat"><b>Active Users</b><strong>'+esc(stats.active_users??0)+'</strong></div><div class="stat"><b>Next Session</b><strong>'+esc(stats.next_session??"—")+'</strong></div></div>':"")+'<section class="panel table-panel">'+(isAppointments?'<p class="section-label">Appointment list</p>':"")+controls(isAppointments?"appointments":"bookings")+'<div class="table-wrap"><table class="data-table"><thead><tr>'+(isAppointments?'<th>Appointment List</th>':'<th>User</th>')+'<th>Email</th><th>Schedule</th><th>Action</th>'+(isAppointments?'<th>Status</th>':"")+'</tr></thead><tbody>'+rows+noItems+'</tbody></table></div><div class="pagination-count">Showing <span class="visible-count">'+items.length+'</span> of <span class="total-count">'+items.length+'</span> '+(isAppointments?"appointments":"bookings")+'</div></section>';
-}
-function formField(key,label,type,wide){return '<label class="'+(wide?"wide":"")+'">'+label+'<input type="'+type+'" name="'+key+'" value="'+esc(profile[key]||"")+'"></label>'}
-function profileFields(){
- let html=formField("name","Display name","text",false)+formField("email","Email address","email",false);
- if(role==="client") html+=formField("profile_type","Profile type","text",false)+'<label class="wide">About me<textarea name="bio">'+esc(profile.bio||"")+'</textarea></label>';
- if(role==="therapist") html+=formField("title","Professional title","text",false)+formField("education","Education","text",false)+formField("certifications","Qualifications","text",false)+formField("specialty","Specialization","text",false)+formField("availability","Availability","text",false)+'<label class="wide">About me<textarea name="bio">'+esc(profile.bio||"")+'</textarea></label>';
- if(role==="admin") html+=formField("title","Administrator role","text",false)+formField("department","Department","text",false)+formField("access_level","Platform access","text",false)+formField("security_status","Account security","text",false)+'<label class="wide">About me<textarea name="bio">'+esc(profile.bio||"")+'</textarea></label>';
- return html;
-}
-function profilePage(){
- const admin=role==="admin", therapist=role==="therapist", title=therapist?"My Professional Profile":"My Profile";
- let details="";
- if(role==="client") details='<div class="info-card bio"><h3>About me</h3><p>'+esc(profile.bio||"")+'</p></div>';
- if(therapist) details='<div class="info-card"><h3>About me</h3><p>'+esc(profile.bio||"")+'</p><div class="rule"></div><p>'+esc(profile.availability||"")+'</p></div><div class="info-card"><h3>Professional Information</h3><div class="fact"><b>Professional title</b><span>'+esc(profile.title||"")+'</span></div><div class="fact"><b>Qualifications</b><span>'+esc(profile.education||profile.certifications||"")+'</span></div><div class="fact"><b>Specialization</b><span>'+esc(profile.specialty||"")+'</span></div><div class="fact"><b>Availability</b><span>'+esc(profile.availability||"")+'</span></div></div>';
- if(admin) details='<div class="info-card"><h3>Administrator Profile</h3><p>'+esc(profile.bio||"")+'</p><div class="rule"></div><div class="fact"><b>Role</b><span>'+esc(profile.title||"")+'</span></div></div><div class="info-card"><h3>Administrative Access</h3><div class="fact"><b>Department</b><span>'+esc(profile.department||"")+'</span></div><div class="fact"><b>Permissions</b><span>'+esc(profile.access_level||"")+'</span></div><div class="fact"><b>Account security</b><span>'+esc(profile.security_status||"")+'</span></div></div>';
- return topbar(title,false)+'<section class="panel profile-panel"><div class="cover"><div class="avatar">'+esc((profile.name||"?").slice(0,1))+'</div></div><div class="identity"><div><h2>'+esc(profile.name||"")+'</h2><p>'+esc(therapist?profile.title:admin?profile.title:profile.profile_type)+'</p><p>'+esc(profile.email||"")+'</p></div><div class="profile-actions"><button type="button" class="edit">Edit Profile</button><a class="privacy" href="/settings?role='+role+'">Privacy Settings ↗</a></div></div><div class="profile-grid '+(admin?"admin-grid":"")+'">'+details+'</div></section>';
-}
-const app=$("#app");
-app.innerHTML=sidebar()+'<main class="main">'+(page==="bookings"?tablePage(bookings,false):page==="appointments"?tablePage(appointments,true):profilePage())+'</main>';
-function notify(text){const el=$(".toast");el.textContent=text;el.classList.add("show");setTimeout(()=>el.classList.remove("show"),2200)}
-function visibleRows(){
- const query=($(".search")?.value||"").trim().toLowerCase(),status=($(".status")?.value||"").toLowerCase();
- const body=$(".data-table tbody");if(!body)return;
- const rows=Array.from(body.querySelectorAll("tr[data-id]"));
- const filtered=rows.filter(r=>(!query||r.dataset.search.includes(query))&&(!status||r.dataset.status.toLowerCase()===status));
- const direction=$(".sort")?.value==="asc"?1:-1;
- filtered.sort((a,b)=>(Number(a.dataset.sort)-Number(b.dataset.sort))*direction);
- rows.forEach(r=>r.hidden=!filtered.includes(r));
- const no=body.querySelector(".empty-note");
- if(filtered.length===0&&rows.length>0){if(!no){const tr=document.createElement("tr");tr.className="empty-note";tr.innerHTML='<td colspan="'+(page==="appointments"?5:4)+'">No results match your search.</td>';body.append(tr)}else no.hidden=false}else if(no)no.hidden=true;
- const count=$(".visible-count"),total=$(".total-count");if(count)count.textContent=filtered.length;if(total)total.textContent=rows.length;
-}
-$(".search")?.addEventListener("input",visibleRows);$(".status")?.addEventListener("change",visibleRows);$(".sort")?.addEventListener("change",visibleRows);
-document.addEventListener("click",async event=>{
- const update=event.target.closest("[data-update]");
- if(update){update.disabled=true;try{const res=await fetch("/api/appointments/"+encodeURIComponent(update.dataset.update),{method:"PATCH",headers:{"Content-Type":"application/json"},body:JSON.stringify({status:update.dataset.status})});if(!res.ok)throw Error();location.reload()}catch{update.disabled=false;notify("Could not update this booking. Please try again.")}return}
- const review=event.target.closest("[data-review]");
- if(review){const item=appointments.find(x=>String(x.id)===review.dataset.review);if(!item)return;$("#reviewTitle").textContent=item.client||"Appointment details";$("#reviewEmail").textContent=item.client_email||"";$("#reviewSchedule").textContent=(item.display_date||item.date||"")+" · "+(item.time||"");$("#reviewSession").textContent=item.session_type||"";$("#reviewStatus").textContent="Status: "+item.status;const confirm=$("#confirmReview");confirm.hidden=item.status!=="Pending";confirm.dataset.id=item.id;$("#reviewDialog").showModal()}
- if(event.target.closest(".edit")){$("#profileFields").innerHTML=profileFields();$("#profileDialog").showModal()}
- const closeButton=event.target.closest(".close-dialog");if(closeButton)closeButton.closest("dialog").close();if(event.target.closest(".cancel-review"))$("#reviewDialog").close();
- if(event.target.closest(".cancel-profile"))$("#profileDialog").close();
-});
-$("#confirmReview")?.addEventListener("click",async event=>{const button=event.currentTarget;button.disabled=true;try{const res=await fetch("/api/appointments/"+encodeURIComponent(button.dataset.id),{method:"PATCH",headers:{"Content-Type":"application/json"},body:JSON.stringify({status:"Confirmed"})});if(!res.ok)throw Error();location.reload()}catch{button.disabled=false;notify("Could not confirm this appointment.")}});
-$("#profileForm")?.addEventListener("submit",async event=>{event.preventDefault();const button=event.submitter;button.disabled=true;const payload=Object.fromEntries(new FormData(event.currentTarget));try{const res=await fetch("/api/profile/"+role,{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});if(!res.ok)throw Error();location.reload()}catch{button.disabled=false;notify("Could not save your profile. Please try again.")}});
-visibleRows();
-})();
+<body class="dashboard-body therapist-bookings-page">
+<div class="app-layout">
+<aside class="sidebar">
+<div class="sidebar-logo">
+  <img src="{{ url_for('static', filename='solace-logo-pnjee.png') }}" alt="Solace" class="sidebar-logo-img">
+</div>
+<div class="sean-nav-caption">Main Menu</div>
+<nav class="sidebar-nav">
+<a href="/therapist" class="nav-item">
+<svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+<path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2h-5v-7h-4v7H5a2 2 0 0 1-2-2z"/>
+</svg>
+<span>Dashboard</span>
+</a>
+<a href="/therapist/sessions" class="nav-item">
+<svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+<rect x="2" y="3" width="20" height="14" rx="2"/>
+<path d="M8 21h8m-4-4v4"/>
+<circle cx="12" cy="10" r="2.5"/>
+</svg>
+<span>My Sessions</span>
+</a>
+<a href="/therapist/bookings" class="nav-item active">
+<svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+<rect x="3" y="4" width="18" height="17" rx="2"/>
+<path d="M16 2v4M8 2v4M3 10h18m-13 5 2 2 5-5"/>
+</svg>
+<span>Bookings</span>
+</a>
+<a href="/therapist/appointments" class="nav-item">
+<svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+<rect x="3" y="4" width="18" height="17" rx="2"/>
+<path d="M16 2v4M8 2v4M3 10h18"/>
+</svg>
+<span>Appointments</span>
+</a>
+<a href="/therapist/history" class="nav-item">
+<svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+<path d="M14 2v6h6m-8 3v4l3 2"/>
+</svg>
+<span>Session History</span>
+</a>
+</nav>
+<div class="sean-nav-caption account-caption">Account</div>
+<nav class="sidebar-nav account-nav">
+<a href="/profile?role=therapist" class="nav-item">
+<svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+<circle cx="12" cy="7" r="4"/>
+</svg>
+<span>Profile</span>
+</a>
+<a href="/settings?role=therapist" class="nav-item">
+<svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+<circle cx="12" cy="12" r="3"/>
+<path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1-2.8 2.8-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5v.2h-4v-.2a1.7 1.7 0 0 0-1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1-2.8-2.8.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3v-4h.2a1.7 1.7 0 0 0 1.5-1 1.7 1.7 0 0 0-.3-1.8l-.1-.1 2.8-2.8.1.1a1.7 1.7 0 0 0 1.8.3 1.7 1.7 0 0 0 1-1.5V3h4v.2a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1 2.8 2.8-.1.1a1.7 1.7 0 0 0-.3 1.8 1.7 1.7 0 0 0 1.5 1h.2v4h-.2a1.7 1.7 0 0 0-1.5 1z"/>
+</svg>
+<span>Settings</span>
+</a>
+</nav>
+<a class="sean-logout" href="/">
+<svg class="logout-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+<path d="M10 17l5-5-5-5m5 5H3"/>
+<path d="M12 3h7a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-7"/>
+</svg> Log Out</a>
+</aside>
+<main class="main-content sean-main-content">
+<header class="sean-topbar">
+<div class="profile-page-heading">
+<span class="profile-heading-icon">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M16 2v4M8 2v4M3 10h18m-13 5 2 2 5-5"/></svg>
+</span>
+<h1>Bookings</h1>
+</div>
+<div class="user-pill">
+<div class="user-avatar">D</div>
+<div class="user-details">
+<span class="user-name">{{ user.display_name }}</span>
+<span class="user-role">Therapist</span>
+</div>
+</div>
+</header>
+<section class="booking-list-card sean-table-page">
+<div class="booking-list-heading">
+<div class="header-icon-badge">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+<rect x="3" y="4" width="18" height="17" rx="2"/>
+<line x1="16" y1="2" x2="16" y2="6"/>
+<line x1="8" y1="2" x2="8" y2="6"/>
+<path d="m8 14 2 2 5-5"/>
+</svg>
+</div>
+<h1>Bookings</h1>
+</div>
+<section class="search-filter-card booking-toolbar">
+<div class="search-input-wrapper">
+<input class="search-field booking-search" type="search" placeholder="Search by name or email" aria-label="Search bookings">
+</div>
+<div class="filter-dropdown-wrapper">
+<select class="filter-select booking-filter" aria-label="Filter by status">
+<option value="all">All Statuses</option>
+<option value="Pending">Pending</option>
+<option value="Confirmed">Confirmed</option>
+<option value="Cancelled">Cancelled</option>
+<option value="Completed">Completed</option>
+</select>
+<svg class="select-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+<polyline points="6 9 12 15 18 9"/>
+</svg>
+</div>
+<div class="filter-dropdown-wrapper sort-dropdown">
+<select class="filter-select booking-sort" aria-label="Sort bookings">
+<option value="desc">Sort By: Newest</option>
+<option value="asc">Sort By: Oldest</option>
+</select>
+<svg class="select-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+<polyline points="6 9 12 15 18 9"/>
+</svg>
+</div>
+</section>
+<div class="admin-full-table-box appointment-table-wrap">
+<table class="admin-data-table appointment-table">
+<thead>
+<tr>
+<th>User</th>
+<th>Email</th>
+<th>Schedule</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+{% for item in bookings %}
+<tr data-appointment-id="{{ item.id }}" data-status="{{ item.status }}" data-schedule="{{ item.sort_key }}" data-search="{{ item.client|lower }} {{ item.client_email|lower }}">
+<td class="serif-td font-medium">{{ item.client }}</td>
+<td class="serif-td">{{ item.client_email }}</td>
+<td class="serif-td">{{ item.display_date }} · {{ item.time }}</td>
+<td>
+{% if item.status == 'Pending' %}
+<span class="booking-action-group">
+<button class="booking-action review-action" data-status="Confirmed">Accept</button>
+<button class="booking-action decline-action" data-status="Cancelled">Decline</button>
+</span>
+{% elif item.status == 'Cancelled' %}
+<span class="status-badge status-cancelled">Declined</span>
+{% else %}
+<span class="status-badge status-confirmed">Confirmed</span>
+{% endif %}
+</td>
+</tr>
+{% else %}
+<tr class="no-appointments-row">
+<td colspan="4">No bookings yet.</td>
+</tr>
+{% endfor %}
+<tr class="no-filter-results" hidden>
+<td colspan="4">No results match your search.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="table-pagination-footer booking-table-footer">
+<span class="pagination-count">Showing <strong id="visibleAppointmentCount">{{ bookings|length }}</strong> of <span id="totalAppointmentCount">{{ bookings|length }}</span> bookings</span>
+<div class="pagination-controls booking-pagination">
+<button type="button" class="page-btn previous-page" aria-label="Previous page">&larr;</button>
+<button type="button" class="page-btn active-page current-page">1</button>
+<button type="button" class="page-btn next-page" aria-label="Next page">&rarr;</button>
+</div>
+</div>
+</section>
+</main>
+</div>
+<script src="/sean-pages.js">
 </script>
 </body>
 </html>
