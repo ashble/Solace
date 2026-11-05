@@ -28,9 +28,7 @@ else:
     TEMPLATES_DIR = os.path.join(CURRENT_DIR, "templates")
 
 # Auto-detect static/CSS directory
-if os.path.isfile(os.path.join(FRONTEND_DIR, "static", "css", "styles.css")):
-    STATIC_DIR = os.path.join(FRONTEND_DIR, "static", "css")
-elif os.path.isfile(os.path.join(FRONTEND_DIR, "static", "styles.css")):
+if os.path.isdir(os.path.join(FRONTEND_DIR, "static")):
     STATIC_DIR = os.path.join(FRONTEND_DIR, "static")
 elif os.path.isdir(os.path.join(CURRENT_DIR, "static")):
     STATIC_DIR = os.path.join(CURRENT_DIR, "static")
@@ -133,7 +131,7 @@ def appointment_sort_key(date_value, time_value):
 @app.route("/styles.css")
 @app.route("/<path:subpath>/styles.css")
 def serve_css(subpath=None):
-    return send_from_directory(STATIC_DIR, "styles.css")
+    return send_from_directory(os.path.join(STATIC_DIR, "css"), "styles.css")
 
 @app.route("/solace-logo-pnjee.png")
 @app.route("/static/solace-logo-pnjee.png")
@@ -320,11 +318,12 @@ def update_appointment(appointment_id):
 from routes.client_routes import client_bp
 from routes.admin_routes import admin_bp
 from routes.therapist_routes import therapist_bp
+from routes.auth_routes import auth_bp
 
 app.register_blueprint(client_bp)
 app.register_blueprint(admin_bp)
 app.register_blueprint(therapist_bp)
-
+app.register_blueprint(auth_bp)
 
 # ==========================================
 # 7. RUN SERVER
