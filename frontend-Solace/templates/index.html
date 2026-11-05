@@ -6,11 +6,9 @@
   <title>{{ role|capitalize }} Dashboard - Solace</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Istok+Web:wght@400;700&family=Oxanium:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Roboto:wght@400;500;700&family=Rufina:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
-  <style>
-    .nav-item { cursor: pointer; }
-  </style>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body class="dashboard-body">
   <div class="app-layout">
@@ -19,16 +17,12 @@
          ========================================== -->
     <aside class="sidebar">
       <div class="sidebar-logo">
-        <span class="logo-text">S</span>
-        <span class="logo-sun">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#E9A844" stroke-width="2"><circle cx="12" cy="12" r="4.5" fill="#E9A844" stroke="none"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="4.93" y1="4.93" x2="7.05" y2="7.05"/><line x1="16.95" y1="16.95" x2="19.07" y2="19.07"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.93" y1="19.07" x2="7.05" y2="16.95"/><line x1="16.95" y1="7.05" x2="19.07" y2="4.93"/></svg>
-        </span>
-        <span class="logo-text">LACE</span>
-      </div>
+  <img src="{{ url_for('static', filename='solace-logo-pnjee.png') }}" alt="Solace" class="sidebar-logo-img">
+</div>
 
-      <nav class="sidebar-nav">
-        <!-- 1. CLIENT SIDEBAR -->
-        {% if role == 'client' %}
+      <!-- 1. CLIENT SIDEBAR -->
+      {% if role == 'client' %}
+        <nav class="sidebar-nav">
           <a href="/client" class="nav-item {% if not active_tab or active_tab == 'dashboard' %}active{% endif %}">
             <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
             <span>Dashboard</span>
@@ -50,69 +44,94 @@
             <span>Profile</span>
           </a>
           <a href="/settings?role=client" class="nav-item {% if active_tab == 'settings' %}active{% endif %}">
-            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
             <span>Settings</span>
           </a>
+        </nav>
 
-        <!-- 2. THERAPIST SIDEBAR -->
-        {% elif role == 'therapist' %}
+      <!-- 2. THERAPIST SIDEBAR (Updated: My Chats, Appointments, My Clients) -->
+      {% elif role == 'therapist' %}
+        <div class="sidebar-section-label">MAIN MENU</div>
+        <nav class="sidebar-nav">
           <a href="/therapist" class="nav-item {% if not active_tab or active_tab == 'dashboard' %}active{% endif %}">
             <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
             <span>Dashboard</span>
           </a>
-          <a href="/therapist/sessions" class="nav-item {% if active_tab == 'sessions' %}active{% endif %}">
-            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/><circle cx="12" cy="10" r="2.5"/></svg>
-            <span>My Sessions</span>
-          </a>
-          <a href="/therapist/bookings" class="nav-item {% if active_tab == 'bookings' %}active{% endif %}">
-            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><path d="m8 15 2 2 5-5"/></svg>
-            <span>Bookings</span>
+          <a href="/therapist/chats" class="nav-item {% if active_tab == 'chats' %}active{% endif %}">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            <span>My Chats</span>
           </a>
           <a href="/therapist/appointments" class="nav-item {% if active_tab == 'appointments' %}active{% endif %}">
-            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><circle cx="12" cy="15" r="2.5"/></svg>
             <span>Appointments</span>
           </a>
           <a href="/therapist/history" class="nav-item {% if active_tab == 'history' %}active{% endif %}">
             <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><circle cx="12" cy="14" r="3"/><polyline points="12 13 12 14 13.5 14"/></svg>
             <span>Session History</span>
           </a>
+          <a href="/therapist/clients" class="nav-item {% if active_tab == 'clients' %}active{% endif %}">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            <span>My Clients</span>
+          </a>
+        </nav>
+
+        <div class="sidebar-section-label" style="margin-top: 18px;">ACCOUNT</div>
+        <nav class="sidebar-nav">
           <a href="/profile?role=therapist" class="nav-item {% if active_tab == 'profile' %}active{% endif %}">
             <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
             <span>Profile</span>
           </a>
           <a href="/settings?role=therapist" class="nav-item {% if active_tab == 'settings' %}active{% endif %}">
-            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-            <span>Settings</span>
-          </a>
-
-        <!-- 3. ADMIN SIDEBAR -->
-        {% elif role == 'admin' %}
-          <a href="/admin" class="nav-item {% if not active_tab or active_tab == 'dashboard' %}active{% endif %}">
-            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-            <span>Dashboard</span>
-          </a>
-          <a href="/admin/therapist-verification" class="nav-item {% if active_tab == 'verification' %}active{% endif %}">
-            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
-            <span style="line-height: 1.2;">Therapist<br>Verification</span>
-          </a>
-          <a href="/admin/user-management" class="nav-item {% if active_tab == 'users' %}active{% endif %}">
-            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-            <span style="line-height: 1.2;">User<br>Management</span>
-          </a>
-          <a href="/admin/reports" class="nav-item {% if active_tab == 'reports' %}active{% endif %}">
-            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-            <span>Reports</span>
-          </a>
-          <a href="/profile?role=admin" class="nav-item {% if active_tab == 'profile' %}active{% endif %}">
-            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-            <span>Profile</span>
-          </a>
-          <a href="/settings?role=admin" class="nav-item {% if active_tab == 'settings' %}active{% endif %}">
             <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
             <span>Settings</span>
           </a>
-        {% endif %}
-      </nav>
+        </nav>
+
+        <!-- Log Out Link at Bottom -->
+        <a href="/client" class="logout-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          <span>LOG OUT</span>
+        </a>
+
+      <!-- 3. ADMIN SIDEBAR -->
+            <!-- 3. ADMIN SIDEBAR -->
+      {% elif role == 'admin' %}
+        <div class="nav-section-title">Main Menu</div>
+        <nav class="sidebar-nav">
+          <a href="/admin" class="nav-item {% if not active_tab or active_tab == 'dashboard' %}active{% endif %}">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h7v7H4zm9 0h7v4h-7zm0 6h7v10h-7zm-9 3h7v7H4z"/></svg>
+            <span>Dashboard</span>
+          </a>
+          <a href="/admin/therapist-verification" class="nav-item {% if active_tab == 'verification' %}active{% endif %}">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/><circle cx="12" cy="10" r="2.5"/></svg>
+            <span>Therapist Verification</span>
+          </a>
+          <a href="/admin/user-management" class="nav-item {% if active_tab == 'users' %}active{% endif %}">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.9M16 3.1a4 4 0 0 1 0 7.8"/></svg>
+            <span>User Management</span>
+          </a>
+          <a href="/admin/reports" class="nav-item {% if active_tab == 'reports' %}active{% endif %}">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8m-8 4h8"/></svg>
+            <span>Reports</span>
+          </a>
+        </nav>
+
+        <div class="nav-section-title account-title" style="margin-top: 24px;">Account</div>
+        <nav class="sidebar-nav">
+          <a href="/profile?role=admin" class="nav-item {% if active_tab == 'profile' or active_page == 'profile' %}active{% endif %}">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            <span>Profile</span>
+          </a>
+          <a href="/settings?role=admin" class="nav-item {% if active_tab == 'settings' or active_page == 'settings' %}active{% endif %}">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l-2.8 2.8a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5h-4a1.7 1.7 0 0 0-2.8-1.2l-2.8-2.8a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1v-4a1.7 1.7 0 0 0 1.2-2.8l2.8-2.8a1.7 1.7 0 0 0 2.8-1.2h4a1.7 1.7 0 0 0 2.8 1.2l2.8 2.8a1.7 1.7 0 0 0 1.2 2.8v4a1.7 1.7 0 0 0-1.2 1.8z"/></svg>
+            <span>Settings</span>
+          </a>
+        </nav>
+
+        <a class="logout-btn" href="/">
+          <span>↪ Log Out</span>
+        </a>
+      {% endif %}
     </aside>
 
     <!-- ==========================================
@@ -122,7 +141,7 @@
       <!-- Top Bar with 1-Click Role Switcher -->
       <header class="top-header">
         <div style="position: relative;">
-          <div class="user-pill {% if role == 'admin' %}admin-pill{% endif %}" onclick="document.getElementById('roleMenu').classList.toggle('show-menu')" style="cursor: pointer;">
+          <div class="user-pill {% if role == 'admin' %}admin-pill{% endif %}" onclick="document.getElementById('roleMenu').classList.toggle('show-menu')">
             <div class="user-avatar {% if role == 'admin' %}admin-avatar{% endif %}"></div>
             <div class="user-details">
               <span class="user-name">{{ user.display_name }}</span>
@@ -131,7 +150,7 @@
           </div>
 
           <div id="roleMenu" class="role-switcher-dropdown">
-            <div style="padding: 8px 14px; font-size: 11px; font-weight: 700; color: #887B99; text-transform: uppercase;">Switch Role</div>
+            <div class="dropdown-header">Switch Role</div>
             <a href="/client" class="{% if role == 'client' %}active-role{% endif %}">👤 Client View</a>
             <a href="/therapist" class="{% if role == 'therapist' %}active-role{% endif %}">🩺 Therapist View</a>
             <a href="/admin" class="{% if role == 'admin' %}active-role{% endif %}">🛡️ Administrator View</a>
@@ -140,37 +159,17 @@
       </header>
 
       {% if active_tab == 'profile' %}
-        <section class="profile-page-heading"><span class="profile-heading-icon">♙</span><h1>{{ 'My Professional Profile' if role == 'therapist' else 'My Profile' }}</h1></section>
-        <section class="showcase-profile" data-profile-role="{{ role }}">
-          <div class="showcase-cover"></div>
-          <div class="showcase-body">
-            <div class="showcase-person-row"><div class="showcase-avatar">{{ profile.name[:1] }}</div><div class="showcase-person"><h2>{{ profile.name }}</h2><p>{{ profile.profile_type if role == 'client' else profile.title }}</p><a href="mailto:{{ profile.email }}">{{ profile.email }}</a></div><div class="showcase-links"><button type="button" class="edit-profile-btn" onclick="document.getElementById('profileEditor').showModal()">Edit Profile</button><a href="/settings?role={{ role }}">Privacy Settings <span>↗</span></a></div></div>
-            {% if role == 'client' %}
-              <div class="showcase-info-card client-about-card"><h3>About me</h3><p>{{ profile.bio }}</p><div class="profile-detail-tags"><span>🌱 &nbsp; Calm and curious</span><span>♡ &nbsp; Personal growth</span></div><small>{{ profile.privacy }}</small></div>
-            {% elif role == 'therapist' %}
-              <div class="showcase-info-grid"><section class="showcase-info-card"><h3>About me</h3><p>{{ profile.bio }}</p><small>📍 &nbsp; {{ profile.availability }}</small></section><section class="showcase-info-card"><h3>Professional Information</h3><div class="profile-detail-row"><span>Professional title</span><strong>{{ profile.title }}</strong></div><div class="profile-detail-row"><span>Qualification</span><strong>{{ profile.education }}</strong></div><div class="profile-detail-row"><span>Specialization</span><strong>{{ profile.specialty }}</strong></div><div class="profile-detail-row"><span>Availability</span><strong>{{ profile.availability }}</strong></div></section></div>
-            {% else %}
-              <div class="showcase-info-grid"><section class="showcase-info-card"><h3>About me</h3><p>{{ profile.bio }}</p><small>🛡 &nbsp; Solace administration</small></section><section class="showcase-info-card"><h3>Administrator Information</h3><div class="profile-detail-row"><span>Role</span><strong>{{ profile.title }}</strong></div><div class="profile-detail-row"><span>Department</span><strong>{{ profile.department }}</strong></div><div class="profile-detail-row"><span>Platform access</span><strong>{{ profile.access_level }}</strong></div><div class="profile-detail-row"><span>Account security</span><strong>{{ profile.security_status }}</strong></div></section></div>
-            {% endif %}
-          </div>
+        <!-- Profile View -->
+        <section class="welcome-section">
+          <h1 class="welcome-title">User Profile</h1>
+          <p class="welcome-subtitle">Manage your account and preferences</p>
         </section>
-        <p class="profile-save-notice" id="profileNotice" role="status"></p>
-        <dialog class="profile-editor-dialog" id="profileEditor"><form id="profileForm" data-role="{{ role }}"><div class="editor-heading"><div><span class="profile-eyebrow">ACCOUNT DETAILS</span><h2>Edit Profile</h2></div><button type="button" class="editor-close" onclick="document.getElementById('profileEditor').close()" aria-label="Close">×</button></div><div class="profile-fields">
-          <label>Display name<input name="name" value="{{ profile.name }}" required></label><label>Email address<input type="email" name="email" value="{{ profile.email }}" required></label>
-          {% if role == 'client' %}<label>Profile type<input name="profile_type" value="{{ profile.profile_type }}"></label><label class="profile-field-wide">About me<textarea name="bio" rows="4">{{ profile.bio }}</textarea></label>
-          {% elif role == 'therapist' %}<label>Professional title<input name="title" value="{{ profile.title }}"></label><label>Education<input name="education" value="{{ profile.education }}"></label><label>Specialization<input name="specialty" value="{{ profile.specialty }}"></label><label>Availability<input name="availability" value="{{ profile.availability }}"></label><label class="profile-field-wide">About me<textarea name="bio" rows="4">{{ profile.bio }}</textarea></label>
-          {% else %}<label>Administrator role<input name="title" value="{{ profile.title }}"></label><label>Department<input name="department" value="{{ profile.department }}"></label><label>Platform access<input name="access_level" value="{{ profile.access_level }}"></label><label>Account security<input name="security_status" value="{{ profile.security_status }}"></label><label class="profile-field-wide">About me<textarea name="bio" rows="4">{{ profile.bio }}</textarea></label>{% endif %}
-        </div><div class="editor-actions"><span id="profileEditorNotice" role="status"></span><button type="button" class="editor-cancel" onclick="document.getElementById('profileEditor').close()">Cancel</button><button type="submit" class="profile-save-btn">Save changes</button></div></form></dialog>
-      {% elif active_tab == 'bookings' or active_tab == 'appointments' %}
-        {% set is_bookings = active_tab == 'bookings' %}
-        {% set rows = bookings if is_bookings else appointments %}
-        {% if not is_bookings %}
-          <section class="appointment-stat-grid"><article class="appointment-stat-card stat-upcoming"><span>Upcoming</span><strong>{{ stats.upcoming }}</strong></article><article class="appointment-stat-card stat-pending"><span>Pending</span><strong>{{ stats.pending }}</strong></article><article class="appointment-stat-card stat-users"><span>Active Users</span><strong>{{ stats.active_users }}</strong></article><article class="appointment-stat-card stat-next"><span>Next Session</span><strong>{{ stats.next_session }}</strong></article></section>
-        {% endif %}
-        <section class="booking-list-card"><div class="booking-list-heading"><div class="booking-title-mark">♧</div><h1>{{ 'Bookings' if is_bookings else 'Appointments' }}</h1></div>
-          <div class="booking-toolbar"><div class="booking-search-wrap"><input class="booking-search" type="search" placeholder="Search by name or email" aria-label="Search appointments"></div><select class="booking-filter" aria-label="Filter by status"><option value="all">All Statuses</option><option value="Pending">Pending</option><option value="Confirmed">Confirmed</option><option value="Cancelled">Cancelled</option></select><select class="booking-sort" aria-label="Sort appointments"><option value="desc">Sort By: Newest</option><option value="asc">Sort By: Oldest</option></select></div>
-          <div class="appointment-table-wrap"><table class="appointment-table"><thead><tr><th>User</th><th>Email</th><th>Schedule</th><th>Action</th>{% if not is_bookings %}<th>Status</th>{% endif %}</tr></thead><tbody>{% for item in rows %}<tr data-appointment-id="{{ item.id }}" data-status="{{ item.status }}" data-schedule="{{ item.date }} {{ item.time }}" data-search="{{ item.client|lower }} {{ item.client_email|lower }}"><td>{{ item.client }}</td><td>{{ item.client_email }}</td><td>{{ item.display_date }} · {{ item.time }}</td><td>{% if item.status == 'Pending' %}<span class="booking-action-group"><button class="booking-action review-action" data-status="Confirmed">{{ 'Accept' if is_bookings else 'Review' }}</button>{% if is_bookings %}<button class="booking-action decline-action" data-status="Cancelled">Decline</button>{% endif %}</span>{% elif item.status == 'Cancelled' %}<span class="booking-action-label declined-label">Declined</span>{% else %}<span class="booking-action-label accepted-label">Confirmed</span>{% endif %}</td>{% if not is_bookings %}<td><span class="appointment-status status-{{ item.status|lower }}">{{ item.status }}</span></td>{% endif %}</tr>{% else %}<tr class="no-appointments-row"><td colspan="5">No appointments to show yet.</td></tr>{% endfor %}<tr class="no-filter-results" hidden><td colspan="5">No results match your search.</td></tr></tbody></table></div>
-          <div class="booking-table-footer"><span>Showing <strong id="visibleAppointmentCount">{{ rows|length }}</strong> of {{ rows|length }} appointments</span><div class="booking-pagination"><button type="button" aria-label="Previous page">‹</button><button type="button" class="current-page">1</button><button type="button" aria-label="Next page">›</button></div></div>
+        <section class="admin-table-card" style="padding: 30px;">
+          <h3 class="table-heading">Profile Details</h3>
+          <p style="margin-bottom: 12px; color: #555;"><strong>Name:</strong> {{ user.name }}</p>
+          <p style="margin-bottom: 12px; color: #555;"><strong>Role:</strong> {{ user.role }}</p>
+          <p style="margin-bottom: 20px; color: #555;"><strong>Email:</strong> user@solace.internal</p>
+          <a href="/{{ role }}" class="check-pill-btn" style="text-decoration: none;">&larr; Back to Dashboard</a>
         </section>
 
       {% elif active_tab == 'settings' %}
@@ -196,7 +195,7 @@
             <h1 class="welcome-title">Welcome Back, {{ user.name }}</h1>
             <p class="welcome-subtitle">Here's what's coming up today</p>
           {% elif role == 'admin' %}
-            <h1 class="welcome-title">Welcome Back, {{ user.name }}</h1>
+            <h1 class="welcome-title" style="font-family: var(--font-serif); font-size: 32px;">Welcome Back, {{ user.name }}</h1>
           {% endif %}
         </section>
 
@@ -254,7 +253,7 @@
           </section>
 
         <!-- ==========================================
-             2. THERAPIST DASHBOARD
+             2. THERAPIST DASHBOARD (Updated: My Chats, Appointments, My Clients)
              ========================================== -->
         {% elif role == 'therapist' %}
           <section class="calendar-ribbon-container">
@@ -279,20 +278,21 @@
             </div>
           </section>
 
+          <!-- CONTENTS: My Chats, My Clients, Appointments, Session History -->
           <section class="contents-section">
             <h4 class="section-heading">CONTENTS</h4>
             <div class="content-pills-grid therapist-grid">
-              <a href="/therapist/sessions" class="content-card card-peach" style="text-decoration: none;">
-                <svg class="content-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/><circle cx="12" cy="10" r="2.5"/></svg>
-                <span class="content-title">My Sessions</span>
+              <a href="/therapist/chats" class="content-card card-peach" style="text-decoration: none;">
+                <svg class="content-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                <span class="content-title">My Chats</span>
               </a>
               <a href="/therapist/clients" class="content-card card-pinkish" style="text-decoration: none;">
                 <svg class="content-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
                 <span class="content-title">My Clients</span>
               </a>
-              <a href="/therapist/schedule" class="content-card card-yellow" style="text-decoration: none;">
+              <a href="/therapist/appointments" class="content-card card-yellow" style="text-decoration: none;">
                 <svg class="content-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><circle cx="12" cy="15" r="2.5"/></svg>
-                <span class="content-title">My Schedule</span>
+                <span class="content-title">Appointments</span>
               </a>
               <a href="/therapist/history" class="content-card card-lavender" style="text-decoration: none;">
                 <svg class="content-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><circle cx="12" cy="14" r="3"/><polyline points="12 13 12 14 13.5 14"/></svg>
@@ -334,21 +334,26 @@
              3. ADMIN DASHBOARD
              ========================================== -->
         {% elif role == 'admin' %}
-          <section class="admin-stats-grid">
-            <div class="stat-card">
-              <span class="stat-label">Total Reports</span>
-              <span class="stat-value">{{ stats.total_reports }}</span>
-            </div>
-            <div class="stat-card">
-              <span class="stat-label">Urgent Reports</span>
-              <span class="stat-value">{{ stats.urgent_reports }}</span>
-            </div>
-            <div class="stat-card">
-              <span class="stat-label">Administrators Online</span>
-              <span class="stat-value">{{ stats.admins_online }}</span>
-            </div>
-          </section>
+          <!-- AFTER: -->
+<section class="stat-boxes-row">
+  <!-- Box 1: Total Reports (Pastel Lavender-Pink #E5D9E1) -->
+  <article class="stat-box box-total-reports">
+    <span class="stat-label-oxanium">Total Reports</span>
+    <strong class="stat-num-istok">{{ stats.total_reports if stats and stats.total_reports else '12,345' }}</strong>
+  </article>
 
+  <!-- Box 2: Urgent Reports (Pastel Coral-Red #F8D7DA) -->
+  <article class="stat-box box-urgent-reports">
+    <span class="stat-label-oxanium">Urgent Reports</span>
+    <strong class="stat-num-istok">{{ stats.urgent_reports if stats and stats.urgent_reports else '123' }}</strong>
+  </article>
+
+  <!-- Box 3: Administrators Online (Pastel Soft Blue #D6E6F2) -->
+  <article class="stat-box box-admins">
+    <span class="stat-label-oxanium">Administrators Online</span>
+    <strong class="stat-num-istok">{{ stats.admins_online if stats and stats.admins_online else '12' }}</strong>
+  </article>
+</section>
           <section class="admin-table-card">
             <h3 class="table-heading">Pending Verifications</h3>
             <div class="table-rows">
@@ -356,7 +361,7 @@
               <div class="table-row">
                 <div class="row-subject">{{ item.name }}</div>
                 <div class="row-date">{{ item.date }}</div>
-                <a href="/admin/therapist-verification" class="check-pill-btn" style="text-decoration: none;">
+                <a href="/admin/therapist-verification" class="check-pill-btn">
                   <span>Check</span>
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
                 </a>
@@ -372,7 +377,7 @@
               <div class="table-row">
                 <div class="row-subject">{{ item.name }}</div>
                 <div class="row-date">{{ item.date }}</div>
-                <a href="/admin/reports" class="check-pill-btn" style="text-decoration: none;">
+                <a href="/admin/reports" class="check-pill-btn">
                   <span>Check</span>
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
                 </a>
@@ -385,42 +390,14 @@
     </main>
   </div>
   <script>
-    const profileForm = document.getElementById('profileForm');
-    if (profileForm) profileForm.addEventListener('submit', async (event) => {
-      event.preventDefault();
-      const data = Object.fromEntries(new FormData(profileForm));
-      const response = await fetch(`/api/profile/${profileForm.dataset.role}`, {method:'PUT', headers:{'Content-Type':'application/json'}, body:JSON.stringify(data)});
-      const notice = document.getElementById('profileEditorNotice');
-      if (response.ok) { document.getElementById('profileEditor').close(); document.getElementById('profileNotice').textContent = 'Profile updated successfully.'; window.setTimeout(() => window.location.reload(), 450); }
-      else { notice.textContent = 'Could not save changes. Please try again.'; }
+    // Close role switcher when clicking outside
+    document.addEventListener('click', function(e) {
+      const menu = document.getElementById('roleMenu');
+      const pill = document.querySelector('.user-pill');
+      if (menu && pill && !pill.contains(e.target) && !menu.contains(e.target)) {
+        menu.classList.remove('show-menu');
+      }
     });
-    document.querySelectorAll('[data-appointment-id] [data-status]').forEach((button) => button.addEventListener('click', async () => {
-      const row = button.closest('[data-appointment-id]');
-      const response = await fetch(`/api/appointments/${row.dataset.appointmentId}`, {method:'PATCH', headers:{'Content-Type':'application/json'}, body:JSON.stringify({status:button.dataset.status})});
-      if (response.ok) window.location.reload();
-    }));
-    const bookingSearch = document.querySelector('.booking-search');
-    const statusFilter = document.querySelector('.booking-filter');
-    const sortOrder = document.querySelector('.booking-sort');
-    const appointmentBody = document.querySelector('.appointment-table tbody');
-    if (appointmentBody) {
-      const appointmentRows = Array.from(appointmentBody.querySelectorAll('tr[data-appointment-id]'));
-      const emptyResults = appointmentBody.querySelector('.no-filter-results');
-      const updateAppointmentList = () => {
-        const query = (bookingSearch?.value || '').trim().toLowerCase();
-        const status = statusFilter?.value || 'all';
-        const visible = appointmentRows.filter((row) => (!query || row.dataset.search.includes(query)) && (status === 'all' || row.dataset.status === status));
-        visible.sort((a, b) => (a.dataset.schedule.localeCompare(b.dataset.schedule)) * (sortOrder?.value === 'desc' ? -1 : 1));
-        visible.forEach((row) => appointmentBody.insertBefore(row, emptyResults));
-        appointmentRows.filter((row) => !visible.includes(row)).forEach((row) => row.hidden = true);
-        visible.forEach((row) => row.hidden = false);
-        if (emptyResults) emptyResults.hidden = visible.length > 0;
-        const count = document.getElementById('visibleAppointmentCount');
-        if (count) count.textContent = visible.length;
-      };
-      [bookingSearch, statusFilter, sortOrder].forEach((control) => control?.addEventListener(control.tagName === 'INPUT' ? 'input' : 'change', updateAppointmentList));
-      updateAppointmentList();
-    }
   </script>
 </body>
 </html>

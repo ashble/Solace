@@ -1,7 +1,10 @@
 /* ========================================================
    SOLACE DASHBOARD DESIGN SYSTEM & STYLESHEET
    Matching Client, Therapist, and Admin Views
+   Integrated with Figma Specifications for Admin Suite & Search Therapist
    ======================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Istok+Web:wght@400;700&family=Oxanium:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Roboto:wght@400;500;700&family=Rufina:wght@400;700&display=swap');
 
 :root {
   /* Color Palette */
@@ -34,6 +37,20 @@
   /* Typography */
   --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --font-serif: 'Playfair Display', Georgia, 'Times New Roman', serif;
+
+  /* Specific Figma Palette for Admin & Search Suite */
+  --figma-sidebar-bg: #D8C6E5;
+  --figma-sidebar-purple: #6750A4;
+  --figma-sidebar-pale: #EBDFF2;
+  --box-users-bg: #E5D9E1;
+  --box-therapists-bg: #D9E1D9;
+  --box-admins-bg: #D6E6F2;
+  --box-urgent-bg: #F8D7DA;
+  --font-rufina: 'Rufina', Georgia, serif;
+  --font-istok: 'Istok Web', sans-serif;
+  --font-oxanium: 'Oxanium', sans-serif;
+  --font-roboto: 'Roboto', sans-serif;
+  --font-inter: 'Inter', sans-serif;
 }
 
 /* Base Reset */
@@ -60,7 +77,7 @@ body.dashboard-body {
 }
 
 /* ========================================================
-   SIDEBAR
+   SIDEBAR (Base Dashboard)
    ======================================================== */
 .sidebar {
   width: 230px;
@@ -554,114 +571,7 @@ body.dashboard-body {
 }
 
 /* ========================================================
-   ADMIN DASHBOARD STYLES
-   ======================================================== */
-.admin-stats-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 22px;
-  margin-bottom: 28px;
-}
-
-.stat-card {
-  background: #FFFFFF;
-  border: 1.5px solid var(--card-border);
-  border-radius: 22px;
-  padding: 24px 18px;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 4px 14px rgba(0,0,0,0.02);
-}
-
-.stat-label {
-  font-size: 16px;
-  font-weight: 500;
-  color: #2F2837;
-  margin-bottom: 8px;
-}
-
-.stat-value {
-  font-size: 34px;
-  font-weight: 700;
-  color: #17131C;
-  letter-spacing: -0.02em;
-}
-
-.admin-table-card {
-  background: #FFFFFF;
-  border: 1.5px solid var(--table-border);
-  border-radius: 8px;
-  padding: 16px 26px 20px 26px;
-  margin-bottom: 24px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.02);
-}
-
-.table-heading {
-  font-family: var(--font-serif);
-  font-size: 18px;
-  font-weight: 600;
-  color: #1E1A23;
-  margin-bottom: 14px;
-}
-
-.table-rows {
-  display: flex;
-  flex-direction: column;
-}
-
-.table-row {
-  display: grid;
-  grid-template-columns: 2fr 2fr 1fr;
-  align-items: center;
-  padding: 14px 4px;
-  border-top: 1px solid var(--table-row-divider);
-}
-
-.row-subject {
-  font-family: var(--font-serif);
-  font-size: 15px;
-  font-weight: 500;
-  color: #1D1825;
-}
-
-.row-date {
-  font-family: var(--font-serif);
-  font-size: 14px;
-  color: #4C4356;
-}
-
-.check-pill-btn {
-  justify-self: end;
-  background: transparent;
-  border: 1.5px solid #231E29;
-  border-radius: 9999px;
-  padding: 4px 14px;
-  font-family: var(--font-serif);
-  font-size: 13px;
-  font-weight: 500;
-  color: #1C1724;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  transition: all 0.15s ease;
-}
-
-.check-pill-btn:hover {
-  background: #231E29;
-  color: #FFFFFF;
-}
-
-.check-pill-btn svg {
-  width: 14px;
-  height: 14px;
-}
-
-/* ========================================================
-   RESPONSIVE
+   RESPONSIVE (Base)
    ======================================================== */
 @media (max-width: 900px) {
   .app-layout {
@@ -816,215 +726,6 @@ body.dashboard-body {
 @media(max-width:800px) { .appointment-stat-grid { grid-template-columns:repeat(2,1fr); }.showcase-info-grid { grid-template-columns:1fr; } }
 @media(max-width:520px) { .showcase-cover { height:90px; }.showcase-body { padding:0 12px 14px; }.showcase-person-row { min-height:78px; padding-left:0; }.showcase-avatar { flex-basis:55px; width:55px; height:55px; margin-top:-31px; }.showcase-person { margin-left:6px; }.showcase-person h2 { font-size:20px; }.showcase-links { gap:7px; }.client-about-card { margin-left:0; }.profile-page-heading h1 { font-size:22px; }.booking-table-footer { flex-wrap:wrap; gap:10px; } }
 
-/* Compact layouts for Sean's assigned pages, matching the narrow Figma frames. */
-@media (max-width: 600px) {
-  body.therapist-bookings-page,
-  body.therapist-appointments-page,
-  body.client-profile-page,
-  body.therapist-profile-page,
-  body.admin-profile-page { min-width: 0; overflow-x: hidden; }
-
-  body.therapist-bookings-page .app-layout,
-  body.therapist-appointments-page .app-layout,
-  body.client-profile-page .app-layout,
-  body.therapist-profile-page .app-layout,
-  body.admin-profile-page .app-layout { display:flex; flex-direction:row; min-height:100vh; }
-
-  body.therapist-bookings-page .sidebar,
-  body.therapist-appointments-page .sidebar,
-  body.client-profile-page .sidebar,
-  body.therapist-profile-page .sidebar,
-  body.admin-profile-page .sidebar {
-    flex:0 0 70px; width:70px; min-width:70px; height:100vh; min-height:100vh;
-    padding:10px 5px 9px; gap:8px; overflow:hidden;
-  }
-  body.therapist-bookings-page .sidebar-logo,
-  body.therapist-appointments-page .sidebar-logo,
-  body.client-profile-page .sidebar-logo,
-  body.therapist-profile-page .sidebar-logo,
-  body.admin-profile-page .sidebar-logo { min-height:24px; padding:0 1px 6px; margin-bottom:2px; }
-  body.therapist-bookings-page .logo-text,
-  body.therapist-appointments-page .logo-text,
-  body.client-profile-page .logo-text,
-  body.therapist-profile-page .logo-text,
-  body.admin-profile-page .logo-text { font-size:9px; letter-spacing:-.5px; }
-  body.therapist-bookings-page .logo-sun,
-  body.therapist-appointments-page .logo-sun,
-  body.client-profile-page .logo-sun,
-  body.therapist-profile-page .logo-sun,
-  body.admin-profile-page .logo-sun { width:8px; height:8px; }
-  body.therapist-bookings-page .sidebar-nav,
-  body.therapist-appointments-page .sidebar-nav,
-  body.client-profile-page .sidebar-nav,
-  body.therapist-profile-page .sidebar-nav,
-  body.admin-profile-page .sidebar-nav { display:flex; flex:1; flex-direction:column; flex-wrap:nowrap; gap:2px; overflow:hidden; }
-  body.therapist-bookings-page .sean-nav-caption,
-  body.therapist-appointments-page .sean-nav-caption,
-  body.client-profile-page .sean-nav-caption,
-  body.therapist-profile-page .sean-nav-caption,
-  body.admin-profile-page .sean-nav-caption { margin:4px 0 2px; font-size:5px; line-height:1.2; }
-  body.therapist-bookings-page .nav-item,
-  body.therapist-appointments-page .nav-item,
-  body.client-profile-page .nav-item,
-  body.therapist-profile-page .nav-item,
-  body.admin-profile-page .nav-item { min-height:17px; gap:4px; padding:3px 4px; border-radius:4px; font-size:6px; line-height:1.1; }
-  body.therapist-bookings-page .nav-icon,
-  body.therapist-appointments-page .nav-icon,
-  body.client-profile-page .nav-icon,
-  body.therapist-profile-page .nav-icon,
-  body.admin-profile-page .nav-icon { flex:0 0 9px; width:9px; height:9px; }
-  body.therapist-bookings-page .sean-logout,
-  body.therapist-appointments-page .sean-logout,
-  body.client-profile-page .sean-logout,
-  body.therapist-profile-page .sean-logout,
-  body.admin-profile-page .sean-logout { margin: auto 0 0; padding:4px 2px; font-size:6px; }
-
-  body.therapist-bookings-page .main-content,
-  body.therapist-appointments-page .main-content,
-  body.client-profile-page .main-content,
-  body.therapist-profile-page .main-content,
-  body.admin-profile-page .main-content { width:calc(100% - 70px); max-width:none; min-width:0; padding:7px 7px 10px; }
-
-  body.therapist-bookings-page .sean-topbar,
-  body.therapist-appointments-page .sean-topbar,
-  body.client-profile-page .sean-topbar,
-  body.therapist-profile-page .sean-topbar,
-  body.admin-profile-page .sean-topbar { min-height:22px; margin-bottom:6px; }
-  body.therapist-bookings-page .sean-topbar .user-pill,
-  body.therapist-appointments-page .sean-topbar .user-pill { padding:2px 5px; }
-  body.therapist-bookings-page .sean-topbar .user-avatar,
-  body.therapist-appointments-page .sean-topbar .user-avatar { width:15px; height:15px; font-size:7px; }
-  body.therapist-bookings-page .sean-topbar .user-name,
-  body.therapist-appointments-page .sean-topbar .user-name { font-size:6px; }
-  body.therapist-bookings-page .sean-topbar .user-role,
-  body.therapist-appointments-page .sean-topbar .user-role { font-size:5px; }
-
-  body.therapist-appointments-page .appointment-stat-grid { grid-template-columns:repeat(4,minmax(0,1fr)); gap:4px; margin:0 0 7px; }
-  body.therapist-appointments-page .appointment-stat-card { min-height:37px; gap:2px; padding:5px 4px; border-radius:7px; }
-  body.therapist-appointments-page .appointment-stat-card span { font-size:5.5px; }
-  body.therapist-appointments-page .appointment-stat-card strong { font-size:11px; }
-
-  body.therapist-bookings-page .booking-list-heading,
-  body.therapist-appointments-page .booking-list-heading { gap:5px; margin:0 0 6px; }
-  body.therapist-bookings-page .booking-list-heading h1,
-  body.therapist-appointments-page .booking-list-heading h1 { font-size:12px; }
-  body.therapist-bookings-page .header-icon-badge,
-  body.therapist-appointments-page .header-icon-badge { width:20px; height:20px; flex-basis:20px; border-radius:6px; }
-  body.therapist-bookings-page .header-icon-badge svg,
-  body.therapist-appointments-page .header-icon-badge svg { width:12px; height:12px; }
-  body.therapist-bookings-page .booking-toolbar,
-  body.therapist-appointments-page .booking-toolbar { display:grid; grid-template-columns:minmax(0,1fr) 58px 43px; gap:3px; margin-bottom:6px; padding:4px; border-radius:7px; }
-  body.therapist-bookings-page .booking-toolbar .search-input-wrapper,
-  body.therapist-appointments-page .booking-toolbar .search-input-wrapper { min-width:0; }
-  body.therapist-bookings-page .booking-toolbar input,
-  body.therapist-appointments-page .booking-toolbar input { min-width:0; height:19px; padding:3px 5px; font-size:5.5px; }
-  body.therapist-bookings-page .booking-toolbar .filter-dropdown-wrapper,
-  body.therapist-appointments-page .booking-toolbar .filter-dropdown-wrapper { min-width:0; }
-  body.therapist-bookings-page .booking-toolbar .filter-select,
-  body.therapist-appointments-page .booking-toolbar .filter-select { width:100%; min-width:0; height:19px; padding:3px 10px 3px 4px; font-size:5.5px; }
-  body.therapist-bookings-page .booking-toolbar .select-chevron,
-  body.therapist-appointments-page .booking-toolbar .select-chevron { right:3px; width:7px; height:7px; }
-
-  body.therapist-bookings-page .admin-full-table-box,
-  body.therapist-appointments-page .admin-full-table-box { min-width:0; overflow:hidden; border-radius:7px; }
-  body.therapist-bookings-page .appointment-table-wrap,
-  body.therapist-appointments-page .appointment-table-wrap { min-width:0; overflow:hidden; }
-  body.therapist-bookings-page .appointment-table,
-  body.therapist-appointments-page .appointment-table { width:100%; min-width:0; table-layout:fixed; }
-  body.therapist-bookings-page .appointment-table th,
-  body.therapist-appointments-page .appointment-table th { padding:4px 2px; font-size:5.5px; line-height:1.1; }
-  body.therapist-bookings-page .appointment-table td,
-  body.therapist-appointments-page .appointment-table td { padding:3px 2px; font-size:5px; line-height:1.15; white-space:normal; overflow-wrap:anywhere; }
-  body.therapist-bookings-page .appointment-table th:nth-child(1) { width:24%; }
-  body.therapist-bookings-page .appointment-table th:nth-child(2) { width:25%; }
-  body.therapist-bookings-page .appointment-table th:nth-child(3) { width:29%; }
-  body.therapist-bookings-page .appointment-table th:nth-child(4) { width:22%; }
-  body.therapist-appointments-page .appointment-table th:nth-child(1) { width:25%; }
-  body.therapist-appointments-page .appointment-table th:nth-child(2) { width:23%; }
-  body.therapist-appointments-page .appointment-table th:nth-child(3) { width:28%; }
-  body.therapist-appointments-page .appointment-table th:nth-child(4) { width:12%; }
-  body.therapist-appointments-page .appointment-table th:nth-child(5) { width:12%; }
-  body.therapist-bookings-page .booking-action,
-  body.therapist-bookings-page .booking-action-label,
-  body.therapist-appointments-page .booking-action,
-  body.therapist-appointments-page .booking-action-label { min-width:0; padding:2px 3px; font-size:4.5px; }
-  body.therapist-bookings-page .no-filter-results td,
-  body.therapist-bookings-page .no-appointments-row td,
-  body.therapist-appointments-page .no-filter-results td,
-  body.therapist-appointments-page .no-appointments-row td { padding:8px 2px; font-size:6px; }
-  body.therapist-bookings-page .booking-table-footer,
-  body.therapist-appointments-page .booking-table-footer { gap:4px; padding-top:6px; font-size:6px; }
-
-  body.client-profile-page .sean-topbar .user-pill,
-  body.therapist-profile-page .sean-topbar .user-pill,
-  body.admin-profile-page .sean-topbar .user-pill { display:none; }
-  body.client-profile-page .sean-topbar .profile-page-heading h1,
-  body.therapist-profile-page .sean-topbar .profile-page-heading h1,
-  body.admin-profile-page .sean-topbar .profile-page-heading h1 { font-size:12px; }
-  body.client-profile-page .sean-topbar .profile-heading-icon,
-  body.therapist-profile-page .sean-topbar .profile-heading-icon,
-  body.admin-profile-page .sean-topbar .profile-heading-icon { width:22px; height:22px; flex-basis:22px; border-radius:7px; font-size:12px; }
-  body.client-profile-page .sean-topbar .profile-heading-icon svg,
-  body.therapist-profile-page .sean-topbar .profile-heading-icon svg,
-  body.admin-profile-page .sean-topbar .profile-heading-icon svg { width:13px; height:13px; }
-  body.client-profile-page .showcase-profile,
-  body.therapist-profile-page .showcase-profile,
-  body.admin-profile-page .showcase-profile { width:100%; max-width:none; margin:0; border-radius:10px; }
-  body.client-profile-page .showcase-cover,
-  body.therapist-profile-page .showcase-cover,
-  body.admin-profile-page .showcase-cover { height:67px; margin:6px 6px 0; border-radius:7px; }
-  body.client-profile-page .showcase-body,
-  body.therapist-profile-page .showcase-body,
-  body.admin-profile-page .showcase-body { padding:0 7px 8px; }
-  body.client-profile-page .showcase-person-row,
-  body.therapist-profile-page .showcase-person-row,
-  body.admin-profile-page .showcase-person-row { min-height:53px; padding:0 0 5px 2px; }
-  body.client-profile-page .showcase-avatar,
-  body.therapist-profile-page .showcase-avatar,
-  body.admin-profile-page .showcase-avatar { flex-basis:43px; width:43px; height:43px; margin-top:-23px; border-width:2px; font-size:17px; }
-  body.client-profile-page .showcase-person,
-  body.therapist-profile-page .showcase-person,
-  body.admin-profile-page .showcase-person { margin:0 0 0 4px; }
-  body.client-profile-page .showcase-person h2,
-  body.therapist-profile-page .showcase-person h2,
-  body.admin-profile-page .showcase-person h2 { margin:0; font-size:15px; line-height:1.05; }
-  body.client-profile-page .showcase-person p,
-  body.client-profile-page .showcase-person a,
-  body.therapist-profile-page .showcase-person p,
-  body.therapist-profile-page .showcase-person a,
-  body.admin-profile-page .showcase-person p,
-  body.admin-profile-page .showcase-person a { margin:1px 0; font-size:6px; }
-  body.client-profile-page .showcase-links,
-  body.therapist-profile-page .showcase-links,
-  body.admin-profile-page .showcase-links { gap:5px; margin:3px 0 0 auto; }
-  body.client-profile-page .edit-profile-btn,
-  body.therapist-profile-page .edit-profile-btn,
-  body.admin-profile-page .edit-profile-btn { padding:4px 7px; font-size:6px; }
-  body.client-profile-page .showcase-links>a,
-  body.therapist-profile-page .showcase-links>a,
-  body.admin-profile-page .showcase-links>a { font-size:5px; }
-  body.client-profile-page .showcase-info-card,
-  body.therapist-profile-page .showcase-info-card,
-  body.admin-profile-page .showcase-info-card { padding:5px 6px; border-radius:7px; }
-  body.client-profile-page .showcase-info-card h3,
-  body.therapist-profile-page .showcase-info-card h3,
-  body.admin-profile-page .showcase-info-card h3 { margin-bottom:3px; font-size:8px; }
-  body.client-profile-page .showcase-info-card p,
-  body.client-profile-page .showcase-info-card small,
-  body.therapist-profile-page .showcase-info-card p,
-  body.therapist-profile-page .showcase-info-card small,
-  body.admin-profile-page .showcase-info-card p,
-  body.admin-profile-page .showcase-info-card small { margin-bottom:3px; font-size:5px; line-height:1.35; }
-  body.client-profile-page .client-about-card { margin:0; padding:6px; }
-  body.client-profile-page .client-about-card p { font-size:5.5px; line-height:1.4; }
-  body.therapist-profile-page .showcase-info-grid,
-  body.admin-profile-page .showcase-info-grid { grid-template-columns:minmax(0,.8fr) minmax(0,1.3fr); gap:5px; }
-  body.therapist-profile-page .profile-detail-row,
-  body.admin-profile-page .profile-detail-row { gap:3px; margin:3px 0; font-size:5px; }
-  body.therapist-profile-page .profile-detail-row span,
-  body.admin-profile-page .profile-detail-row span { padding:2px 4px; }
-}
-
 /* Header Elements */
 .page-top-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
 .header-title-group { display: flex; align-items: center; gap: 14px; }
@@ -1122,7 +823,7 @@ body.dashboard-body {
 .chat-send-btn svg { width: 18px; height: 18px; margin-left: -2px; }
 
 /* ========================================================
-   ADMIN PAGES - MISSING STYLES (append to styles.css)
+   ADMIN PAGES - COMPONENT STYLES
    ======================================================== */
 
 /* ---------- Tables (Reports, Therapist Verification, User Mgmt) ---------- */
@@ -1240,7 +941,7 @@ body.dashboard-body {
 .status-pill-btn:hover { transform: translateY(-1px); }
 .status-pill-btn.active-tab { border-color: #554477; }
 
-/* ---------- User Management stat cards ---------- */
+/* ---------- User Management stat cards (Fallback) ---------- */
 .user-mgmt-stats-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -1284,6 +985,8 @@ body.dashboard-body {
   position: fixed;
   inset: 0;
   background: rgba(35, 28, 44, 0.45);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
   display: none;
   align-items: center;
   justify-content: center;
@@ -1451,28 +1154,895 @@ body.dashboard-body {
 
 .modal-textarea:focus { border-color: #A888C9; }
 
-/* ---------- Responsive ---------- */
+
+/* ========================================================
+   ========================================================
+   EXACT FIGMA DESIGN SPECIFICATIONS
+   Scoped to Admin Suite (Dashboard, User Mgmt, Reports, Verification)
+   & Client Search Therapist (Concept 1)
+   ========================================================
+   ======================================================== */
+
+/* --------------------------------------------------------
+   1. LEFT NAVBAR (Exact Figma Specifications)
+   - Background Color: #D8C6E5
+   - Font Size: 20px
+   - Font Style: Rufina
+   - Icons: Strictly 30px by 30px
+   - Logo: S☼LACE
+   - Logout: #EBDFF2 with red text #DF1F1F
+   -------------------------------------------------------- */
+body:not(.therapist-bookings-page):not(.therapist-appointments-page):not(.client-profile-page):not(.therapist-profile-page) .sidebar {
+  width: 260px;
+  min-width: 260px;
+  background-color: var(--figma-sidebar-bg);
+  padding: 25px 14px 22px;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  z-index: 50;
+}
+
+.sidebar-brand {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #5A4763;
+  font-family: var(--font-rufina);
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  padding-bottom: 14px;
+  margin-bottom: 14px;
+  border-bottom: 2px solid var(--figma-sidebar-purple);
+}
+
+.sidebar-brand .sun {
+  color: #E9A844;
+  font-size: 20px;
+  margin: 0 2px;
+}
+
+.nav-section-title {
+  font-family: var(--font-rufina);
+  font-size: 22px;
+  color: #5A4763;
+  margin: 14px 12px 8px;
+  font-weight: 700;
+}
+
+body:not(.therapist-bookings-page):not(.therapist-appointments-page):not(.client-profile-page):not(.therapist-profile-page) .nav-item {
+  height: 50px;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 0 14px;
+  border-radius: 15px;
+  color: var(--figma-sidebar-purple);
+  font-family: var(--font-rufina);
+  font-size: 20px;
+  text-decoration: none;
+  transition: all 0.15s ease-in-out;
+  cursor: pointer;
+}
+
+body:not(.therapist-bookings-page):not(.therapist-appointments-page):not(.client-profile-page):not(.therapist-profile-page) .nav-item:hover {
+  background: rgba(255, 255, 255, 0.4);
+  color: #5A4763;
+}
+
+body:not(.therapist-bookings-page):not(.therapist-appointments-page):not(.client-profile-page):not(.therapist-profile-page) .nav-item.active {
+  background: rgba(255, 255, 255, 0.65);
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.15);
+  font-weight: 700;
+  color: #5A4763;
+}
+
+/* ALL ICONS ARE STRICTLY 30x30 */
+body:not(.therapist-bookings-page):not(.therapist-appointments-page):not(.client-profile-page):not(.therapist-profile-page) .nav-item svg,
+body:not(.therapist-bookings-page):not(.therapist-appointments-page):not(.client-profile-page):not(.therapist-profile-page) .nav-icon {
+  width: 30px !important;
+  height: 30px !important;
+  min-width: 30px !important;
+  min-height: 30px !important;
+  flex-shrink: 0;
+}
+
+.logout-btn {
+  margin: auto 8px 0;
+  height: 48px;
+  border: 0;
+  border-radius: 14px;
+  background: var(--figma-sidebar-pale);
+  color: #DF1F1F;
+  font-family: var(--font-rufina);
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.15s ease;
+}
+
+.logout-btn:hover { background: #FFE8E8; }
+
+
+/* --------------------------------------------------------
+   2. TOP BAR & USER PILL (Wireframe Aligned)
+   -------------------------------------------------------- */
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 26px;
+}
+
+.title-icon-badge {
+  width: 58px;
+  height: 58px;
+  border-radius: 20px;
+  background: #C49ACD;
+  display: grid;
+  place-items: center;
+}
+
+.title-icon-badge svg {
+  width: 34px;
+  height: 34px;
+  color: #FFFFFF;
+}
+
+/* Page Titles: Roboto 30 (Figma Spec) */
+.user-management-title,
+.reports-page-title,
+.search-therapist-title,
+.verification-page-title,
+.dashboard-page-title {
+  font-family: var(--font-roboto);
+  font-size: 30px;
+  font-weight: 500;
+  color: #5A4763;
+  letter-spacing: -0.01em;
+}
+
+/* User Profile Pill in Top Right */
+.profile-chip {
+  background: #C49ACD;
+  border-radius: 30px;
+  padding: 6px 16px 6px 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-family: var(--font-roboto);
+  font-size: 15px;
+  color: #17121E;
+}
+
+.profile-chip-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #1F1B24;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #FFFFFF;
+  font-weight: 700;
+  font-size: 18px;
+}
+
+.profile-chip .profile-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.profile-chip .user-name {
+  font-weight: 600;
+  font-size: 15px;
+  line-height: 1.2;
+}
+
+.profile-chip .user-role,
+.profile-chip small {
+  display: block;
+  color: #3E3246;
+  font-size: 13px;
+  line-height: 1.2;
+}
+
+
+/* --------------------------------------------------------
+   3. STAT BOXES (Exact Figma Dimensions & Fonts)
+   - Box size: strictly 291px x 114px
+   - Numbers: Istok Web 40
+   - Words: Oxanium 20 (User Mgmt) / Inter 27 (Admin Dashboard)
+   -------------------------------------------------------- */
+.stat-boxes-row {
+  display: flex;
+  gap: 24px;
+  margin-bottom: 30px;
+  flex-wrap: wrap;
+}
+
+.stat-box {
+  width: 291px;
+  min-width: 291px;
+  height: 114px;
+  border-radius: 24px;
+  padding: 16px 22px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+/* Specific Box Colors */
+.box-users { background-color: var(--box-users-bg); } /* #E5D9E1 */
+.box-therapists { background-color: var(--box-therapists-bg); } /* #D9E1D9 */
+.box-admins { background-color: var(--box-admins-bg); } /* #D6E6F2 */
+.box-total-reports { background-color: var(--box-users-bg); }
+.box-urgent-reports { background-color: var(--box-urgent-bg); }
+.box-resolved-reports { background-color: var(--box-therapists-bg); }
+
+/* Words in top boxes: Oxanium 20 */
+.stat-label-oxanium {
+  font-family: var(--font-oxanium);
+  font-size: 20px;
+  font-weight: 600;
+  color: #2F243A;
+  letter-spacing: 0.02em;
+}
+
+/* Admin Dashboard Specific: Inter 27 */
+.stat-label-inter {
+  font-family: var(--font-inter);
+  font-size: 27px;
+  font-weight: 600;
+  color: #2F243A;
+  letter-spacing: -0.01em;
+}
+
+/* Numbers in boxes: Istok Web 40 */
+.stat-num-istok {
+  font-family: var(--font-istok);
+  font-size: 40px;
+  font-weight: 700;
+  color: #17121E;
+  line-height: 1;
+}
+
+/* Admin Dashboard Overrides when in index.html */
+.admin-stats-grid {
+  display: flex;
+  gap: 24px;
+  margin-bottom: 28px;
+  flex-wrap: wrap;
+}
+
+.admin-stats-grid .stat-card {
+  width: 291px;
+  min-width: 291px;
+  height: 114px;
+  border-radius: 24px;
+  padding: 16px 22px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  border: none;
+  text-align: left;
+  align-items: flex-start;
+}
+
+.admin-stats-grid .stat-card:nth-child(1) { background-color: var(--box-users-bg); }
+.admin-stats-grid .stat-card:nth-child(2) { background-color: var(--box-therapists-bg); }
+.admin-stats-grid .stat-card:nth-child(3) { background-color: var(--box-admins-bg); }
+
+.admin-stats-grid .stat-label {
+  font-family: var(--font-inter);
+  font-size: 27px;
+  font-weight: 600;
+  color: #2F243A;
+  letter-spacing: -0.01em;
+  margin-bottom: 0;
+}
+
+.admin-stats-grid .stat-value {
+  font-family: var(--font-istok);
+  font-size: 40px;
+  font-weight: 700;
+  color: #17121E;
+  line-height: 1;
+}
+
+
+/* --------------------------------------------------------
+   4. DATA TABLES (Words in Rufina 17 - Exact Figma Spec)
+   -------------------------------------------------------- */
+.table-container {
+  background: #FFFFFF;
+  border: 1px solid var(--card-border);
+  border-radius: 20px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
+  overflow: hidden;
+  padding: 6px 16px 20px;
+  margin-bottom: 24px;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-rufina);
+  font-size: 17px;
+}
+
+.data-table thead th {
+  background-color: var(--figma-sidebar-bg);
+  font-family: var(--font-rufina);
+  font-size: 18px;
+  font-weight: 700;
+  color: #5A4763;
+  text-align: left;
+  padding: 14px 18px;
+}
+
+.data-table thead th:first-child { border-radius: 14px 0 0 14px; }
+.data-table thead th:last-child { border-radius: 0 14px 14px 0; text-align: right; }
+
+.data-table tbody td {
+  font-family: var(--font-rufina);
+  font-size: 17px;
+  color: #2F243A;
+  padding: 15px 18px;
+  border-bottom: 1px solid #EFE9F4;
+  vertical-align: middle;
+}
+
+.data-table tbody td:last-child { text-align: right; }
+
+/* Admin Dashboard Table Overrides */
+.admin-table-card {
+  border-radius: 20px;
+  border: 1px solid var(--card-border);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
+  padding: 8px 24px 20px;
+}
+
+.admin-table-card .table-heading {
+  font-family: var(--font-rufina);
+  font-size: 22px;
+  font-weight: 700;
+  color: #5A4763;
+  padding: 14px 4px 8px;
+  margin-bottom: 6px;
+}
+
+.admin-table-card .table-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 4px;
+  border-top: 1px solid #EFE9F4;
+  font-family: var(--font-rufina);
+  font-size: 17px;
+}
+
+.admin-table-card .row-subject {
+  font-family: var(--font-rufina);
+  font-weight: 700;
+  font-size: 17px;
+  color: #2F243A;
+}
+
+.admin-table-card .row-date {
+  font-family: var(--font-rufina);
+  color: #7B688E;
+  font-size: 16px;
+}
+
+.admin-table-card .check-pill-btn {
+  background: var(--figma-sidebar-pale);
+  border: none;
+  color: var(--figma-sidebar-purple);
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-family: var(--font-rufina);
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.admin-table-card .check-pill-btn:hover {
+  background: var(--figma-sidebar-purple);
+  color: #FFFFFF;
+}
+
+/* Badges (Figma Spec) */
+.status-badge, .badge {
+  display: inline-block;
+  padding: 3px 12px;
+  border-radius: 20px;
+  font-family: var(--font-rufina);
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.status-active, .badge-resolved { background: #62EE72; color: #0E4B17; border: none; }
+.status-pending, .badge-pending { background: #FFED57; color: #5A4C00; border: none; }
+.status-flagged, .badge-urgent { background: #FF879C; color: #5A0E1C; border: none; }
+.status-in-progress { background: #FACBB7; color: #6E3218; border: none; }
+.badge-normal { background: #EBDFF2; color: #5A4763; border: none; }
+
+/* Action Buttons */
+.action-manage-btn, .action-btn, .review-action-btn {
+  background: #FFFFFF;
+  border: 1.5px solid var(--figma-sidebar-purple);
+  color: var(--figma-sidebar-purple);
+  border-radius: 20px;
+  padding: 5px 16px;
+  font-family: var(--font-rufina);
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.action-manage-btn:hover, .action-btn:hover, .review-action-btn:hover {
+  background: var(--figma-sidebar-purple);
+  color: #FFFFFF;
+}
+
+.table-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 8px 0;
+  font-family: var(--font-rufina);
+  font-size: 16px;
+  color: #6C5D7E;
+}
+
+
+/* --------------------------------------------------------
+   5. SEARCH THERAPIST & TOOLBAR (Wireframe Aligned)
+   -------------------------------------------------------- */
+.toolbar-card, .search-filter-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.search-input-wrap {
+  flex: 1;
+  min-width: 260px;
+  position: relative;
+}
+
+.search-input {
+  width: 100%;
+  height: 48px;
+  border: 1px solid #D9D9D9;
+  border-radius: 999px;
+  padding: 0 20px 0 46px;
+  font-family: var(--font-rufina);
+  font-size: 16px;
+  color: #333333;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  outline: none;
+}
+
+.search-input:focus { border-color: var(--figma-sidebar-purple); }
+
+.search-icon {
+  position: absolute;
+  left: 18px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 18px;
+  height: 18px;
+  color: #7B688E;
+}
+
+.filter-select {
+  height: 44px;
+  background: #FFFFFF;
+  border: 1px solid #856FC5;
+  border-radius: 12px;
+  padding: 0 16px;
+  font-family: var(--font-rufina);
+  font-size: 16px;
+  color: #333333;
+  cursor: pointer;
+  outline: none;
+}
+
+
+/* --------------------------------------------------------
+   6. SEARCH THERAPIST: CONCEPT 1 HORIZONTAL CARDS
+   (Replaces repetitive 3x3 rectangles wireframe)
+   -------------------------------------------------------- */
+.therapists-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.therapist-card-horizontal {
+  background: #FFFFFF;
+  border: 1.5px solid var(--card-border);
+  border-radius: 24px;
+  padding: 24px 28px;
+  display: grid;
+  grid-template-columns: 100px 1fr 220px;
+  gap: 24px;
+  align-items: center;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.therapist-card-horizontal:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(103, 80, 164, 0.1);
+  border-color: #C49ACD;
+}
+
+.card-left-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.avatar-wrapper {
+  position: relative;
+  width: 84px;
+  height: 84px;
+}
+
+.therapist-avatar {
+  width: 84px;
+  height: 84px;
+  border-radius: 50%;
+  background: #D8C6E5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-rufina);
+  font-size: 32px;
+  font-weight: 700;
+  color: #5A4763;
+  border: 3px solid #FFFFFF;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.status-dot {
+  position: absolute;
+  bottom: 2px;
+  right: 4px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #62EE72;
+  border: 2.5px solid #FFFFFF;
+}
+
+.availability-pill {
+  font-family: var(--font-rufina);
+  font-size: 12px;
+  color: #176527;
+  background: #E5F8E8;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.card-center-col {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.therapist-name-row {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+}
+
+.therapist-name {
+  font-family: var(--font-rufina);
+  font-size: 24px;
+  font-weight: 700;
+  color: #2F243A;
+}
+
+.therapist-credentials {
+  font-family: var(--font-inter);
+  font-size: 14px;
+  color: #7B688E;
+  font-weight: 500;
+}
+
+.specialty-chips-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 2px 0;
+}
+
+.specialty-chip {
+  font-family: var(--font-inter);
+  font-size: 13px;
+  font-weight: 600;
+  padding: 4px 12px;
+  border-radius: 20px;
+}
+
+.chip-anxiety { background: #EBDFF2; color: #5A4763; }
+.chip-cbt { background: #D9E1D9; color: #1D5C26; }
+.chip-burnout { background: #F8D7DA; color: #721C24; }
+.chip-relationships { background: #E5D9E1; color: #5C2B4E; }
+.chip-mindfulness { background: #D6E6F2; color: #1E4E79; }
+
+.therapist-quote {
+  font-family: var(--font-rufina);
+  font-size: 15px;
+  font-style: italic;
+  color: #4A3E54;
+  line-height: 1.4;
+}
+
+.therapist-meta-row {
+  display: flex;
+  gap: 16px;
+  font-family: var(--font-inter);
+  font-size: 13px;
+  color: #6C5D7E;
+}
+
+.card-right-col {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 12px;
+  border-left: 1px solid #EFE9F4;
+  padding-left: 20px;
+}
+
+.next-slot-pill {
+  font-family: var(--font-rufina);
+  font-size: 14px;
+  color: #5A4763;
+  background: #F4EEF8;
+  border: 1px solid #D8C6E5;
+  padding: 6px 12px;
+  border-radius: 14px;
+  text-align: right;
+}
+
+.book-session-btn {
+  width: 100%;
+  height: 44px;
+  background: var(--figma-sidebar-purple);
+  color: #FFFFFF;
+  border: 0;
+  border-radius: 22px;
+  font-family: var(--font-rufina);
+  font-size: 17px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.book-session-btn:hover { background: #533E89; }
+
+.view-profile-link {
+  font-family: var(--font-rufina);
+  font-size: 15px;
+  color: var(--figma-sidebar-purple);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.view-profile-link:hover { text-decoration: underline; }
+
 @media (max-width: 900px) {
-  .user-mgmt-stats-grid { grid-template-columns: 1fr; }
-  .search-filter-card { flex-wrap: wrap; }
-  .admin-full-table-box { overflow-x: auto; }
-  .therapist-stats-row { grid-template-columns: 1fr; }
+  .therapist-card-horizontal {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  .card-right-col {
+    border-left: none;
+    padding-left: 0;
+    align-items: stretch;
+  }
 }
 
-/* Typography and palette drawn from the supplied page HTML, scoped to Sean's pages. */
-body.therapist-bookings-page,
-body.therapist-appointments-page,
-body.client-profile-page,
-body.therapist-profile-page,
-body.admin-profile-page {
-  --sidebar-bg: #d8c6e5;
-  --sidebar-active: #c49acd;
-  --sidebar-text: #6750a4;
-  --user-pill-bg: #c49acd;
-  --font-sans: "Roboto", Arial, sans-serif;
-  --font-serif: "Rufina", Georgia, serif;
+
+/* --------------------------------------------------------
+   7. FLOATING VERIFICATION MODALS
+   -------------------------------------------------------- */
+.floating-window-card {
+  background: #FFFFFF;
+  width: 100%;
+  max-width: 580px;
+  border-radius: 20px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.22);
+  border: 1px solid var(--figma-sidebar-bg);
+  padding: 28px 32px;
+  position: relative;
+  animation: modalPopIn 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-body.therapist-bookings-page .booking-list-heading { display:none; }
-body.therapist-appointments-page .booking-list-heading { gap:8px; margin:0 0 10px; }
-body.therapist-appointments-page .booking-list-heading h1 { font-size:20px; }
+@keyframes modalPopIn {
+  from { opacity: 0; transform: scale(0.94) translateY(12px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.close-modal-btn {
+  position: absolute;
+  top: 18px;
+  right: 20px;
+  background: #F3EDF8;
+  border: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  font-size: 18px;
+  color: #554A62;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.therapist-info { margin-bottom: 20px; }
+.therapist-info h2 { font-family: var(--font-rufina); font-size: 26px; color: #27212E; margin-bottom: 2px; }
+.therapist-info p { font-family: var(--font-inter); font-size: 14px; color: #6C5D7E; }
+
+.mini-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  background: #FAF8FD;
+  border: 1px solid #EBE4F2;
+  border-radius: 12px;
+  padding: 12px 14px;
+  margin-bottom: 22px;
+}
+
+.mini-stat-col { display: flex; flex-direction: column; }
+.mini-stat-label { font-family: var(--font-inter); font-size: 11px; text-transform: uppercase; color: #8A7D9D; font-weight: 700; margin-bottom: 3px; }
+.mini-stat-val { font-family: var(--font-inter); font-size: 14px; font-weight: 700; color: #2B2536; }
+
+.credentials-box {
+  border: 1.5px solid #EBE4F2;
+  border-radius: 12px;
+  padding: 12px 16px;
+  margin-bottom: 24px;
+}
+
+.credentials-title {
+  font-family: var(--font-inter);
+  font-size: 12px;
+  font-weight: 700;
+  color: #2B2536;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.cred-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid #F3EDF8;
+}
+
+.cred-row:last-child { border-bottom: none; }
+.cred-file { display: flex; align-items: center; gap: 8px; font-family: var(--font-inter); font-size: 13.5px; color: #3A3245; font-weight: 500; }
+.cred-right { display: flex; align-items: center; gap: 10px; }
+
+.verified-badge {
+  background: #EDFAF0;
+  color: #2A8C4A;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 9999px;
+  border: 1px solid #C0EACF;
+}
+
+.preview-link-btn {
+  background: #FAF8FD;
+  border: 1px solid #C4BDCC;
+  border-radius: 6px;
+  padding: 3px 10px;
+  font-family: var(--font-inter);
+  font-size: 12px;
+  font-weight: 600;
+  color: #4B4158;
+  cursor: pointer;
+}
+
+.modal-actions-row { display: flex; gap: 12px; justify-content: flex-end; }
+
+.btn-reject {
+  background: #FFFFFF;
+  border: 1.5px solid #D94848;
+  color: #D94848;
+  padding: 9px 24px;
+  border-radius: 9999px;
+  font-family: var(--font-rufina);
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.btn-approve {
+  background: #2A8C4A;
+  border: none;
+  color: #FFFFFF;
+  padding: 9px 26px;
+  border-radius: 9999px;
+  font-family: var(--font-rufina);
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.btn-cancel {
+  background: #F3EDF8;
+  border: none;
+  color: #554A62;
+  padding: 9px 22px;
+  border-radius: 9999px;
+  font-family: var(--font-rufina);
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.reject-textarea {
+  width: 100%;
+  height: 90px;
+  border: 1.5px solid #C4BDCC;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-family: inherit;
+  font-size: 14px;
+  resize: vertical;
+  margin-bottom: 22px;
+  outline: none;
+}
+
+.sidebar-logo {
+  display: flex;
+  justify-content: center; /* 👈 Centers horizontally */
+  align-items: center;
+  margin: 0 auto 28px;     /* 👈 Centers container in the sidebar */
+  padding: 0;              /* 👈 Removes the left padding */
+  width: 100%;
+  text-align: center;
+}
+.sidebar-logo-img {
+  max-width: 180px;        /* Adjust size as you like */
+  width: 100%;
+  height: auto;
+  display: block;
+  margin: 0 auto;          /* 👈 Centers image perfectly */
+  mix-blend-mode: multiply;
+}

@@ -4,162 +4,233 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Reports - Solace Admin</title>
+  <!-- Google Fonts: Rufina, Istok Web, Oxanium, Roboto, Inter -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Istok+Web:wght@400;700&family=Oxanium:wght@400;500;600;700&family=Roboto:wght@400;500;700&family=Rufina:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body class="dashboard-body">
   <div class="app-layout">
-    <!-- Sidebar -->
+    <!-- ==========================================
+         LEFT NAVBAR: Color #D8C6E5, Rufina 20px, Icons 30x30
+         ========================================== -->
     <aside class="sidebar">
       <div class="sidebar-logo">
-        <span class="logo-text">S</span>
-        <span class="logo-sun">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#E9A844" stroke-width="2"><circle cx="12" cy="12" r="4.5" fill="#E9A844" stroke="none"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="4.93" y1="4.93" x2="7.05" y2="7.05"/><line x1="16.95" y1="16.95" x2="19.07" y2="19.07"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.93" y1="19.07" x2="7.05" y2="16.95"/><line x1="16.95" y1="7.05" x2="19.07" y2="4.93"/></svg>
-        </span>
-        <span class="logo-text">LACE</span>
-      </div>
+  <img src="{{ url_for('static', filename='solace-logo-pnjee.png') }}" alt="Solace" class="sidebar-logo-img">
+</div>
 
+      <div class="nav-section-title">Main Menu</div>
       <nav class="sidebar-nav">
         <a href="/admin" class="nav-item">
-          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h7v7H4zm9 0h7v4h-7zm0 6h7v10h-7zm-9 3h7v7H4z"/></svg>
           <span>Dashboard</span>
         </a>
         <a href="/admin/therapist-verification" class="nav-item">
-          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
-          <span style="line-height: 1.2;">Therapist<br>Verification</span>
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/><circle cx="12" cy="10" r="2.5"/></svg>
+          <span>Therapist Verification</span>
         </a>
         <a href="/admin/user-management" class="nav-item">
-          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-          <span style="line-height: 1.2;">User<br>Management</span>
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.9M16 3.1a4 4 0 0 1 0 7.8"/></svg>
+          <span>User Management</span>
         </a>
         <a href="/admin/reports" class="nav-item active">
-          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8m-8 4h8"/></svg>
           <span>Reports</span>
         </a>
+      </nav>
+
+      <div class="nav-section-title account-title" style="margin-top: 24px;">Account</div>
+      <nav class="sidebar-nav">
         <a href="/profile?role=admin" class="nav-item">
           <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
           <span>Profile</span>
         </a>
         <a href="/settings?role=admin" class="nav-item">
-          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l-2.8 2.8a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5h-4a1.7 1.7 0 0 0-2.8-1.2l-2.8-2.8a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1v-4a1.7 1.7 0 0 0 1.2-2.8l2.8-2.8a1.7 1.7 0 0 0 2.8-1.2h4a1.7 1.7 0 0 0 2.8 1.2l2.8 2.8a1.7 1.7 0 0 0 1.2 2.8v4a1.7 1.7 0 0 0-1.2 1.8z"/></svg>
           <span>Settings</span>
         </a>
       </nav>
+
+      <a class="logout-btn" href="/">
+        <span>↪ Log Out</span>
+      </a>
     </aside>
 
+    <!-- ==========================================
+         MAIN CONTENT: Reports Table
+         ========================================== -->
     <main class="main-content">
-      <header class="page-top-header">
-        <h1 class="serif-title" style="font-size: 28px;">Reports</h1>
-        <div class="user-pill admin-pill">
-          <div class="user-avatar admin-avatar"></div>
-          <div class="user-details">
+      <!-- Top Bar -->
+      <header class="page-header">
+        <div class="header-title-group">
+          <div class="title-icon-badge">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8m-8 4h8"/></svg>
+          </div>
+          <!-- Title: Roboto 30 -->
+          <h1 class="reports-page-title">Reports</h1>
+        </div>
+
+        <div class="profile-chip">
+          <div class="profile-chip-avatar">A</div>
+          <div class="profile-info">
             <span class="user-name">User, name</span>
             <span class="user-role">Administrator</span>
           </div>
         </div>
       </header>
 
-      <!-- Clean Filter Bar replacing separate buttons -->
-      <section class="search-filter-card" style="margin-bottom: 22px;">
-        <div class="search-input-wrapper">
-          <input type="text" placeholder="Search reports by user or concern..." class="search-field">
-          <button class="search-icon-btn" aria-label="Search">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-          </button>
-        </div>
+      <!-- ==========================================
+           3 STAT BOXES: Exactly 291x114 (Figma Specs)
+           Numbers: Istok Web 40 | Words: Oxanium 20
+           ========================================== -->
+      <section class="stat-boxes-row">
+        <!-- Box 1: Total Reports (E5D9E1) -->
+        <article class="stat-box box-total-reports">
+          <span class="stat-label-oxanium">Total Reports</span>
+          <strong class="stat-num-istok">1,234</strong>
+        </article>
 
-        <div class="filter-dropdown-wrapper">
-          <select class="filter-select">
-            <option selected>All Statuses</option>
-            <option>Pending</option>
-            <option>Accomplished</option>
-            <option>In Review</option>
-          </select>
-          <svg class="select-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
-        </div>
+        <!-- Box 2: Urgent Reports (F8D7DA) -->
+        <article class="stat-box box-urgent-reports">
+          <span class="stat-label-oxanium">Urgent Reports</span>
+          <strong class="stat-num-istok">23</strong>
+        </article>
 
-        <div class="filter-dropdown-wrapper">
-          <select class="filter-select">
-            <option selected>All Concerns</option>
-            <option>Spam</option>
-            <option>Troll</option>
-            <option>Death Threat</option>
-            <option>Harassment</option>
-          </select>
-          <svg class="select-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
-        </div>
-
-        <div class="filter-dropdown-wrapper sort-dropdown">
-          <select class="filter-select">
-            <option selected>Sort By: Newest</option>
-            <option>Sort By: Oldest</option>
-            <option>Sort By: Severity</option>
-          </select>
-          <svg class="select-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
-        </div>
+        <!-- Box 3: Resolved Reports (D9E1D9) -->
+        <article class="stat-box box-resolved-reports">
+          <span class="stat-label-oxanium">Resolved Reports</span>
+          <strong class="stat-num-istok">1,211</strong>
+        </article>
       </section>
 
-      <!-- Table -->
-      <section class="admin-full-table-box">
-        <table class="admin-data-table">
+      <!-- Search & Filter Controls -->
+      <section class="toolbar-card">
+        <div class="search-input-wrap">
+          <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="search" placeholder="Search reports by user or concern..." class="search-input" id="reportSearch">
+        </div>
+
+        <select class="filter-select" id="statusFilter">
+          <option value="all">All Statuses</option>
+          <option value="Pending">Pending</option>
+          <option value="In Review">In Review</option>
+          <option value="Resolved">Resolved</option>
+        </select>
+
+        <select class="filter-select" id="concernFilter">
+          <option value="all">All Concerns</option>
+          <option value="Death Threat">Death Threat</option>
+          <option value="Harassment">Harassment</option>
+          <option value="Troll">Troll</option>
+          <option value="Spam">Spam</option>
+        </select>
+
+        <select class="filter-select" id="sortFilter">
+          <option value="newest">Sort By: Newest</option>
+          <option value="oldest">Sort By: Oldest</option>
+        </select>
+      </section>
+
+      <!-- ==========================================
+           REPORTS TABLE: Words in Rufina 17 (Figma Spec)
+           ========================================== -->
+      <section class="table-container">
+        <table class="data-table">
           <thead>
             <tr>
-              <th>User</th>
+              <th>Reporter</th>
+              <th>Reported User</th>
               <th>Concern</th>
+              <th>Severity</th>
+              <th>Date</th>
               <th>Status</th>
-              <th style="text-align: right;">Action</th>
+              <th>Action</th>
             </tr>
           </thead>
-          <tbody>
-            <tr>
-              <td class="serif-td font-medium">Anonymous User #6767</td>
-              <td class="serif-td">Spam</td>
-              <td><span class="status-badge status-pending">Pending</span></td>
-              <td style="text-align: right;"><button class="check-pill-btn">Review</button></td>
+          <tbody id="reportsTableBody">
+            <tr data-status="Pending" data-concern="Death Threat">
+              <td>Anonymous User #6767</td>
+              <td>calmcloud27</td>
+              <td>Death Threat</td>
+              <td><span class="badge badge-urgent">Urgent</span></td>
+              <td>October 27, 2026</td>
+              <td><span class="badge badge-pending">Pending</span></td>
+              <td><button class="action-btn" onclick="alert('Review report #1')">Review</button></td>
             </tr>
-            <tr>
-              <td class="serif-td font-medium">Anonymous User #1234</td>
-              <td class="serif-td">Troll</td>
-              <td><span class="status-badge status-pending">Pending</span></td>
-              <td style="text-align: right;"><button class="check-pill-btn">Review</button></td>
+            <tr data-status="Resolved" data-concern="Harassment">
+              <td>Dr. Eggman</td>
+              <td>sonic_hedgehog</td>
+              <td>Harassment</td>
+              <td><span class="badge badge-normal">Normal</span></td>
+              <td>October 26, 2026</td>
+              <td><span class="badge badge-resolved">Resolved</span></td>
+              <td><button class="action-btn" onclick="alert('View details')">View</button></td>
             </tr>
-            <tr>
-              <td class="serif-td font-medium">Dr. Meeseeks</td>
-              <td class="serif-td">Death Threat</td>
-              <td><span class="status-badge status-pending">Pending</span></td>
-              <td style="text-align: right;"><button class="check-pill-btn">Review</button></td>
+            <tr data-status="Pending" data-concern="Spam">
+              <td>Anonymous User #854</td>
+              <td>spambot99</td>
+              <td>Spam</td>
+              <td><span class="badge badge-normal">Normal</span></td>
+              <td>October 24, 2026</td>
+              <td><span class="badge badge-pending">Pending</span></td>
+              <td><button class="action-btn" onclick="alert('Review report #3')">Review</button></td>
             </tr>
-            <tr>
-              <td class="serif-td font-medium">Dr. Eggman</td>
-              <td class="serif-td">Unauthorized Access</td>
-              <td><span class="status-badge status-approved">Accomplished</span></td>
-              <td style="text-align: right;"><button class="check-pill-btn">Review</button></td>
-            </tr>
-            <tr>
-              <td class="serif-td font-medium">Anonymous User #854</td>
-              <td class="serif-td">Harassment</td>
-              <td><span class="status-badge status-approved">Accomplished</span></td>
-              <td style="text-align: right;"><button class="check-pill-btn">Review</button></td>
+            <tr data-status="In Review" data-concern="Troll">
+              <td>quietriver12</td>
+              <td>trolluser01</td>
+              <td>Troll</td>
+              <td><span class="badge badge-normal">Normal</span></td>
+              <td>October 23, 2026</td>
+              <td><span class="badge badge-pending" style="background: #FACBB7;">In Review</span></td>
+              <td><button class="action-btn" onclick="alert('Review report #4')">Review</button></td>
             </tr>
           </tbody>
         </table>
 
-        <div class="table-pagination-footer">
-          <span class="pagination-count serif-td">Showing page 1 of 55 pages of reports</span>
-          <div class="pagination-controls">
-            <button class="page-btn page-arrow">&larr;</button>
-            <button class="page-btn active-page">1</button>
-            <button class="page-btn">2</button>
-            <button class="page-btn">3</button>
-            <button class="page-btn">4</button>
-            <span class="page-dots">...</span>
-            <button class="page-btn page-arrow">&rarr;</button>
-          </div>
+        <div class="table-footer">
+          <span id="reportsCount">Showing 4 of 4 reports</span>
         </div>
       </section>
     </main>
   </div>
+
+  <script>
+    const searchInput = document.getElementById('reportSearch');
+    const statusFilter = document.getElementById('statusFilter');
+    const concernFilter = document.getElementById('concernFilter');
+    const rows = Array.from(document.querySelectorAll('#reportsTableBody tr'));
+
+    function filterReports() {
+      const q = (searchInput.value || '').trim().toLowerCase();
+      const status = statusFilter.value;
+      const concern = concernFilter.value;
+      let count = 0;
+
+      rows.forEach(row => {
+        const text = row.textContent.toLowerCase();
+        const rowStatus = row.dataset.status;
+        const rowConcern = row.dataset.concern;
+
+        const matchesQuery = !q || text.includes(q);
+        const matchesStatus = status === 'all' || rowStatus === status;
+        const matchesConcern = concern === 'all' || rowConcern === concern;
+
+        if (matchesQuery && matchesStatus && matchesConcern) {
+          row.style.display = '';
+          count++;
+        } else {
+          row.style.display = 'none';
+        }
+      });
+
+      document.getElementById('reportsCount').textContent = `Showing ${count} of ${rows.length} reports`;
+    }
+
+    searchInput.addEventListener('input', filterReports);
+    statusFilter.addEventListener('change', filterReports);
+    concernFilter.addEventListener('change', filterReports);
+  </script>
 </body>
 </html>
