@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Dashboard{% endblock %} - Solace</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600&family=Playfair+Display:wght@500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/solace.css') }}">
+</head>
+<body>
+<div class="layout">
+  <aside>
+    <div class="logo">S☀LACE</div>
+    <nav>
+      <div class="group">Main Menu</div>
+      {% if role == 'client' %}
+        <a href="/client" class="{{ 'active' if active_tab == 'dashboard' }}">⌂ Dashboard</a>
+        <a href="/chats">✉ Messages</a>
+        <a href="/schedule">▦ Appointments</a>
+        <a href="/schedule">◷ Session History</a>
+      {% else %}
+        <a href="/therapist" class="{{ 'active' if active_tab == 'dashboard' }}">⌂ Dashboard</a>
+        <a href="/therapist/sessions">▣ Sessions</a>
+        <a href="/therapist/clients">☺ Clients</a>
+        <a href="/therapist/appointments">▦ Schedule</a>
+        <a href="/therapist/history">◷ Session History</a>
+      {% endif %}
+      <div class="group">Account</div>
+      <a href="/profile?role={{ role }}">☺ Profile</a>
+      {% if role == 'therapist' %}<a href="/therapist/verification">⛨ Therapist Verification</a>{% endif %}
+      <a href="/settings?role={{ role }}">⚙ Settings</a>
+    </nav>
+    <a class="logout" href="/login">Log Out</a>
+  </aside>
+
+  <main>
+    <div class="topbar">
+      <button class="user-pill" id="userPill" aria-haspopup="true" aria-expanded="false">
+        <span class="avatar"></span>
+        <span>{{ user.display_name }}<small>{{ user.role }}</small></span>
+      </button>
+      <div class="menu" id="roleMenu">
+        <a href="/client">Client view</a>
+        <a href="/therapist">Therapist view</a>
+        <a href="/admin">Administrator view</a>
+      </div>
+    </div>
+    {% block content %}{% endblock %}
+  </main>
+</div>
+<script src="{{ url_for('static', filename='js/solace.js') }}"></script>
+{% block js %}{% endblock %}
+</body>
+</html>
