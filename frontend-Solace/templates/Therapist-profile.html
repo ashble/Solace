@@ -93,7 +93,7 @@ button,input,select{font:inherit}.app{min-height:100dvh}.sidebar{position:fixed;
 }
 </style>
 </head>
-<body data-page="therapist">
+<body data-page="therapist" data-page-data='{{ {"bookings": bookings|default([]), "appointments": appointments|default([]), "stats": stats|default({}), "profile": profile|default({}), "userName": user.display_name|default("")}|tojson }}'>
 <div id="app" class="app"></div>
 <dialog class="dialog" id="reviewDialog">
 <button class="close-dialog" type="button" aria-label="Close">×</button>
@@ -108,13 +108,15 @@ button,input,select{font:inherit}.app{min-height:100dvh}.sidebar{position:fixed;
 </dialog>
 <div class="toast" role="status" aria-live="polite"></div>
 <script>
+(() => {
 const page=document.body.dataset.page;
-const bookings={{ bookings|default([])|tojson }};
-const appointments={{ appointments|default([])|tojson }};
-const stats={{ stats|default({})|tojson }};
-const profile={{ profile|default({})|tojson }};
+const pageData=JSON.parse(document.body.dataset.pageData);
+const bookings=pageData.bookings;
+const appointments=pageData.appointments;
+const stats=pageData.stats;
+const profile=pageData.profile;
 const role=page==="user"?"client":page==="admin"?"admin":"therapist";
-const userName={{ user.display_name|default("")|tojson }};
+const userName=pageData.userName;
 const $=s=>document.querySelector(s);
 const esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const iconPaths={
@@ -202,6 +204,7 @@ document.addEventListener("click",async event=>{
 $("#confirmReview")?.addEventListener("click",async event=>{const button=event.currentTarget;button.disabled=true;try{const res=await fetch("/api/appointments/"+encodeURIComponent(button.dataset.id),{method:"PATCH",headers:{"Content-Type":"application/json"},body:JSON.stringify({status:"Confirmed"})});if(!res.ok)throw Error();location.reload()}catch{button.disabled=false;notify("Could not confirm this appointment.")}});
 $("#profileForm")?.addEventListener("submit",async event=>{event.preventDefault();const button=event.submitter;button.disabled=true;const payload=Object.fromEntries(new FormData(event.currentTarget));try{const res=await fetch("/api/profile/"+role,{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});if(!res.ok)throw Error();location.reload()}catch{button.disabled=false;notify("Could not save your profile. Please try again.")}});
 visibleRows();
+})();
 </script>
 </body>
 </html>
