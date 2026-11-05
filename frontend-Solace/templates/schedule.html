@@ -4,34 +4,13 @@
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>Solace - Client Schedule</title>
-<!-- Tailwind CSS v3 CDN with plugins -->
-<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 <!-- Google Fonts: Playfair Display (Serif) & Plus Jakarta Sans (Sans) -->
 <link href="https://fonts.googleapis.com" rel="preconnect"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400&amp;family=Plus+Jakarta+Sans:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
-<script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: {
-            serif: ['"Playfair Display"', 'Georgia', 'serif'],
-            sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
-          },
-          colors: {
-            sidebar: '#E4DAEE',
-            'sidebar-hover': '#DAD0E5',
-            'purple-brand': '#A888C9',
-            'purple-button': '#BFA9D6',
-            'purple-badge': '#B090D2',
-            'gold-sun': '#C89658',
-          }
-        }
-      }
-    }
-  </script>
 <!-- BEGIN: Custom Layout Styles -->
 <style data-purpose="base-typography">
+    /* Page colours and fonts - edit text colour, background and typefaces here */
     body {
       font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
       color: #333333;
@@ -43,7 +22,7 @@
     }
   </style>
 <style data-purpose="sidebar-styles">
-    /* Explicit dimension enforcement for standard icons */
+    /* Sidebar styling - menu icon size and the highlighted (active) menu pill colour */
     .nav-icon {
       width: 18px;
       height: 18px;
@@ -57,10 +36,12 @@
     }
   </style>
 <!-- END: Custom Layout Styles -->
+<link rel="stylesheet" href="../static/css/schedule.css"/>
 </head>
 <body class="bg-white min-h-screen text-slate-800 antialiased selection:bg-purple-200">
 <div class="flex min-h-screen w-full">
 <!-- BEGIN: LeftSidebar -->
+<!-- Sidebar: width (w-64) and background colour are set by the classes on the <aside> tag below -->
 <aside class="w-64 min-w-[16rem] bg-[#E4DAEE] flex flex-col justify-between p-6 select-none shrink-0" data-purpose="sidebar-navigation">
 <div>
 <!-- Brand Logo Header -->
@@ -157,7 +138,7 @@
 </div>
 </div>
 </div>
-<!-- Pickers Section (Grid: Calendar & Timeslots) -->
+<!-- Calendar and appointment styling: the two cards below sit side by side (grid) - calendar on the left, time slots on the right -->
 <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8" data-purpose="datetime-selection-grid">
 <!-- Left Box: Calendar Card -->
 <div class="border border-[#E2DBE8] rounded-xl p-5 bg-white shadow-[0_2px_10px_rgba(0,0,0,0.02)] flex flex-col justify-between" id="calendarCard">
@@ -190,13 +171,13 @@
 <span>Sat</span>
 <span>Sun</span>
 </div>
-<!-- Day Cells Container (Rendered dynamically) -->
+<!-- Day Cells Container (rendered by renderCalendar() in the script; selected day colour is set in that function) -->
 <div class="grid grid-cols-7 gap-y-1.5 text-center text-xs" id="calendarDaysGrid">
 <!-- Injected by JavaScript -->
 </div>
 </div>
 </div>
-<!-- Right Box: Time Slot Selector -->
+<!-- Right Box: Time Slot Selector (add/remove time buttons here; selection is handled by the time slot click handlers) -->
 <div class="border border-[#E2DBE8] rounded-xl p-5 bg-white shadow-[0_2px_10px_rgba(0,0,0,0.02)] flex flex-col" data-purpose="time-selection-card">
 <h2 class="text-[15px] font-semibold text-[#3C3247] mb-4">Select Time:</h2>
 <!-- Time Grid -->
@@ -213,7 +194,7 @@
 </div>
 </div>
 </div>
-<!-- BEGIN: BookingSummarySection -->
+<!-- BEGIN: BookingSummarySection (date/time labels update automatically; the button opens the confirm popup) -->
 <div class="border border-[#E2DBE8] rounded-xl p-7 bg-white shadow-[0_2px_10px_rgba(0,0,0,0.02)] mb-3 relative" data-purpose="booking-summary-card">
 <h3 class="text-base font-bold text-[#342A40] mb-5 tracking-tight">Booking Summary</h3>
 <div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
@@ -278,7 +259,7 @@
 <!-- END: MainContent -->
 </div>
 <!-- BEGIN: ModalsSection -->
-<!-- Dialog 1: Request Appointment Confirmation Modal -->
+<!-- Dialog 1: Request Appointment Confirmation Modal (opened by the Request Appointment button) -->
 <div class="fixed inset-0 bg-black/40 backdrop-blur-[2px] hidden z-50 flex items-center justify-center p-4" id="requestModal">
 <div class="bg-white rounded-2xl w-full max-w-sm p-6 shadow-2xl border border-purple-100 transition-all transform scale-100">
 <!-- Modal Title -->
@@ -312,7 +293,7 @@
 </div>
 </div>
 </div>
-<!-- Dialog 2: Request Submitted Success Modal -->
+<!-- Dialog 2: Request Submitted Success Modal (shown after Confirm Request) -->
 <div class="fixed inset-0 bg-black/40 backdrop-blur-[2px] hidden z-50 flex items-center justify-center p-4" id="successModal">
 <div class="bg-white rounded-2xl w-full max-w-sm p-7 shadow-2xl border border-purple-100 text-center">
 <div class="w-12 h-12 bg-purple-50 text-[#9E7EB8] rounded-full mx-auto flex items-center justify-center mb-4">
@@ -332,7 +313,7 @@
 <!-- END: ModalsSection -->
 <!-- BEGIN: InteractiveScripts -->
 <script data-purpose="calendar-and-appointment-engine">
-    // State management
+    // APPOINTMENT STATE - the date and time selected by default; the page opens on this month
     const state = {
       currentYear: 2027,
       currentMonth: 0, // 0 = January
@@ -364,7 +345,7 @@
     const cancelModalBtn = document.getElementById('cancelModalBtn');
     const backToDashboardBtn = document.getElementById('backToDashboardBtn');
 
-    // Render Calendar dynamically
+    // CALENDAR: draws the day buttons for the current month (week starts on Monday)
     function renderCalendar() {
       const year = state.currentYear;
       const month = state.currentMonth;
@@ -420,7 +401,7 @@
       modalTimeLabel.textContent = state.selectedTime;
     }
 
-    // Month navigation listeners
+    // CALENDAR CONTROLS: previous / next month arrows
     prevMonthBtn.addEventListener('click', () => {
       state.currentMonth--;
       if (state.currentMonth < 0) {
@@ -441,7 +422,7 @@
       updateBookingDisplay();
     });
 
-    // Time slot click handlers
+    // TIME SLOT SELECTION: highlights the clicked time and updates the booking summary
     timeSlotsContainer.addEventListener('click', (event) => {
       const target = event.target.closest('.time-slot-btn');
       if (!target) return;
@@ -458,7 +439,7 @@
       updateBookingDisplay();
     });
 
-    // Modal Interaction Handlers
+    // APPOINTMENT REQUEST: open confirm popup -> Confirm Request -> success popup; Cancel closes
     openRequestModalBtn.addEventListener('click', () => {
       requestModal.classList.remove('hidden');
     });
