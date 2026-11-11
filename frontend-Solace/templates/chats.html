@@ -1,805 +1,289 @@
 <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Messages - Solace</title>
 
-<html lang="en"><head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Messages - Solace</title>
-<!-- Google Fonts: Playfair Display & Plus Jakarta Sans -->
-<link href="https://fonts.googleapis.com" rel="preconnect"/>
-<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
-<!-- BEGIN: Custom Stylesheet -->
-<style data-purpose="layout-and-utilities">
-    /* Page colours and font - edit the page background, text colour and typeface here */
-    body {
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      background-color: #ffffff;
-      color: #332b3a;
-      overflow-x: hidden;
-    }
-    
-    /* Scrollbar styling for smooth chat reading */
-    ::-webkit-scrollbar {
-      width: 6px;
-    }
-    ::-webkit-scrollbar-track {
-      background: transparent;
-    }
-    ::-webkit-scrollbar-thumb {
-      background: #d8cbe3;
-      border-radius: 9999px;
-    }
-    ::-webkit-scrollbar-thumb:hover {
-      background: #bfaecf;
-    }
+  <!-- Fonts: Playfair Display (headings) and Plus Jakarta Sans (body text) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" />
 
-    /* Chat message layout - bubble colours and rounded corners (.bubble-in = received, .bubble-out = sent) */
-    .bubble-in {
-      background-color: #dcd0ea;
-      border-radius: 1.25rem 1.25rem 1.25rem 0.35rem;
-    }
-    
-    .bubble-out {
-      background-color: #c4b4d8;
-      border-radius: 1.25rem 1.25rem 0.35rem 1.25rem;
-    }
+  <!-- Page styles (colours, fonts, avatars and layout live in this file) -->
+  <link rel="stylesheet" href="../static/css/chats.css" />
 
-    /* Dark blurred background behind the Report and New Chat popups */
-    .modal-backdrop {
-      background-color: rgba(62, 45, 78, 0.45);
-      backdrop-filter: blur(2px);
-    }
-
-    /* Animation for sent and incoming messages */
-    @keyframes messageSlideUp {
-      from {
-        opacity: 0;
-        transform: translateY(10px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    .msg-animate {
-      animation: messageSlideUp 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-    }
-
-    /* Typing indicator pulse */
-    .typing-dot {
-      animation: typingBounce 1.3s infinite ease-in-out;
-    }
-    .typing-dot:nth-child(2) {
-      animation-delay: 0.2s;
-    }
-    .typing-dot:nth-child(3) {
-      animation-delay: 0.4s;
-    }
-
-    @keyframes typingBounce {
-      0%, 60%, 100% {
-        transform: translateY(0);
-        opacity: 0.4;
-      }
-      30% {
-        transform: translateY(-4px);
-        opacity: 1;
-      }
-    }
-  </style>
-<!-- END: Custom Stylesheet -->
-<link rel="stylesheet" href="../static/css/chats.css"/>
+  <!-- Page script (conversations, sending messages, popups) -->
+  <script src="../static/js/chats-page.js" defer></script>
 </head>
-<body class="min-h-screen flex antialiased select-none">
-<!-- BEGIN: Sidebar Navigation -->
-<!-- Sidebar: width (w-64), background and border colours are set by the classes on the <aside> tag below -->
-<aside class="w-64 bg-[#e4daee] min-h-screen flex flex-col justify-between p-6 shrink-0 border-r border-[#d5c7df]" data-purpose="sidebar-navigation">
-<div>
-<!-- Brand Solace Logo -->
-<div class="flex items-center gap-2 mb-10 pl-2">
-<span class="font-serif tracking-[0.25em] text-2xl font-bold text-[#443850]">S</span>
-<!-- Sun Icon with amber rays -->
-<svg class="w-5 h-5 text-amber-500 fill-amber-500" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
-<circle cx="12" cy="12" fill="#d99b38" r="4" stroke="#d99b38"></circle>
-<path d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32l1.41 1.41M2 12h2m16 0h2M6.34 17.66l-1.41 1.41m14.14-14.14l-1.41 1.41" stroke="#d99b38" stroke-linecap="round"></path>
-</svg>
-<span class="font-serif tracking-[0.25em] text-2xl font-bold text-[#443850]">LACE</span>
-</div>
-<!-- Main Navigation Menu -->
-<div class="space-y-6">
-<div>
-<span class="text-[11px] font-semibold tracking-wider text-[#796b88] uppercase block mb-3 pl-2">MAIN MENU</span>
-<nav class="space-y-1">
-<!-- Dashboard Link -->
-<a class="flex items-center gap-3.5 px-3.5 py-2.5 rounded-full text-[#483d54] hover:bg-[#d8cbe3]/60 transition text-sm font-medium" href="#">
-<svg class="w-4 h-4 text-[#6c5e7b]" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
-<path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" stroke-linecap="round" stroke-linejoin="round"></path>
-</svg>
-<span>Dashboard</span>
-</a>
-<!-- Messages Link (Active) -->
-<a class="flex items-center gap-3.5 px-3.5 py-2.5 rounded-full bg-[#cbb4e3] text-[#2c203b] text-sm font-semibold shadow-sm transition" href="#">
-<svg class="w-4 h-4 text-[#392c4a]" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
-<path d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" stroke-linecap="round" stroke-linejoin="round"></path>
-</svg>
-<span>Messages</span>
-</a>
-<!-- Appointments Link -->
-<a class="flex items-center gap-3.5 px-3.5 py-2.5 rounded-full text-[#483d54] hover:bg-[#d8cbe3]/60 transition text-sm font-medium" href="#">
-<svg class="w-4 h-4 text-[#6c5e7b]" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
-<path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round"></path>
-</svg>
-<span>Appointments</span>
-</a>
-<!-- Session History Link -->
-<a class="flex items-center gap-3.5 px-3.5 py-2.5 rounded-full text-[#483d54] hover:bg-[#d8cbe3]/60 transition text-sm font-medium" href="#">
-<svg class="w-4 h-4 text-[#6c5e7b]" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
-<path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round"></path>
-</svg>
-<span>Session History</span>
-</a>
-</nav>
-</div>
-<!-- Account Section -->
-<div>
-<span class="text-[11px] font-semibold tracking-wider text-[#796b88] uppercase block mb-3 pl-2">ACCOUNT</span>
-<nav class="space-y-1">
-<a class="flex items-center gap-3.5 px-3.5 py-2.5 rounded-full text-[#483d54] hover:bg-[#d8cbe3]/60 transition text-sm font-medium" href="#">
-<svg class="w-4 h-4 text-[#6c5e7b]" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
-<path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" stroke-linecap="round" stroke-linejoin="round"></path>
-</svg>
-<span>Profile</span>
-</a>
-<a class="flex items-center gap-3.5 px-3.5 py-2.5 rounded-full text-[#483d54] hover:bg-[#d8cbe3]/60 transition text-sm font-medium" href="#">
-<svg class="w-4 h-4 text-[#6c5e7b]" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
-<path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" stroke-linecap="round" stroke-linejoin="round"></path>
-<path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round"></path>
-</svg>
-<span>Settings</span>
-</a>
-</nav>
-</div>
-</div>
-</div>
-<!-- Log Out Button -->
-<div class="pt-6">
-<button class="flex items-center gap-2.5 px-3 py-2 text-rose-500 hover:text-rose-600 font-medium text-sm transition">
-<svg class="w-4 h-4 text-rose-500" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
-<path d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" stroke-linecap="round" stroke-linejoin="round"></path>
-</svg>
-<span>Log Out</span>
-</button>
-</div>
-</aside>
-<!-- END: Sidebar Navigation -->
-<!-- BEGIN: Main Chat Page Content -->
-<main class="flex-1 flex flex-col min-w-0 bg-white" data-purpose="chat-page-content">
-<!-- Top Bar Header -->
-<header class="h-20 px-8 flex items-center justify-between border-b border-gray-100 shrink-0" data-purpose="top-header">
-<div class="flex items-center gap-3">
-<!-- Messages Title & Icon -->
-<div class="w-8 h-8 rounded-lg bg-[#f0e8f8] flex items-center justify-center text-[#6e5884]">
-<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
-<path d="M8 10h.01M12 10h.01M16 10h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" stroke-linecap="round" stroke-linejoin="round"></path>
-</svg>
-</div>
-<h1 class="font-serif text-2xl font-semibold text-[#2f253a]">Messages</h1>
-</div>
-<!-- User Profile Badge Pill (avatar letter is generated from the name below) -->
-<div class="flex items-center gap-2.5 bg-[#dcd0ea] py-1.5 px-3 rounded-full shadow-sm">
-<div class="avatar avatar-md border border-white" data-avatar-from="current-user-name"></div>
-<div class="pr-2 leading-tight">
-<p class="text-xs font-bold text-[#2a1e36]" id="current-user-name">Sylus Qin</p>
-<p class="text-[10px] text-[#69587c]">Client</p>
-</div>
-</div>
-</header>
-<!-- Chat Screen Content Container -->
-<div class="flex-1 flex px-8 py-6 gap-6 overflow-hidden max-w-7xl w-full mx-auto" data-purpose="chat-view-container">
-<!-- Chat Channels / Contacts List -->
-<section class="w-64 flex flex-col gap-4 shrink-0" data-purpose="contacts-column">
-<!-- New Chat Button -->
-<button class="w-full flex items-center justify-start gap-2.5 px-4 py-2.5 rounded-full border border-[#cfc4dc] hover:bg-[#faf7fc] text-sm text-[#3f314f] font-medium transition shadow-sm bg-white" id="new-chat-btn">
-<svg class="w-4 h-4 text-[#5e4f71]" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
-<path d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" stroke-linecap="round" stroke-linejoin="round"></path>
-</svg>
-<span>New Chat</span>
-</button>
-<!-- Contacts list: clicking a .contact-pill switches conversation (data-contact-id matches conversationData in the script) -->
-<div class="border border-[#e1d5ec] rounded-2xl p-3 flex-1 flex flex-col gap-2.5 bg-[#fbf9fd]/60 overflow-y-auto" id="contacts-list-container">
-<!-- Active Contact: Anonymous 235 -->
-<div class="contact-pill flex items-center gap-3 px-3 py-2 rounded-xl bg-[#dcd0ea] border border-[#cfbedf] cursor-pointer shadow-sm transition" data-contact-id="235" data-contact-title="Anonymous 235">
-<div class="avatar avatar-sm" data-avatar-auto></div>
-<span class="text-xs font-semibold text-[#281b36] truncate">Anonymous 235</span>
-</div>
-<!-- Contact: Anonymous 359 -->
-<div class="contact-pill flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-[#f3edf8] transition cursor-pointer border border-transparent" data-contact-id="359" data-contact-title="Anonymous 359 (Dr. Nyen)">
-<div class="avatar avatar-sm" data-avatar-auto></div>
-<span class="text-xs font-medium text-[#4f425f] truncate">Anonymous 359</span>
-</div>
-<!-- Contact: Anonymous 964 -->
-<div class="contact-pill flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-[#f3edf8] transition cursor-pointer border border-transparent" data-contact-id="964" data-contact-title="Anonymous 964 (Peer Support)">
-<div class="avatar avatar-sm" data-avatar-auto></div>
-<span class="text-xs font-medium text-[#4f425f] truncate">Anonymous 964</span>
-</div>
-<!-- Contact: Anonymous 179 -->
-<div class="contact-pill flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-[#f3edf8] transition cursor-pointer border border-transparent" data-contact-id="179" data-contact-title="Anonymous 179 (Mindfulness Coach)">
-<div class="avatar avatar-sm" data-avatar-auto></div>
-<span class="text-xs font-medium text-[#4f425f] truncate">Anonymous 179</span>
-</div>
-</div>
-</section>
-<!-- Main Conversation Thread Window -->
-<section class="flex-1 flex flex-col border border-[#dfd5ea] rounded-2xl bg-white shadow-sm overflow-hidden" data-purpose="chat-window">
-<!-- Conversation Header -->
-<div class="px-6 py-3.5 border-b border-[#ebdff5] flex items-center justify-between">
-<h2 class="text-sm font-semibold text-[#2d213b]" id="active-chat-title">Anonymous 235</h2>
-<span class="flex items-center gap-1.5 text-[11px] font-medium text-[#79678e]">
-<span class="w-2 h-2 rounded-full bg-emerald-400"></span>
-  Active now
-</span>
-</div>
-<!-- Chat Messages Area: bubbles are rendered here by renderConversation() -->
-<div class="flex-1 p-6 overflow-y-auto space-y-4" id="chat-messages-box">
-<!-- Dynamic conversation content will render here based on active contact -->
-</div>
-<!-- Typing Indicator (Simulated) -->
-<div class="hidden px-6 py-2 items-center gap-2 text-xs text-[#7d6c93] bg-[#fbf9fd]/80 border-t border-[#f4eef9]" id="typing-indicator">
-<div class="avatar avatar-xs" data-avatar-from="typing-author"></div>
-<span class="text-[11px] font-medium" id="typing-author">Anonymous 235</span>
-<span class="text-[11px]">is typing</span>
-<div class="flex items-center gap-1 ml-1">
-<span class="w-1.5 h-1.5 rounded-full bg-[#9f8eb7] typing-dot"></span>
-<span class="w-1.5 h-1.5 rounded-full bg-[#9f8eb7] typing-dot"></span>
-<span class="w-1.5 h-1.5 rounded-full bg-[#9f8eb7] typing-dot"></span>
-</div>
-</div>
-<!-- Chat Input Bar: submitting this form sends a message (handleSendMessage in the script) -->
-<div class="p-4 border-t border-[#ebdff5] bg-white">
-<form autocomplete="off" class="flex items-center gap-3" id="chat-input-form">
-<div class="flex-1 relative">
-<input class="w-full pl-4 pr-10 py-2.5 bg-[#fbf9fd] border border-[#d8cbe3] rounded-full text-xs text-[#2e213d] placeholder-[#9f91af] focus:outline-none focus:ring-1 focus:ring-[#aa8ec7] focus:border-[#aa8ec7] transition" id="chat-message-input" placeholder="Type a message..." type="text"/>
-</div>
-<!-- Send Button with paper airplane -->
-<button class="w-9 h-9 rounded-full bg-[#c4b4d8] hover:bg-[#b29ecb] active:scale-95 text-[#332247] flex items-center justify-center transition shrink-0 shadow-sm" id="chat-send-btn" title="Send message" type="submit">
-<svg class="w-4 h-4 rotate-45 transform -translate-x-0.5 translate-y-0.5" fill="currentColor" viewbox="0 0 20 20">
-<path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"></path>
-</svg>
-</button>
-</form>
-</div>
-</section>
-</div>
-</main>
-<!-- END: Main Chat Page Content -->
-<!-- BEGIN: Report Message Modal Popup -->
-<div class="fixed inset-0 modal-backdrop hidden items-center justify-center z-50 p-4 transition-all duration-200" data-purpose="report-modal" id="report-modal">
-<div class="bg-[#fce8e8] border border-[#f5b8b8] rounded-2xl w-full max-w-md p-6 shadow-xl relative animate-in fade-in zoom-in duration-150">
-<!-- Close icon button -->
-<button class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition p-1" id="modal-close-btn" title="Close">
-<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
-<path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round"></path>
-</svg>
-</button>
-<!-- Modal Header with Warning Triangle -->
-<div class="flex items-center gap-2 mb-3">
-<div class="text-[#e76f6f]">
-<svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
-<path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" stroke-linecap="round" stroke-linejoin="round"></path>
-</svg>
-</div>
-<h3 class="font-serif text-xl font-semibold text-[#3c2a30]">Report Message</h3>
-</div>
-<!-- Target message preview snippet -->
-<div class="bg-white/70 border border-[#f3c8c8] rounded-lg px-3 py-2 mb-3">
-<span class="text-[10px] uppercase font-semibold tracking-wider text-[#935f67] block">Flagged message text:</span>
-<p class="text-xs text-[#3b2b30] italic truncate mt-0.5" id="report-modal-msg-preview">"Great!"</p>
-</div>
-<!-- Question Subtitle -->
-<p class="text-xs font-medium text-[#543b43] mb-3">Why are you reporting this message?</p>
-<!-- Textarea Reason Input -->
-<div class="mb-5">
-<textarea class="w-full bg-white border border-[#edd1d1] rounded-xl p-3 text-xs text-[#3b2b30] placeholder-[#a68c92] focus:outline-none focus:ring-1 focus:ring-rose-400 focus:border-rose-400 transition resize-none" id="report-reason-input" placeholder="e.g. The message was inappropriate, spam, etc." rows="3"></textarea>
-</div>
-<!-- Report Submit & Cancel Buttons -->
-<div class="flex items-center justify-end gap-2.5">
-<button class="px-5 py-2 rounded-full text-xs font-medium text-[#6e4d56] hover:bg-white/60 transition" id="modal-cancel-btn" type="button">
-  Cancel
-</button>
-<button class="bg-[#f08585] hover:bg-[#e67575] text-white text-xs font-semibold px-8 py-2 rounded-full shadow-sm transition active:scale-95" id="submit-report-btn">
-  Report
-</button>
-</div>
-</div>
-</div>
-<!-- END: Report Message Modal Popup -->
-<!-- BEGIN: New Chat Modal Popup -->
-<div class="fixed inset-0 modal-backdrop hidden items-center justify-center z-50 p-4 transition-all duration-200" id="new-chat-modal">
-<div class="bg-white border border-[#d8cbe3] rounded-2xl w-full max-w-md p-6 shadow-2xl relative animate-in fade-in zoom-in duration-150">
-<!-- Close Button -->
-<button class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition p-1" id="new-chat-close-btn">
-<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
-<path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round"></path>
-</svg>
-</button>
-<div class="flex items-center gap-3 mb-2">
-<div class="w-8 h-8 rounded-lg bg-[#f0e8f8] flex items-center justify-center text-[#6e5884]">
-<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
-<path d="M12 4v16m8-8H4" stroke-linecap="round" stroke-linejoin="round"></path>
-</svg>
-</div>
-<h3 class="font-serif text-xl font-semibold text-[#2f253a]">Start a New Conversation</h3>
-</div>
-<p class="text-xs text-[#6e5d80] mb-4">Choose a certified counselor or enter an anonymous partner handle to begin a private, secure dialogue.</p>
-<form id="new-chat-form" onsubmit="event.preventDefault();">
-<div class="space-y-3 mb-5">
-<div>
-<label class="block text-[11px] font-semibold text-[#544465] uppercase tracking-wider mb-1">Partner or Counselor</label>
-<input class="w-full px-3.5 py-2.5 bg-[#fbf9fd] border border-[#d8cbe3] rounded-xl text-xs text-[#2e213d] placeholder-[#9f91af] focus:outline-none focus:ring-1 focus:ring-[#aa8ec7] focus:border-[#aa8ec7]" id="new-chat-input-name" placeholder="e.g. Dr. Marianne Wells or Anonymous 412" required="" type="text"/>
-</div>
-<div>
-<label class="block text-[11px] font-semibold text-[#544465] uppercase tracking-wider mb-1">Initial Topic or Message (Optional)</label>
-<input class="w-full px-3.5 py-2.5 bg-[#fbf9fd] border border-[#d8cbe3] rounded-xl text-xs text-[#2e213d] placeholder-[#9f91af] focus:outline-none focus:ring-1 focus:ring-[#aa8ec7] focus:border-[#aa8ec7]" id="new-chat-input-intro" placeholder="e.g. Seeking guidance regarding work stress..." type="text"/>
-</div>
-</div>
-<div class="flex justify-end gap-2">
-<button class="px-5 py-2 rounded-full text-xs font-medium text-[#645277] hover:bg-[#f4eef9] transition" id="new-chat-cancel-btn" type="button">
-      Cancel
-    </button>
-<button class="bg-[#c4b4d8] hover:bg-[#b29ecb] text-[#2c1d3c] text-xs font-semibold px-6 py-2 rounded-full shadow-sm transition active:scale-95" id="create-new-chat-btn" type="submit">
-      Start Chat
-    </button>
-</div>
-</form>
-</div>
-</div>
-<!-- END: New Chat Modal Popup -->
-<!-- BEGIN: Toast Notification -->
-<div class="fixed bottom-6 right-6 z-50 transform translate-y-16 opacity-0 transition-all duration-300 pointer-events-none" id="toast-notification">
-<div class="bg-[#2f233a] text-white px-4 py-2.5 rounded-full shadow-lg flex items-center gap-2 text-xs">
-<svg class="w-4 h-4 text-emerald-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
-<path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"></path>
-</svg>
-<span id="toast-message">Message reported successfully</span>
-</div>
-</div>
-<!-- END: Toast Notification -->
-<!-- BEGIN: Interactive Logic Script -->
-<script data-purpose="chat-interactive-suite">
-    // CONVERSATION DATA - edit contacts, messages and the auto-replies (botReplies) here.
-    // message types: incoming | outgoing | divider; showReport adds the "..." report button
-    const conversationData = {
-      "235": {
-        title: "Anonymous 235",
-        messages: [
-          { type: 'incoming', text: "Talk to you next time, hope you feel better", showReport: true },
-          { type: 'outgoing', text: "Thanks for today, see you!", showCheck: true },
-          { type: 'divider', text: "Jan 5, 2027" },
-          { type: 'outgoing', text: "hi, you there?" },
-          { type: 'incoming', text: "Hey, what's up?", showReport: true },
-          { type: 'outgoing', text: "Everything feels lighter now. As if a heavy brick was removed from my bag." },
-          { type: 'incoming', text: "That's great!", showReport: true },
-          { type: 'incoming', text: "Great!", showReport: true, flagged: true }
-        ],
-        botReplies: [
-          "I understand completely. Let's explore that feeling together.",
-          "Thank you for sharing that with me. What sensations arose as you noticed that?",
-          "Take a slow breath. You are in a safe and supportive space.",
-          "That is meaningful progress. How did that realization shift your perspective?"
-        ]
-      },
-      "359": {
-        title: "Anonymous 359 (Dr. Nyen)",
-        messages: [
-          { type: 'divider', text: "Jan 4, 2027" },
-          { type: 'incoming', text: "Hello Sylus, glad you made it to our introductory session yesterday.", showReport: true },
-          { type: 'outgoing', text: "Thank you Dr. Nyen. The somatic breathing exercise you demonstrated helped a lot last night." },
-          { type: 'incoming', text: "I'm delighted to hear that. Consistency with the 4-7-8 breathing will solidify that calm response.", showReport: true },
-          { type: 'outgoing', text: "I will make sure to practice each evening before bed." }
-        ],
-        botReplies: [
-          "That's wonderful consistency. Notice any muscle tension softening as you breathe?",
-          "Remember that patience with yourself is essential during this stage.",
-          "I am here whenever you'd like to reflect on your progress."
-        ]
-      },
-      "964": {
-        title: "Anonymous 964 (Peer Support)",
-        messages: [
-          { type: 'divider', text: "Jan 3, 2027" },
-          { type: 'incoming', text: "Hi! Welcome to our weekly community peer circle.", showReport: true },
-          { type: 'outgoing', text: "Hi everyone! Excited to connect and exchange tips for managing burnout." },
-          { type: 'incoming', text: "You are not alone in that journey. We share reflections every Tuesday.", showReport: true }
-        ],
-        botReplies: [
-          "We hear you. Finding small boundaries in daily routine makes a big difference!",
-          "Thanks for contributing your perspective to the circle.",
-          "What has been the most rejuvenating habit you tried this week?"
-        ]
-      },
-      "179": {
-        title: "Anonymous 179 (Mindfulness Coach)",
-        messages: [
-          { type: 'divider', text: "Jan 2, 2027" },
-          { type: 'incoming', text: "Gentle reminder to hydrate and un-clench your shoulders today.", showReport: true },
-          { type: 'outgoing', text: "Appreciate the check-in! Doing a quick posture reset right now." }
-        ],
-        botReplies: [
-          "Beautiful. Inhale peace, exhale release.",
-          "Keep anchoring yourself back into the present moment.",
-          "A five-minute screen break can refresh your focus completely."
-        ]
-      }
-    };
 
-    let activeContactId = "235";
-    let messageToReport = "";
+<body>
+  <div class="app-layout">
 
-    // DOM Elements
-    const chatMessagesBox = document.getElementById('chat-messages-box');
-    const activeChatTitle = document.getElementById('active-chat-title');
-    const contactPills = document.querySelectorAll('.contact-pill');
-    const chatInputForm = document.getElementById('chat-input-form');
-    const chatMessageInput = document.getElementById('chat-message-input');
-    const typingIndicator = document.getElementById('typing-indicator');
-    const typingAuthor = document.getElementById('typing-author');
+    <!-- ===== SIDEBAR NAVIGATION ===== -->
+    <aside class="sidebar">
 
-    // Modals
-    const reportModal = document.getElementById('report-modal');
-    const reportPreview = document.getElementById('report-modal-msg-preview');
-    const reportReasonInput = document.getElementById('report-reason-input');
-    const modalCloseBtn = document.getElementById('modal-close-btn');
-    const modalCancelBtn = document.getElementById('modal-cancel-btn');
-    const submitReportBtn = document.getElementById('submit-report-btn');
+      <!-- Logo: the sun icon replaces the "O" in SOLACE -->
+      <div class="sidebar-logo">
+        <span>S</span>
+        <svg class="sidebar-logo-sun" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="12" cy="12" fill="#d99b38" r="4" stroke="#d99b38"></circle>
+          <path d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32l1.41 1.41M2 12h2m16 0h2M6.34 17.66l-1.41 1.41m14.14-14.14l-1.41 1.41" stroke="#d99b38" stroke-linecap="round"></path>
+        </svg>
+        <span>LACE</span>
+      </div>
 
-    // New Chat
-    const newChatBtn = document.getElementById('new-chat-btn');
-    const newChatModal = document.getElementById('new-chat-modal');
-    const newChatCloseBtn = document.getElementById('new-chat-close-btn');
-    const newChatCancelBtn = document.getElementById('new-chat-cancel-btn');
-    const newChatForm = document.getElementById('new-chat-form');
-    const newChatInputName = document.getElementById('new-chat-input-name');
+      <!-- Main menu (the current page, Messages, has the "is-active" class) -->
+      <div class="sidebar-group">
+        <p class="sidebar-group-label">MAIN MENU</p>
+        <nav class="sidebar-nav" aria-label="Main menu">
+          <a class="nav-link" href="#">
+            <svg class="nav-link-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" stroke-linecap="round" stroke-linejoin="round"></path>
+            </svg>
+            <span>Dashboard</span>
+          </a>
+          <a class="nav-link is-active" href="#" aria-current="page">
+            <svg class="nav-link-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" stroke-linecap="round" stroke-linejoin="round"></path>
+            </svg>
+            <span>Messages</span>
+          </a>
+          <a class="nav-link" href="#">
+            <svg class="nav-link-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round"></path>
+            </svg>
+            <span>Appointments</span>
+          </a>
+          <a class="nav-link" href="#">
+            <svg class="nav-link-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round"></path>
+            </svg>
+            <span>Session History</span>
+          </a>
+        </nav>
+      </div>
 
-    // Toast
-    const toastNotification = document.getElementById('toast-notification');
-    const toastMessage = document.getElementById('toast-message');
+      <!-- Account menu -->
+      <div class="sidebar-group">
+        <p class="sidebar-group-label">ACCOUNT</p>
+        <nav class="sidebar-nav" aria-label="Account menu">
+          <a class="nav-link" href="#">
+            <svg class="nav-link-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" stroke-linecap="round" stroke-linejoin="round"></path>
+            </svg>
+            <span>Profile</span>
+          </a>
+          <a class="nav-link" href="#">
+            <svg class="nav-link-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" stroke-linecap="round" stroke-linejoin="round"></path>
+              <path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round"></path>
+            </svg>
+            <span>Settings</span>
+          </a>
+        </nav>
+      </div>
 
-    function showToast(text) {
-      toastMessage.textContent = text;
-      toastNotification.classList.remove('translate-y-16', 'opacity-0');
-      toastNotification.classList.add('translate-y-0', 'opacity-100');
-      setTimeout(() => {
-        toastNotification.classList.add('translate-y-16', 'opacity-0');
-        toastNotification.classList.remove('translate-y-0', 'opacity-100');
-      }, 2600);
-    }
+      <!-- Log out button (pinned to the bottom) -->
+      <div class="sidebar-footer">
+        <button class="logout-button" type="button">
+          <svg class="icon-sm" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" stroke-linecap="round" stroke-linejoin="round"></path>
+          </svg>
+          <span>Log Out</span>
+        </button>
+      </div>
+    </aside>
 
-    // REPORT MESSAGE + NEW CHAT popups: open/close helpers
-    function openReportModal(msgText) {
-      messageToReport = msgText;
-      reportPreview.textContent = `"${msgText}"`;
-      reportReasonInput.value = "";
-      reportModal.classList.remove('hidden');
-      reportModal.classList.add('flex');
-    }
 
-    function closeReportModal() {
-      reportModal.classList.add('hidden');
-      reportModal.classList.remove('flex');
-    }
+    <!-- ===== MAIN CONTENT ===== -->
+    <main class="main-content">
 
-    function openNewChatModal() {
-      newChatModal.classList.remove('hidden');
-      newChatModal.classList.add('flex');
-      newChatInputName.focus();
-    }
-
-    function closeNewChatModal() {
-      newChatModal.classList.add('hidden');
-      newChatModal.classList.remove('flex');
-      newChatForm.reset();
-    }
-
-    // CHAT MESSAGES: builds the incoming/outgoing bubbles for the selected contact
-    function renderConversation(contactId) {
-      const data = conversationData[contactId];
-      if (!data) return;
-
-      activeChatTitle.textContent = data.title;
-      typingAuthor.textContent = data.title.split(' ')[0] + ' ' + (data.title.split(' ')[1] || '');
-      renderAvatars(); // keep the typing-indicator avatar in sync
-
-      let html = '';
-      data.messages.forEach(msg => {
-        if (msg.type === 'divider') {
-          html += `
-            <div class="relative flex items-center justify-center my-3">
-              <div class="border-t border-[#ebdff5] w-full"></div>
-              <span class="bg-white px-3 text-[11px] font-medium text-[#8f829f] absolute">${msg.text}</span>
-            </div>
-          `;
-        } else if (msg.type === 'incoming') {
-          html += `
-            <div class="flex items-start gap-2.5 max-w-lg msg-animate">
-              ${avatarHtml(data.title)}
-              <div class="flex items-center gap-1.5 group">
-                <div class="bubble-in px-4 py-2 text-xs text-[#2b2138] leading-relaxed">
-                  ${escapeHtml(msg.text)}
-                </div>
-                ${msg.showReport ? `
-                  <button class="report-trigger-btn text-gray-400 hover:text-gray-700 p-1 opacity-60 group-hover:opacity-100 transition" title="Report message" data-msg="${escapeHtml(msg.text)}">
-                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M6 10a2 2 0 11-4 0 2 2 0 014 0zm8 0a2 2 0 11-4 0 2 2 0 014 0zm8 0a2 2 0 11-4 0 2 2 0 014 0z"></path>
-                    </svg>
-                  </button>
-                ` : ''}
-              </div>
-            </div>
-          `;
-          if (msg.flagged) {
-            html += `
-              <div class="flex justify-start pl-9 msg-animate">
-                <div class="bg-[#fce8e8] border border-[#f5a8a8] rounded-xl px-4 py-2.5 max-w-xs shadow-xs" data-purpose="spam-warning-banner">
-                  <p class="text-[11px] font-semibold text-rose-600">This message was flagged as spam.</p>
-                  <p class="text-[10px] text-rose-500/80 italic mt-0.5">"${escapeHtml(msg.text)}"</p>
-                </div>
-              </div>
-            `;
-          }
-        } else if (msg.type === 'outgoing') {
-          html += `
-            <div class="flex justify-end msg-animate">
-              <div class="bubble-out px-4 py-2 text-xs text-[#20142e] max-w-sm leading-relaxed flex items-end gap-1.5 shadow-sm">
-                <span>${escapeHtml(msg.text)}</span>
-                <span class="inline-flex items-center text-[#5e4b71] text-[10px] font-bold leading-none select-none ml-1" title="Delivered & Read">✓✓</span>
-              </div>
-            </div>
-          `;
-        }
-      });
-
-      chatMessagesBox.innerHTML = html;
-      scrollToBottom();
-      attachReportTriggers();
-    }
-
-    function scrollToBottom() {
-      chatMessagesBox.scrollTop = chatMessagesBox.scrollHeight;
-    }
-
-    // ---- Avatar helpers ----
-    // Titles skipped when picking an initial, so "Dr. Zayne Li" shows "Z". Set to [] to use the very first letter instead.
-    const NAME_TITLES = ['dr', 'dr.', 'mr', 'mr.', 'mrs', 'mrs.', 'ms', 'ms.', 'prof', 'prof.'];
-
-    // First letter of a person's name, uppercased (e.g. "Anonymous 235" -> "A")
-    function getInitial(name) {
-      const words = (name || '').trim().split(/\s+/);
-      const word = words.find(w => !NAME_TITLES.includes(w.toLowerCase())) || words[0] || '';
-      return word.charAt(0).toUpperCase() || '?';
-    }
-
-    // Fills every avatar in the page with its initial. Avatars get their name from either:
-    //   data-avatar-from="someElementId"  -> text of that element
-    //   data-avatar-auto                  -> text of the element right after the avatar
-    function renderAvatars() {
-      document.querySelectorAll('[data-avatar-from], [data-avatar-auto]').forEach(el => {
-        const source = el.dataset.avatarFrom ? document.getElementById(el.dataset.avatarFrom) : el.nextElementSibling;
-        el.textContent = getInitial(source ? source.textContent : '');
-      });
-    }
-
-    // Avatar markup for chat messages and new contacts (extra = spacing classes)
-    function avatarHtml(name, extra = 'mt-0.5') {
-      return `<div class="avatar avatar-sm ${extra}">${escapeHtml(getInitial(name))}</div>`;
-    }
-
-    function escapeHtml(str) {
-      if (!str) return '';
-      return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
-    }
-
-    function attachReportTriggers() {
-      const triggers = chatMessagesBox.querySelectorAll('.report-trigger-btn');
-      triggers.forEach(btn => {
-        btn.addEventListener('click', (e) => {
-          e.stopPropagation();
-          const text = btn.getAttribute('data-msg') || 'Selected message';
-          openReportModal(text);
-        });
-      });
-    }
-
-    // CONTACT SWITCHING: highlights the clicked contact and loads its conversation
-    function switchContact(pillEl) {
-      const contactId = pillEl.getAttribute('data-contact-id');
-      if (!contactId || contactId === activeContactId) return;
-
-      activeContactId = contactId;
-
-      // Update styling
-      document.querySelectorAll('.contact-pill').forEach(el => {
-        el.classList.remove('bg-[#dcd0ea]', 'border-[#cfbedf]', 'shadow-sm');
-        el.classList.add('border-transparent');
-        const textSpan = el.querySelector('span');
-        if (textSpan) {
-          textSpan.classList.remove('font-semibold', 'text-[#281b36]');
-          textSpan.classList.add('font-medium', 'text-[#4f425f]');
-        }
-      });
-
-      pillEl.classList.remove('border-transparent');
-      pillEl.classList.add('bg-[#dcd0ea]', 'border-[#cfbedf]', 'shadow-sm');
-      const textSpan = pillEl.querySelector('span');
-      if (textSpan) {
-        textSpan.classList.remove('font-medium', 'text-[#4f425f]');
-        textSpan.classList.add('font-semibold', 'text-[#281b36]');
-      }
-
-      renderConversation(contactId);
-    }
-
-    // SENDING MESSAGES: adds your bubble, then triggerBotReply() shows a simulated reply
-    function handleSendMessage() {
-      const text = chatMessageInput.value.trim();
-      if (!text) return;
-
-      const currentConv = conversationData[activeContactId];
-      if (!currentConv) return;
-
-      // Add to store
-      currentConv.messages.push({
-        type: 'outgoing',
-        text: text,
-        showCheck: true
-      });
-
-      // Clear & refocus
-      chatMessageInput.value = '';
-      chatMessageInput.focus();
-
-      // Append bubble to DOM
-      const outgoingNode = document.createElement('div');
-      outgoingNode.className = 'flex justify-end msg-animate';
-      outgoingNode.innerHTML = `
-        <div class="bubble-out px-4 py-2 text-xs text-[#20142e] max-w-sm leading-relaxed flex items-end gap-1.5 shadow-sm">
-          <span>${escapeHtml(text)}</span>
-          <span class="inline-flex items-center text-[#5e4b71] text-[10px] font-bold leading-none select-none ml-1" title="Delivered & Read">✓✓</span>
-        </div>
-      `;
-      chatMessagesBox.appendChild(outgoingNode);
-      scrollToBottom();
-
-      // Trigger realistic bot typing reply
-      triggerBotReply(currentConv);
-    }
-
-    function triggerBotReply(currentConv) {
-      typingIndicator.classList.remove('hidden');
-      typingIndicator.classList.add('flex');
-      scrollToBottom();
-
-      setTimeout(() => {
-        typingIndicator.classList.remove('flex');
-        typingIndicator.classList.add('hidden');
-
-        // Pick bot reply
-        const replies = currentConv.botReplies || [
-          "Thank you for sharing that with me. How did that make you feel?",
-          "I understand. Let's explore that thought together."
-        ];
-        const randomReply = replies[Math.floor(Math.random() * replies.length)];
-
-        currentConv.messages.push({
-          type: 'incoming',
-          text: randomReply,
-          showReport: true
-        });
-
-        const incomingNode = document.createElement('div');
-        incomingNode.className = 'flex items-start gap-2.5 max-w-lg msg-animate';
-        incomingNode.innerHTML = `
-          ${avatarHtml(currentConv.title)}
-          <div class="flex items-center gap-1.5 group">
-            <div class="bubble-in px-4 py-2 text-xs text-[#2b2138] leading-relaxed">
-              ${escapeHtml(randomReply)}
-            </div>
-            <button class="report-trigger-btn text-gray-400 hover:text-gray-700 p-1 opacity-60 group-hover:opacity-100 transition" title="Report message" data-msg="${escapeHtml(randomReply)}">
-              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M6 10a2 2 0 11-4 0 2 2 0 014 0zm8 0a2 2 0 11-4 0 2 2 0 014 0zm8 0a2 2 0 11-4 0 2 2 0 014 0z"></path>
-              </svg>
-            </button>
+      <!-- Page title and signed-in user -->
+      <header class="page-header">
+        <div class="page-title-group">
+          <div class="icon-badge">
+            <svg class="icon-md" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M8 10h.01M12 10h.01M16 10h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" stroke-linecap="round" stroke-linejoin="round"></path>
+            </svg>
           </div>
-        `;
-        chatMessagesBox.appendChild(incomingNode);
-        scrollToBottom();
-        attachReportTriggers();
-      }, 1500);
-    }
+          <h1 class="page-title">Messages</h1>
+        </div>
 
-    // Event Listeners
-    chatInputForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-      handleSendMessage();
-    });
+        <!-- User badge: the avatar letter is generated from the name -->
+        <div class="user-badge">
+          <div class="avatar avatar-md avatar-bordered" data-avatar-from="current-user-name"></div>
+          <div class="user-badge-text">
+            <p class="user-badge-name" id="current-user-name">Sylus Qin</p>
+            <p class="user-badge-role">Client</p>
+          </div>
+        </div>
+      </header>
 
-    // Contact Pills Click
-    document.getElementById('contacts-list-container').addEventListener('click', (e) => {
-      const pill = e.target.closest('.contact-pill');
-      if (pill) {
-        switchContact(pill);
-      }
-    });
+      <!-- Contacts (left) and chat window (right) -->
+      <div class="chat-layout">
 
-    // Report Modal events
-    modalCloseBtn.addEventListener('click', closeReportModal);
-    modalCancelBtn.addEventListener('click', closeReportModal);
-    reportModal.addEventListener('click', (e) => {
-      if (e.target === reportModal) closeReportModal();
-    });
+        <!-- Contacts: clicking a .contact-pill opens that conversation (data-contact-id matches conversationData in chats-page.js) -->
+        <section class="contacts-panel">
+          <button class="new-chat-button" id="new-chat-btn" type="button">
+            <svg class="icon-sm" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" stroke-linecap="round" stroke-linejoin="round"></path>
+            </svg>
+            <span>New Chat</span>
+          </button>
 
-    submitReportBtn.addEventListener('click', () => {
-      closeReportModal();
-      showToast('Message reported successfully. Thank you.');
-    });
+          <!-- Avatar letters come from the contact name next to each avatar -->
+          <div class="contacts-list" id="contacts-list-container">
+            <div class="contact-pill is-active" data-contact-id="235">
+              <div class="avatar avatar-sm" data-avatar-auto></div>
+              <span class="contact-name">Anonymous 235</span>
+            </div>
+            <div class="contact-pill" data-contact-id="359">
+              <div class="avatar avatar-sm" data-avatar-auto></div>
+              <span class="contact-name">Anonymous 359</span>
+            </div>
+            <div class="contact-pill" data-contact-id="964">
+              <div class="avatar avatar-sm" data-avatar-auto></div>
+              <span class="contact-name">Anonymous 964</span>
+            </div>
+            <div class="contact-pill" data-contact-id="179">
+              <div class="avatar avatar-sm" data-avatar-auto></div>
+              <span class="contact-name">Anonymous 179</span>
+            </div>
+          </div>
+        </section>
 
-    // NEW CHAT: creates a conversation + contact pill from the form (avatar letter comes from the name)
-    newChatBtn.addEventListener('click', openNewChatModal);
-    newChatCloseBtn.addEventListener('click', closeNewChatModal);
-    newChatCancelBtn.addEventListener('click', closeNewChatModal);
-    newChatModal.addEventListener('click', (e) => {
-      if (e.target === newChatModal) closeNewChatModal();
-    });
+        <!-- Chat window -->
+        <section class="chat-window">
+          <header class="chat-window-header">
+            <h2 class="chat-title" id="active-chat-title">Anonymous 235</h2>
+            <span class="chat-status">
+              <span class="chat-status-dot"></span>
+              Active now
+            </span>
+          </header>
 
-    newChatForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const partnerName = newChatInputName.value.trim();
-      const introText = document.getElementById('new-chat-input-intro').value.trim();
-      if (!partnerName) return;
+          <!-- Message bubbles are drawn here by chats-page.js (renderConversation) -->
+          <div class="chat-messages" id="chat-messages-box"></div>
 
-      const newId = 'chat_' + Date.now();
-      const initialMsgs = [
-        { type: 'divider', text: 'Today' }
-      ];
+          <!-- "is typing" bar (shown while a reply is on its way) -->
+          <div class="typing-indicator" id="typing-indicator">
+            <div class="avatar avatar-xs" data-avatar-from="typing-author"></div>
+            <span class="typing-author" id="typing-author">Anonymous 235</span>
+            <span class="typing-text">is typing</span>
+            <div class="typing-dots">
+              <span class="typing-dot"></span>
+              <span class="typing-dot"></span>
+              <span class="typing-dot"></span>
+            </div>
+          </div>
 
-      if (introText) {
-        initialMsgs.push({
-          type: 'outgoing',
-          text: introText,
-          showCheck: true
-        });
-      }
+          <!-- Message input: submitting this form sends a message -->
+          <div class="chat-input-bar">
+            <form class="chat-form" id="chat-input-form" autocomplete="off">
+              <div class="chat-input-wrap">
+                <input class="chat-input" id="chat-message-input" type="text" placeholder="Type a message..." aria-label="Type a message" />
+              </div>
+              <button class="send-button" id="chat-send-btn" type="submit" title="Send message">
+                <svg fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                  <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"></path>
+                </svg>
+              </button>
+            </form>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
 
-      conversationData[newId] = {
-        title: partnerName,
-        messages: initialMsgs,
-        botReplies: [
-          "Hello, I am glad you connected today.",
-          "I am listening whenever you are ready to share.",
-          "Take your time, this is your private space."
-        ]
-      };
 
-      // Add to contact list container at the top
-      const contactsContainer = document.getElementById('contacts-list-container');
-      const newPill = document.createElement('div');
-      newPill.className = 'contact-pill flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-[#f3edf8] transition cursor-pointer border border-transparent';
-      newPill.setAttribute('data-contact-id', newId);
-      newPill.setAttribute('data-contact-title', partnerName);
-      newPill.innerHTML = `
-        ${avatarHtml(partnerName, '')}
-        <span class="text-xs font-medium text-[#4f425f] truncate">${escapeHtml(partnerName)}</span>
-      `;
-      contactsContainer.prepend(newPill);
+  <!-- ===== POPUPS (hidden until the "is-open" class is added) ===== -->
 
-      closeNewChatModal();
-      switchContact(newPill);
-      showToast(`Conversation started with ${partnerName}`);
-    });
+  <!-- Popup 1: Report Message -->
+  <div class="modal-overlay" id="report-modal">
+    <div class="modal-dialog is-report" role="dialog" aria-labelledby="report-modal-title">
+      <button class="modal-close-button" id="modal-close-btn" type="button" title="Close">
+        <svg class="icon-md" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round"></path>
+        </svg>
+      </button>
 
-    // Initial render
-    renderAvatars();
-    renderConversation("235");
-  </script>
-<!-- END: Interactive Logic Script -->
-</body></html>
+      <div class="modal-title-row is-report">
+        <div class="modal-warning-icon">
+          <svg class="icon-lg" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" stroke-linecap="round" stroke-linejoin="round"></path>
+          </svg>
+        </div>
+        <h3 class="modal-title" id="report-modal-title">Report Message</h3>
+      </div>
+
+      <!-- The message being reported -->
+      <div class="report-preview">
+        <span class="report-preview-label">Flagged message text:</span>
+        <p class="report-preview-text" id="report-modal-msg-preview">"Great!"</p>
+      </div>
+
+      <label class="report-question" for="report-reason-input">Why are you reporting this message?</label>
+      <div class="report-reason-wrap">
+        <textarea class="report-reason-input" id="report-reason-input" rows="3" placeholder="e.g. The message was inappropriate, spam, etc."></textarea>
+      </div>
+
+      <div class="modal-actions is-report">
+        <button class="modal-button modal-button-cancel" id="modal-cancel-btn" type="button">Cancel</button>
+        <button class="modal-button modal-button-danger" id="submit-report-btn" type="button">Report</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Popup 2: Start a New Conversation -->
+  <div class="modal-overlay" id="new-chat-modal">
+    <div class="modal-dialog" role="dialog" aria-labelledby="new-chat-modal-title">
+      <button class="modal-close-button" id="new-chat-close-btn" type="button" title="Close">
+        <svg class="icon-md" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round"></path>
+        </svg>
+      </button>
+
+      <div class="modal-title-row">
+        <div class="icon-badge">
+          <svg class="icon-sm" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 4v16m8-8H4" stroke-linecap="round" stroke-linejoin="round"></path>
+          </svg>
+        </div>
+        <h3 class="modal-title" id="new-chat-modal-title">Start a New Conversation</h3>
+      </div>
+      <p class="modal-description">Choose a certified counselor or enter an anonymous partner handle to begin a private, secure dialogue.</p>
+
+      <form id="new-chat-form">
+        <div class="modal-fields">
+          <div>
+            <label class="modal-label" for="new-chat-input-name">Partner or Counselor</label>
+            <input class="text-field" id="new-chat-input-name" type="text" placeholder="e.g. Dr. Marianne Wells or Anonymous 412" required />
+          </div>
+          <div>
+            <label class="modal-label" for="new-chat-input-intro">Initial Topic or Message (Optional)</label>
+            <input class="text-field" id="new-chat-input-intro" type="text" placeholder="e.g. Seeking guidance regarding work stress..." />
+          </div>
+        </div>
+
+        <div class="modal-actions">
+          <button class="modal-button modal-button-cancel" id="new-chat-cancel-btn" type="button">Cancel</button>
+          <button class="modal-button modal-button-primary" id="create-new-chat-btn" type="submit">Start Chat</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+
+  <!-- ===== TOAST (small confirmation message, shown by adding "is-visible") ===== -->
+  <div class="toast" id="toast-notification" role="status" aria-live="polite">
+    <div class="toast-content">
+      <svg class="icon-sm" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"></path>
+      </svg>
+      <span id="toast-message">Message reported successfully</span>
+    </div>
+  </div>
+
+</body>
+</html>
