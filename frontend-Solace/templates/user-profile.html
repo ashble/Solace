@@ -83,7 +83,7 @@
 <circle cx="12" cy="7" r="4"/>
 </svg>
 </span>
-<h1>My Profile</h1>
+<div><h1>My Profile</h1><p class="sean-page-subtitle">Confidential personal wellness settings and identity</p></div>
 </div>
 <div class="user-pill">
 <div class="user-avatar" aria-hidden="true"></div>
@@ -103,6 +103,7 @@
 <h2>{{ profile.name }}</h2>
 <p>{{ profile.profile_type }}</p>
 <a href="mailto:{{ profile.email }}">{{ profile.email }}</a>
+<small class="client-identity-note">Your pseudonym is used as your profile name.</small>
 </div>
 <div class="showcase-links">
 <button type="button" class="edit-profile-btn" onclick="document.getElementById('profileEditor').showModal()">Edit Profile</button>
@@ -114,6 +115,10 @@
 <h3>About me</h3>
 <p>{{ profile.bio }}</p>
 </div>
+<section class="client-profile-data-note" aria-label="Profile data availability">
+<span class="profile-eyebrow">WELLNESS FOCUS &amp; NOTES</span>
+<p>Only the profile description is stored here. Goals, check-in cadence, session history, and communication preferences are not available in the current client profile data.</p>
+</section>
 </div>
 </section>
 <p class="profile-save-notice" id="profileNotice" role="status">

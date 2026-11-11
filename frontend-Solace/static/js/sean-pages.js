@@ -1,4 +1,4 @@
-// Loaded only by Bookings.html, Appointments.html, and the three profile pages.
+// Loaded only by the assigned booking, appointment, and profile pages.
 (() => {
   const profileForm = document.querySelector('#profileForm');
   if (profileForm) {
@@ -25,6 +25,10 @@
   async function updateAppointment(button, status) {
     const row = button.closest('[data-appointment-id]');
     if (!row) return;
+    const confirmation = status === 'Cancelled'
+      ? 'Cancel this appointment request?'
+      : 'Accept and confirm this appointment request?';
+    if (!window.confirm(confirmation)) return;
     button.disabled = true;
     try {
       const response = await fetch(`/api/appointments/${row.dataset.appointmentId}`, {
@@ -64,6 +68,7 @@
 
   const search = document.querySelector('.booking-search');
   const statusFilter = document.querySelector('.booking-filter');
+  const bookingFilters = Array.from(document.querySelectorAll('[data-booking-filter]'));
   const sortOrder = document.querySelector('.booking-sort');
   const tableBody = document.querySelector('.appointment-table tbody');
   if (!tableBody) return;
@@ -78,7 +83,7 @@
 
   function renderRows() {
     const query = (search?.value || '').trim().toLowerCase();
-    const status = statusFilter?.value || 'all';
+    const status = statusFilter?.value || bookingFilters.find((button) => button.getAttribute('aria-pressed') === 'true')?.dataset.bookingFilter || 'all';
     const matching = rows.filter((row) =>
       (!query || row.dataset.search.includes(query)) && (status === 'all' || row.dataset.status === status)
     );
@@ -93,7 +98,7 @@
     if (noResults) noResults.hidden = matching.length > 0 || rows.length === 0;
 
     const visibleCount = document.querySelector('#visibleAppointmentCount');
-    const totalCount = document.querySelector('#totalAppointmentCount');
+    const totalCount = document.querySelector('#matchingAppointmentCount');
     if (visibleCount) visibleCount.textContent = pageRows.length;
     if (totalCount) totalCount.textContent = matching.length;
 
@@ -116,6 +121,11 @@
 
   search?.addEventListener('input', () => { currentPage = 1; renderRows(); });
   statusFilter?.addEventListener('change', () => { currentPage = 1; renderRows(); });
+  bookingFilters.forEach((button) => button.addEventListener('click', () => {
+    bookingFilters.forEach((item) => item.setAttribute('aria-pressed', String(item === button)));
+    currentPage = 1;
+    renderRows();
+  }));
   sortOrder?.addEventListener('change', () => { currentPage = 1; renderRows(); });
   previousButton?.addEventListener('click', () => { currentPage -= 1; renderRows(); });
   nextButton?.addEventListener('click', () => { currentPage += 1; renderRows(); });

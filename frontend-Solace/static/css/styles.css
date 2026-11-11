@@ -599,6 +599,107 @@ body.dashboard-body {
   }
 }
 
+/* Responsive behavior for Sean's assigned pages */
+.sean-main-content { width: min(100%, 1600px); max-width: none; min-width: 0; }
+.sean-topbar .profile-page-heading { min-width: 0; }
+.sean-page-subtitle { margin-top: 3px; color: var(--text-secondary); font-size: 11px; }
+.booking-list-heading h1 { font-size: clamp(20px, 2vw, 26px); }
+.booking-count { display: inline-flex; align-items: center; gap: 4px; }
+.table-subline { display:block; margin-top:4px; color:var(--text-secondary); font-size:10px; }
+.table-actions-cell { min-width: 150px; white-space: normal; }
+.table-actions-cell .booking-action { min-height: 32px; margin: 2px; }
+.appointment-table-wrap { min-width: 0; max-width: 100%; border:1px solid var(--card-border); border-radius:12px; }
+.appointment-table { min-width: 780px; }
+.appointment-table td { vertical-align: middle; }
+.appointment-table .status-badge { white-space:nowrap; }
+.therapist-appointments-page .booking-toolbar,
+.therapist-bookings-page .booking-toolbar { display:flex; align-items:center; gap:10px; padding:12px; border:1px solid var(--card-border); border-radius:12px; background:#fff; }
+.therapist-appointments-page .booking-toolbar .search-input-wrapper,
+.therapist-bookings-page .booking-toolbar .search-input-wrapper { flex:1 1 240px; min-width:min(100%, 210px); }
+.therapist-appointments-page .booking-toolbar .filter-dropdown-wrapper,
+.therapist-bookings-page .booking-toolbar .filter-dropdown-wrapper { flex:0 1 150px; }
+.booking-segmented-filter { display:flex; flex-wrap:wrap; gap:4px; padding:3px; border:1px solid var(--card-border); border-radius:999px; background:#faf8fb; }
+.booking-segmented-filter button { min-height:34px; padding:6px 10px; border:0; border-radius:999px; background:transparent; color:#655873; font:500 10px var(--font-sans); cursor:pointer; }
+.booking-segmented-filter button[aria-pressed="true"] { background:#76528e; color:#fff; }
+.booking-segmented-filter button:focus-visible { outline:2px solid #76528e; outline-offset:2px; }
+.admin-profile-workspace { width:min(100%,1000px); margin:22px auto 0; }
+.admin-workspace-heading { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:12px; }
+.admin-workspace-heading h2 { margin:4px 0 0; color:var(--text-primary); font:600 20px var(--font-serif); }
+.admin-metric-grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px; }
+.admin-metric-grid article { display:flex; flex-direction:column; gap:7px; min-width:0; padding:16px; border:1px solid var(--card-border); border-radius:12px; background:#fff; }
+.admin-metric-grid article span { color:var(--text-secondary); font-size:11px; }
+.admin-metric-grid article strong { color:var(--text-primary); font:600 16px var(--font-serif); }
+.admin-metric-grid article small,.admin-profile-footer { color:var(--text-secondary); font-size:10px; line-height:1.5; }
+.admin-not-configured { background:#f3eff5; color:#655873; }
+.admin-tools-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; margin-top:14px; }
+.admin-tools-grid .showcase-info-card { display:flex; flex-direction:column; align-items:flex-start; gap:8px; padding:16px; }
+.admin-tools-grid .showcase-info-card h3 { font:600 14px var(--font-sans); }
+.admin-tools-grid .showcase-info-card p { font:400 11px/1.55 var(--font-sans); }
+.admin-tool-link { color:#70538c; font-size:11px; font-weight:600; text-decoration:none; }
+.admin-tool-link:hover { text-decoration:underline; }
+.admin-disabled-action { min-height:36px; padding:7px 12px; border:1px solid #ded7e2; border-radius:8px; background:#f7f5f8; color:#867d8c; font:500 11px var(--font-sans); cursor:not-allowed; }
+.admin-notice-label { display:grid; gap:6px; width:100%; color:var(--text-secondary); font-size:10px; }
+.admin-notice-label textarea { width:100%; padding:9px; border:1px solid var(--card-border); border-radius:8px; background:#f7f5f8; color:var(--text-secondary); resize:vertical; }
+.admin-profile-footer { margin-top:12px; text-align:right; }
+body.therapist-profile-page .showcase-profile,
+body.client-profile-page .showcase-profile { width:min(100%,1000px); }
+body.therapist-profile-page .showcase-info-card,
+body.client-profile-page .showcase-info-card { min-width:0; }
+body.therapist-profile-page .profile-detail-row strong { white-space:normal; overflow-wrap:anywhere; }
+.client-identity-note { display:block; margin-top:5px; color:var(--text-secondary); font:400 10px var(--font-sans); }
+.client-profile-data-note { width:min(100%,1000px); margin:12px auto 0; padding:15px; border:1px solid var(--card-border); border-radius:12px; background:#faf7fb; }
+.client-profile-data-note p { margin-top:6px; color:var(--text-secondary); font-size:11px; line-height:1.55; }
+
+@media (max-width: 1100px) {
+  .sean-main-content { padding-left:clamp(16px,3vw,30px); padding-right:clamp(16px,3vw,30px); }
+  .appointment-stat-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .admin-metric-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+}
+@media (max-width: 680px) {
+  .sean-topbar { align-items:flex-start; gap:12px; flex-wrap:wrap; }
+  .sean-topbar .user-pill { margin-left:auto; }
+  .sean-page-subtitle { max-width:42ch; }
+  .appointment-stat-grid { gap:8px; }
+  .appointment-stat-card { min-width:0; padding:11px; }
+  .therapist-appointments-page .booking-toolbar,
+  .therapist-bookings-page .booking-toolbar { align-items:stretch; }
+  .therapist-appointments-page .booking-toolbar .search-input-wrapper,
+  .therapist-bookings-page .booking-toolbar .search-input-wrapper,
+  .therapist-appointments-page .booking-toolbar .filter-dropdown-wrapper,
+  .therapist-bookings-page .booking-toolbar .filter-dropdown-wrapper { flex:1 1 100%; min-width:0; }
+  .booking-segmented-filter { border-radius:12px; }
+  .booking-segmented-filter button { min-height:44px; }
+  .appointment-table-wrap { overflow:visible; border:0; }
+  .appointment-table { display:block; min-width:0; width:100%; }
+  .appointment-table thead { position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; }
+  .appointment-table tbody { display:grid; gap:10px; }
+  .appointment-table tbody tr[data-appointment-id] { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:6px 12px; padding:13px; border:1px solid var(--card-border); border-radius:12px; background:#fff; }
+  .appointment-table tbody tr[data-appointment-id] td { display:block; min-width:0; padding:4px 2px; border:0; overflow-wrap:anywhere; }
+  .appointment-table tbody tr[data-appointment-id] td:first-child { grid-column:1/-1; font-weight:600; }
+  .appointment-table tbody tr[data-appointment-id] td::before { display:block; margin-bottom:3px; color:var(--text-secondary); content:attr(data-label); font:600 9px var(--font-sans); letter-spacing:.04em; text-transform:uppercase; }
+  .appointment-table tbody tr[data-appointment-id] .table-actions-cell { grid-column:1/-1; display:flex; flex-wrap:wrap; gap:6px; min-width:0; }
+  .appointment-table tbody tr[data-appointment-id] .table-actions-cell::before { width:100%; }
+  .appointment-table .booking-action { min-height:44px; padding:8px 12px; font-size:11px; }
+  .appointment-table tbody tr.no-appointments-row,
+  .appointment-table tbody tr.no-filter-results { display:block; }
+  .appointment-table tbody tr.no-appointments-row td,
+  .appointment-table tbody tr.no-filter-results td { display:block; }
+  .appointment-table tbody tr.no-appointments-row td::before,
+  .appointment-table tbody tr.no-filter-results td::before { content:none; }
+  .booking-table-footer { align-items:flex-start; flex-direction:column; }
+  .booking-pagination { align-self:flex-end; }
+  .showcase-person-row { flex-wrap:wrap; }
+  .showcase-links { flex:1 0 100%; flex-direction:row; justify-content:flex-end; align-items:center; margin:6px 0; }
+  .showcase-info-grid,.admin-tools-grid { grid-template-columns:1fr; }
+  .admin-workspace-heading { align-items:flex-start; flex-direction:column; }
+  .admin-profile-footer { text-align:left; }
+}
+@media (max-width: 380px) {
+  .admin-metric-grid { grid-template-columns:1fr; }
+  .appointment-stat-card strong { font-size:18px; }
+  .booking-list-heading { flex-wrap:wrap; }
+}
+
 /* Assigned profile and therapist workflow screens */
 .profile-layout { display:grid; grid-template-columns:minmax(0,1.35fr) minmax(280px,.85fr); gap:20px; align-items:start; }
 .profile-card,.booking-list-card { background:#fff; border:1px solid #e3dce9; border-radius:16px; padding:25px; box-shadow:0 5px 18px rgba(43,31,57,.035); }

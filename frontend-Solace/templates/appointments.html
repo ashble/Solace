@@ -82,7 +82,7 @@
 <span class="profile-heading-icon">
 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
 </span>
-<h1>Appointments</h1>
+<div><h1>Appointments</h1><p class="sean-page-subtitle">Manage appointment schedules and client reviews</p></div>
 </div>
 <div class="user-pill">
 <div class="user-avatar">D</div>
@@ -94,15 +94,15 @@
 </header>
 <section class="appointment-stat-grid sean-stats">
 <article class="appointment-stat-card stat-upcoming">
-<span>Upcoming</span>
+<span>Upcoming · next 7 days</span>
 <strong>{{ stats.upcoming }}</strong>
 </article>
 <article class="appointment-stat-card stat-pending">
-<span>Pending</span>
+<span>Pending · needs review</span>
 <strong>{{ stats.pending }}</strong>
 </article>
 <article class="appointment-stat-card stat-users">
-<span>Active Users</span>
+<span>Active Users · current caseload</span>
 <strong>{{ stats.active_users }}</strong>
 </article>
 <article class="appointment-stat-card stat-next">
@@ -119,7 +119,7 @@
 <line x1="8" y1="2" x2="8" y2="6"/>
 </svg>
 </div>
-<h1>Appointment List</h1>
+<h1>Appointment List</h1><span class="booking-count">{{ appointments|length }} scheduled</span>
 </div>
 <section class="search-filter-card booking-toolbar">
 <div class="search-input-wrapper">
@@ -139,8 +139,8 @@
 </div>
 <div class="filter-dropdown-wrapper sort-dropdown">
 <select class="filter-select booking-sort" aria-label="Sort appointments">
-<option value="desc">Sort By: Newest</option>
-<option value="asc">Sort By: Oldest</option>
+<option value="desc">Sort By: Date (Newest)</option>
+<option value="asc">Sort By: Date (Oldest)</option>
 </select>
 <svg class="select-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
 <polyline points="6 9 12 15 18 9"/>
@@ -151,24 +151,25 @@
 <table class="admin-data-table appointment-table">
 <thead>
 <tr>
-<th>Appointment List</th>
-<th>Email</th>
-<th>Schedule</th>
-<th>Action</th>
+<th>Client / Pseudonym</th>
+<th>Contact</th>
+<th>Scheduled Date &amp; Time</th>
 <th>Status</th>
+<th>Actions</th>
 </tr>
 </thead>
 <tbody>
 {% for item in appointments %}
-<tr data-appointment-id="{{ item.id }}" data-status="{{ item.status }}" data-schedule="{{ item.sort_key }}" data-client="{{ item.client }}" data-email="{{ item.client_email }}" data-schedule-label="{{ item.display_date }} · {{ item.time }}" data-session="{{ item.session_type }}" data-search="{{ item.client|lower }} {{ item.client_email|lower }}">
-<td class="serif-td font-medium">{{ item.client }}</td>
-<td class="serif-td">{{ item.client_email }}</td>
-<td class="serif-td">{{ item.display_date }} · {{ item.time }}</td>
-<td>
-<button class="booking-action review-action" type="button" data-review="{{ item.id }}">Review</button>
-</td>
-<td>
+<tr data-appointment-id="{{ item.id }}" data-status="{{ item.status }}" data-schedule="{{ item.sort_key }}" data-client="{{ item.client }}" data-email="{{ item.client_email }}" data-schedule-label="{{ item.display_date }} · {{ item.time }}" data-session="{{ item.session_type }}" data-search="{{ item.client|lower }} {{ item.client_email|lower }} {{ item.session_type|lower }}">
+<td class="serif-td font-medium" data-label="Client / Pseudonym">{{ item.client }}</td>
+<td class="serif-td" data-label="Contact">{{ item.client_email }}</td>
+<td class="serif-td" data-label="Scheduled Date &amp; Time">{{ item.display_date }} · {{ item.time }}<small class="table-subline">{{ item.session_type }}</small></td>
+<td data-label="Status">
 <span class="status-badge status-{{ item.status|lower }}">{{ item.status }}</span>
+</td>
+<td data-label="Actions" class="table-actions-cell">
+<button class="booking-action review-action" type="button" data-review="{{ item.id }}">Review details</button>
+{% if item.status == 'Pending' %}<button class="booking-action decline-action" type="button" data-status="Cancelled">Cancel</button>{% endif %}
 </td>
 </tr>
 {% else %}
@@ -177,13 +178,13 @@
 </tr>
 {% endfor %}
 <tr class="no-filter-results" hidden>
-<td colspan="5">No results match your search.</td>
+<td colspan="5">No appointments found.</td>
 </tr>
 </tbody>
 </table>
 </div>
 <div class="table-pagination-footer booking-table-footer">
-<span class="pagination-count">Showing <strong id="visibleAppointmentCount">{{ appointments|length }}</strong> of <span id="totalAppointmentCount">{{ appointments|length }}</span> appointments</span>
+<span class="pagination-count">Showing <strong id="visibleAppointmentCount">{{ appointments|length }}</strong> of <span id="matchingAppointmentCount">{{ appointments|length }}</span> appointments</span>
 <div class="pagination-controls booking-pagination">
 <button type="button" class="page-btn previous-page" aria-label="Previous page">&larr;</button>
 <button type="button" class="page-btn next-page" aria-label="Next page">&rarr;</button>

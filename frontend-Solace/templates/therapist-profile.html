@@ -85,7 +85,7 @@
 <circle cx="12" cy="7" r="4"/>
 </svg>
 </span>
-<h1>My Professional Profile</h1>
+<div><h1>My Professional Profile</h1><p class="sean-page-subtitle">Your professional details and practice information</p></div>
 </div>
 <div class="user-pill">
 <div class="user-avatar" aria-hidden="true"></div>
@@ -116,26 +116,29 @@
 <section class="showcase-info-card">
 <h3>About me</h3>
 <p>{{ profile.bio }}</p>
-<small>📍 &nbsp; {{ profile.availability }}</small>
+<small>Care approach tags have not been provided.</small>
 </section>
 <section class="showcase-info-card">
 <h3>Professional Information</h3>
+{% if profile.license %}
 <div class="profile-detail-row">
-<span>Professional title</span>
-<strong>{{ profile.title }}</strong>
+<span>License</span>
+<strong>{{ profile.license }}</strong>
 </div>
+{% endif %}
 <div class="profile-detail-row">
-<span>Qualification</span>
+<span>Qualifications</span>
 <strong>{{ profile.education }}</strong>
 </div>
 <div class="profile-detail-row">
-<span>Specialization</span>
+<span>Specializations</span>
 <strong>{{ profile.specialty }}</strong>
 </div>
 <div class="profile-detail-row">
 <span>Availability</span>
 <strong>{{ profile.availability }}</strong>
 </div>
+<small>Credential verification, rate, location and years of experience are not connected to this profile.</small>
 </section>
 </div>
 </div>

@@ -78,7 +78,7 @@
 <circle cx="12" cy="7" r="4"/>
 </svg>
 </span>
-<h1>My Profile</h1>
+<div><h1>Admin Profile &amp; Platform Management</h1><p class="sean-page-subtitle">Administrator account details</p></div>
 </div>
 <div class="user-pill">
 <div class="user-avatar" aria-hidden="true"></div>
@@ -133,6 +133,22 @@
 </div>
 </div>
 </section>
+<section class="admin-profile-workspace" aria-labelledby="admin-platform-heading">
+<div class="admin-workspace-heading"><div><span class="profile-eyebrow">PLATFORM OVERVIEW</span><h2 id="admin-platform-heading">Administration tools</h2></div><span class="profile-status admin-not-configured">Live metrics unavailable</span></div>
+<div class="admin-metric-grid">
+<article><span>Active therapists</span><strong>Not tracked</strong><small>Credential totals are not connected to this page.</small></article>
+<article><span>Registered clients</span><strong>Not tracked</strong><small>Client totals are not connected to this page.</small></article>
+<article><span>Today's sessions</span><strong>Not tracked</strong><small>Session records are not available in this app.</small></article>
+<article><span>System health</span><strong>Not monitored</strong><small>Uptime and latency are not measured here.</small></article>
+</div>
+<div class="admin-tools-grid">
+<section class="showcase-info-card"><h3>User audit &amp; therapist verification</h3><p>The current verification screen uses demo entries and does not save review decisions.</p><a class="admin-tool-link" href="/admin/therapist-verification">Open verification screen <span aria-hidden="true">→</span></a></section>
+<section class="showcase-info-card"><h3>Session &amp; telehealth logs</h3><p>Session and telehealth log storage is not yet implemented.</p><button class="admin-disabled-action" type="button" disabled aria-describedby="adminLogsHelp">Export log</button><small id="adminLogsHelp">Unavailable until log data is connected.</small></section>
+<section class="showcase-info-card"><h3>Compliance configuration</h3><p>Compliance attestations and security audit data are not configured in this project.</p><button class="admin-disabled-action" type="button" disabled>Run security audit</button></section>
+<section class="showcase-info-card"><h3>System notifications</h3><p>Broadcast delivery is not connected to a notification service.</p><label class="admin-notice-label">Message content<textarea disabled rows="3" placeholder="Broadcasts are not implemented"></textarea></label><button class="admin-disabled-action" type="button" disabled>Publish broadcast</button></section>
+</div>
+<p class="admin-profile-footer">Signed-in identity and administrator permissions are not provided by the current authentication system.</p>
+</section>
 <p class="profile-save-notice" id="profileNotice" role="status">
 </p>
 <dialog class="profile-editor-dialog" id="profileEditor">
@@ -152,10 +168,6 @@
 <label>Administrator role<input name="title" value="{{ profile.title }}">
 </label>
 <label>Department<input name="department" value="{{ profile.department }}">
-</label>
-<label>Platform access<input name="access_level" value="{{ profile.access_level }}">
-</label>
-<label>Account security<input name="security_status" value="{{ profile.security_status }}">
 </label>
 <label class="profile-field-wide">About me<textarea name="bio" rows="4">{{ profile.bio }}</textarea>
 </label>

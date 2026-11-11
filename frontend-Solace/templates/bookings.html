@@ -82,7 +82,8 @@
 <span class="profile-heading-icon">
 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M16 2v4M8 2v4M3 10h18m-13 5 2 2 5-5"/></svg>
 </span>
-<h1>Bookings</h1>
+<div><h1>Client Bookings</h1><p class="sean-page-subtitle">Manage appointment requests and active sessions</p></div>
+<span class="booking-count">{{ bookings|length }} total</span>
 </div>
 <div class="user-pill">
 <div class="user-avatar">D</div>
@@ -106,24 +107,18 @@
 </div>
 <section class="search-filter-card booking-toolbar">
 <div class="search-input-wrapper">
-<input class="search-field booking-search" type="search" placeholder="Search by name or email" aria-label="Search bookings">
+<input class="search-field booking-search" type="search" placeholder="Search user by name or email" aria-label="Search bookings">
 </div>
-<div class="filter-dropdown-wrapper">
-<select class="filter-select booking-filter" aria-label="Filter by status">
-<option value="all">All Statuses</option>
-<option value="Pending">Pending</option>
-<option value="Confirmed">Confirmed</option>
-<option value="Cancelled">Cancelled</option>
-<option value="Completed">Completed</option>
-</select>
-<svg class="select-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-<polyline points="6 9 12 15 18 9"/>
-</svg>
+<div class="booking-segmented-filter" role="group" aria-label="Filter bookings">
+<button type="button" data-booking-filter="all" aria-pressed="true">All ({{ bookings|length }})</button>
+<button type="button" data-booking-filter="Pending" aria-pressed="false">Action Needed ({{ bookings|selectattr('status','equalto','Pending')|list|length }})</button>
+<button type="button" data-booking-filter="Confirmed" aria-pressed="false">Confirmed ({{ bookings|selectattr('status','equalto','Confirmed')|list|length }})</button>
+<button type="button" data-booking-filter="Cancelled" aria-pressed="false">Declined ({{ bookings|selectattr('status','equalto','Cancelled')|list|length }})</button>
 </div>
 <div class="filter-dropdown-wrapper sort-dropdown">
 <select class="filter-select booking-sort" aria-label="Sort bookings">
-<option value="desc">Sort By: Newest</option>
-<option value="asc">Sort By: Oldest</option>
+<option value="desc">Sort By: Date (Newest)</option>
+<option value="asc">Sort By: Date (Oldest)</option>
 </select>
 <svg class="select-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
 <polyline points="6 9 12 15 18 9"/>
@@ -134,44 +129,48 @@
 <table class="admin-data-table appointment-table">
 <thead>
 <tr>
-<th>User</th>
-<th>Email</th>
-<th>Schedule</th>
-<th>Action</th>
+<th>User / Client</th>
+<th>Contact</th>
+<th>Session &amp; Requested Schedule</th>
+<th>Status</th>
+<th>Actions</th>
 </tr>
 </thead>
 <tbody>
 {% for item in bookings %}
 <tr data-appointment-id="{{ item.id }}" data-status="{{ item.status }}" data-schedule="{{ item.sort_key }}" data-search="{{ item.client|lower }} {{ item.client_email|lower }}">
-<td class="serif-td font-medium">{{ item.client }}</td>
-<td class="serif-td">{{ item.client_email }}</td>
-<td class="serif-td">{{ item.display_date }} · {{ item.time }}</td>
-<td>
+<td class="serif-td font-medium" data-label="User / Client">{{ item.client }}</td>
+<td class="serif-td" data-label="Contact">{{ item.client_email }}</td>
+<td class="serif-td" data-label="Session &amp; Requested Schedule">{{ item.display_date }} · {{ item.time }}<small class="table-subline">{{ item.session_type }}</small></td>
+<td data-label="Status">
+<span class="status-badge status-{{ item.status|lower }}">{{ item.status }}</span>
+</td>
+<td data-label="Actions" class="table-actions-cell">
 {% if item.status == 'Pending' %}
 <span class="booking-action-group">
 <button class="booking-action review-action" data-status="Confirmed">Accept</button>
-<button class="booking-action decline-action" data-status="Cancelled">Decline</button>
+<button class="booking-action decline-action" data-status="Cancelled">Reject</button>
 </span>
 {% elif item.status == 'Cancelled' %}
-<span class="status-badge status-cancelled">Declined</span>
+<span class="booking-action-label declined-label">Cancelled</span>
 {% else %}
-<span class="status-badge status-confirmed">Confirmed</span>
+<span class="booking-action-label accepted-label">Confirmed</span>
 {% endif %}
 </td>
 </tr>
 {% else %}
 <tr class="no-appointments-row">
-<td colspan="4">No bookings yet.</td>
+<td colspan="5">No bookings yet.</td>
 </tr>
 {% endfor %}
 <tr class="no-filter-results" hidden>
-<td colspan="4">No results match your search.</td>
+<td colspan="5">No bookings found.</td>
 </tr>
 </tbody>
 </table>
 </div>
 <div class="table-pagination-footer booking-table-footer">
-<span class="pagination-count">Showing <strong id="visibleAppointmentCount">{{ bookings|length }}</strong> of <span id="totalAppointmentCount">{{ bookings|length }}</span> bookings</span>
+<span class="pagination-count">Showing <strong id="visibleAppointmentCount">{{ bookings|length }}</strong> of <span id="matchingAppointmentCount">{{ bookings|length }}</span> bookings</span>
 <div class="pagination-controls booking-pagination">
 <button type="button" class="page-btn previous-page" aria-label="Previous page">&larr;</button>
 <button type="button" class="page-btn active-page current-page">1</button>
