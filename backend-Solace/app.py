@@ -162,34 +162,34 @@ def serve_sean_page_scripts():
 
 PROFILE_DEFAULTS = {
     "client": {
-        "name": "CalmCloud27",
-        "email": "Client@example.com",
+        "name": "Client pseudonym",
+        "email": "",
         "profile_type": "Anonymous Profile",
-        "bio": "I enjoy quiet moments, meaningful conversations, and finding small ways to grow each day.",
+        "bio": "",
         "privacy": "Anonymous to other users",
         "timezone": "Asia/Manila",
         "contact_preference": "Email",
     },
     "therapist": {
-        "name": "Dr. BBno$",
-        "email": "Therapist@example.com",
-        "title": "Psychologist",
-        "bio": "No introduction added yet.",
-        "education": "Doctorate in Clinical Psychology",
-        "specialty": "Psychological wellness",
-        "certifications": "Licensed professional",
-        "availability": "Online and in person",
+        "name": "Therapist profile",
+        "email": "",
+        "title": "Therapist",
+        "bio": "",
+        "education": "Not provided yet",
+        "specialty": "Not provided yet",
+        "certifications": "Not provided yet",
+        "availability": "Not provided yet",
         "license": "",
         "session_format": "Online and in person",
     },
     "admin": {
-        "name": "Solace Administrator",
-        "email": "admin@solace.com",
+        "name": "Administrator profile",
+        "email": "",
         "title": "System Administrator",
-        "bio": "Responsible for keeping the Solace community safe, supportive, and running smoothly.",
-        "department": "Trust and Safety",
-        "access_level": "Full platform administration",
-        "security_status": "Two-step verification enabled",
+        "bio": "",
+        "department": "Not configured",
+        "access_level": "Not configured",
+        "security_status": "Not configured",
         "notification_email": True,
         "notification_security": True,
         "notification_reports": True,
@@ -210,15 +210,19 @@ def profile_page():
     if role not in PROFILE_DEFAULTS:
         role = "client"
     profile = saved_profile(role)
+    if role == "admin":
+        # This app has no persisted permission or security-verification source.
+        profile["access_level"] = "Not configured"
+        profile["security_status"] = "Not configured"
     user = {
         "name": profile["name"],
         "display_name": profile["name"],
         "role": "Administrator" if role == "admin" else role.capitalize(),
     }
     templates = {
-        "client": ["User-profile.html", "index.html"],
-        "therapist": ["Therapist-profile.html", "index.html"],
-        "admin": ["Admin-profile.html", "index.html"],
+        "client": ["user-profile.html", "index.html"],
+        "therapist": ["therapist-profile.html", "index.html"],
+        "admin": ["admin-profile.html", "index.html"],
     }
     return render_first_template(
         templates.get(role, ["index.html"]),

@@ -19,7 +19,7 @@ def therapist_bookings():
         b["sort_key"] = appointment_sort_key(b["date"], b["time"])
 
     user = {"name": "Dr. BBno$", "display_name": "Dr. BBno$", "role": "Therapist"}
-    return render_template("Bookings.html", role="therapist", active_page="bookings", bookings=bookings, user=user)
+    return render_template("bookings.html", role="therapist", active_page="bookings", bookings=bookings, user=user)
 
 @therapist_bp.route("/therapist/appointments")
 def therapist_appointments():
@@ -38,4 +38,4 @@ def therapist_appointments():
         a["sort_key"] = appointment_sort_key(a["date"], a["time"])
 
     user = {"name": "Dr. BBno$", "display_name": "Dr. BBno$", "role": "Therapist"}
-    return render_template("Appointments.html", role="therapist", active_page="appointments", appointments=appointments, stats=stats, user=user)
+    return render_template("appointments.html", role="therapist", active_page="appointments", appointments=appointments, stats=stats, user=user)
