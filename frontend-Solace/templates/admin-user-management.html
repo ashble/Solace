@@ -7,15 +7,15 @@
       <section class="stat-boxes-row">
         <article class="stat-box box-users">
           <span class="stat-label-oxanium">Total Users</span>
-          <strong class="stat-num-istok">1,245</strong>
+          <strong class="stat-num-istok" id="totalUsersCount">0</strong>
         </article>
         <article class="stat-box box-therapists">
           <span class="stat-label-oxanium">Total Therapists</span>
-          <strong class="stat-num-istok">142</strong>
+          <strong class="stat-num-istok" id="totalTherapistsCount">0</strong>
         </article>
         <article class="stat-box box-admins">
           <span class="stat-label-oxanium">Total Administrators</span>
-          <strong class="stat-num-istok">12</strong>
+          <strong class="stat-num-istok" id="totalAdminsCount">0</strong>
         </article>
       </section>
 
@@ -90,7 +90,7 @@
             </tr>
           </tbody>
         </table>
-        <div class="table-footer"><span id="footerCount">Showing 6 of 6 users</span></div>
+        <div class="table-footer"><span id="footerCount">Showing 0 of 0 users</span></div>
       </section>
 {% endblock %}
 {% block scripts %}
@@ -144,6 +144,12 @@
     const statusFilter = document.getElementById('statusFilter');
     const rows = Array.from(document.querySelectorAll('#userTableBody tr'));
 
+    function updateUserStats() {
+      document.getElementById('totalUsersCount').textContent = rows.length;
+      document.getElementById('totalTherapistsCount').textContent = rows.filter(row => row.dataset.role === 'Therapist').length;
+      document.getElementById('totalAdminsCount').textContent = rows.filter(row => row.dataset.role === 'Administrator').length;
+    }
+
     function filterTable() {
       const q = searchInput.value.trim().toLowerCase();
       const r = roleFilter.value, s = statusFilter.value;
@@ -157,9 +163,11 @@
       });
       document.getElementById('footerCount').textContent = `Showing ${n} of ${rows.length} users`;
     }
+    updateUserStats();
     searchInput.addEventListener('input',   filterTable);
     roleFilter.addEventListener('change',   filterTable);
     statusFilter.addEventListener('change', filterTable);
+    filterTable();
 
     let activeRow = null, selVerif = 'Verified';
 
@@ -193,6 +201,7 @@
       const vCls = selVerif === 'Verified' ? 'badge-resolved' : 'badge-pending';
       activeRow.cells[3].innerHTML = `<span class="badge ${vCls}">${selVerif}</span>`;
       closeModal('manageModal');
+      filterTable();
     }
 
     function closeModal(id) { document.getElementById(id).classList.remove('fw-open'); }

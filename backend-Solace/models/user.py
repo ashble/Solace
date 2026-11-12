@@ -13,4 +13,5 @@ class User(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     # Relationships
-    therapist_profile = db.relationship('TherapistVerification', backref='user', uselist=False, cascade="all, delete-orphan")
+    therapist_profile = db.relationship('TherapistProfile', backref='user', uselist=False, cascade="all, delete-orphan")
+    therapist_verifications = db.relationship('TherapistVerification', backref='user', cascade="all, delete-orphan")
