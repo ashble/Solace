@@ -193,8 +193,8 @@ def next_appointment():
 # ==========================================
 
 @app.route("/")
-def landing():
-    return render_template("landing.html")
+def starter():
+    return render_template("starter.html")
 
 
 @app.route("/client")
@@ -206,7 +206,7 @@ def client_dashboard():
     }
 
     return render_template(
-        "Client-dashboard.html",
+        "client-dashboard.html",
         role="client",
         active_tab="dashboard",
         user=user,
