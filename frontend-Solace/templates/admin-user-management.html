@@ -1,127 +1,36 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>User Management - Solace Admin</title>
-  <!-- Google Fonts: Rufina, Istok Web, Oxanium, Roboto, Inter -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Istok+Web:wght@400;700&family=Oxanium:wght@400;500;600;700&family=Roboto:wght@400;500;700&family=Rufina:wght@400;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css">
-  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-</head>
-<body class="dashboard-body">
-  <div class="app-layout">
-    <!-- ==========================================
-         LEFT NAVBAR: Color #D8C6E5, Rufina 20px, Icons 30x30
-         ========================================== -->
-    <aside class="sidebar">
-      <div class="sidebar-logo">
-  <img src="{{ url_for('static', filename='solace-logo-pnjee.png') }}" alt="Solace" class="sidebar-logo-img">
-</div>
-
-      <div class="nav-section-title">Main Menu</div>
-      <nav class="sidebar-nav">
-        <a href="/admin" class="nav-item">
-          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h7v7H4zm9 0h7v4h-7zm0 6h7v10h-7zm-9 3h7v7H4z"/></svg>
-          <span>Dashboard</span>
-        </a>
-        <a href="/admin/therapist-verification" class="nav-item">
-          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/><circle cx="12" cy="10" r="2.5"/></svg>
-          <span>Therapist Verification</span>
-        </a>
-        <a href="/admin/user-management" class="nav-item active">
-          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.9M16 3.1a4 4 0 0 1 0 7.8"/></svg>
-          <span>User Management</span>
-        </a>
-        <a href="/admin/reports" class="nav-item">
-          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8m-8 4h8"/></svg>
-          <span>Reports</span>
-        </a>
-      </nav>
-
-      <div class="nav-section-title account-title" style="margin-top: 24px;">Account</div>
-      <nav class="sidebar-nav">
-        <a href="/profile?role=admin" class="nav-item">
-          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-          <span>Profile</span>
-        </a>
-        <a href="/settings?role=admin" class="nav-item">
-          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l-2.8 2.8a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5h-4a1.7 1.7 0 0 0-2.8-1.2l-2.8-2.8a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1v-4a1.7 1.7 0 0 0 1.2-2.8l2.8-2.8a1.7 1.7 0 0 0 2.8-1.2h4a1.7 1.7 0 0 0 2.8 1.2l2.8 2.8a1.7 1.7 0 0 0 1.2 2.8v4a1.7 1.7 0 0 0-1.2 1.8z"/></svg>
-          <span>Settings</span>
-        </a>
-      </nav>
-
-      <a class="logout-btn" href="/">
-        <span>↪ Log Out</span>
-      </a>
-    </aside>
-
-    <!-- ==========================================
-         MAIN CONTENT: User Management
-         ========================================== -->
-    <main class="main-content">
-      <!-- Top Bar -->
-      <header class="page-header">
-        <div class="header-title-group">
-          <div class="title-icon-badge">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.9M16 3.1a4 4 0 0 1 0 7.8"/></svg>
-          </div>
-          <!-- Top Title: Roboto 30 -->
-          <h1 class="user-management-title">User Management</h1>
-        </div>
-
-        <div class="profile-chip">
-          <div class="profile-chip-avatar">A</div>
-          <div class="profile-info">
-            <span class="user-name">User, name</span>
-            <span class="user-role">Administrator</span>
-          </div>
-        </div>
-      </header>
-
-      <!-- ==========================================
-           3 STAT BOXES: Exactly 291x114 (Figma Specs)
-           Numbers: Istok Web 40 | Words: Oxanium 20
-           - Total Users: #E5D9E1
-           - Total Therapists: #D9E1D9
-           - Total Administrators: #D6E6F2
-           ========================================== -->
+{% extends "admin_base.html" %}
+{% set active_page = "users" %}
+{% set page_heading = "User Management" %}
+{% block page_icon %}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.9M16 3.1a4 4 0 0 1 0 7.8"/></svg>{% endblock %}
+{% block content %}
+<!-- Stat Boxes -->
       <section class="stat-boxes-row">
-        <!-- Box 1: Total Users (E5D9E1) -->
         <article class="stat-box box-users">
           <span class="stat-label-oxanium">Total Users</span>
           <strong class="stat-num-istok">1,245</strong>
         </article>
-
-        <!-- Box 2: Total Therapists (D9E1D9) -->
         <article class="stat-box box-therapists">
           <span class="stat-label-oxanium">Total Therapists</span>
           <strong class="stat-num-istok">142</strong>
         </article>
-
-        <!-- Box 3: Total Administrators (D6E6F2) -->
         <article class="stat-box box-admins">
           <span class="stat-label-oxanium">Total Administrators</span>
           <strong class="stat-num-istok">12</strong>
         </article>
       </section>
 
-      <!-- Search & Filter Controls -->
+      <!-- Toolbar -->
       <section class="toolbar-card">
         <div class="search-input-wrap">
           <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-          <input type="search" placeholder="Search user by name or email" class="search-input" id="userSearch">
+          <input type="search" class="search-input" id="userSearch" placeholder="Search user by name or email">
         </div>
-
         <select class="filter-select" id="roleFilter">
           <option value="all">All Roles</option>
           <option value="Client">Client</option>
           <option value="Therapist">Therapist</option>
           <option value="Administrator">Administrator</option>
         </select>
-
         <select class="filter-select" id="statusFilter">
           <option value="all">All Statuses</option>
           <option value="Active">Active</option>
@@ -130,9 +39,7 @@
         </select>
       </section>
 
-      <!-- ==========================================
-           USER TABLE: Rufina 17 Everywhere (Figma Spec)
-           ========================================== -->
+      <!-- Table -->
       <section class="table-container">
         <table class="data-table">
           <thead>
@@ -145,94 +52,149 @@
             </tr>
           </thead>
           <tbody id="userTableBody">
-            <tr data-role="Client" data-status="Active">
-              <td>Binibirocha</td>
-              <td>Client</td>
-              <td><span class="status-badge status-active">Active</span></td>
-              <td>Verified</td>
-              <td><button class="action-manage-btn" onclick="alert('Manage user: Binibirocha')">Manage</button></td>
+            <tr data-role="Client" data-status="Active" data-email="binibirocha@email.com" data-joined="March 12, 2025" data-verif="Verified">
+              <td>Binibirocha</td><td>Client</td>
+              <td><span class="badge status-active">Active</span></td>
+              <td><span class="badge badge-resolved">Verified</span></td>
+              <td><button class="action-manage-btn" onclick="openManageModal(this)">Manage</button></td>
             </tr>
-            <tr data-role="Therapist" data-status="Pending">
-              <td>Dr. Zayne Li</td>
-              <td>Therapist</td>
-              <td><span class="status-badge status-pending">Pending</span></td>
-              <td>In Review</td>
-              <td><button class="action-manage-btn" onclick="alert('Manage user: Dr. Zayne Li')">Manage</button></td>
+            <tr data-role="Therapist" data-status="Pending" data-email="zayne.li@email.com" data-joined="October 1, 2026" data-verif="Pending">
+              <td>Dr. Zayne Li</td><td>Therapist</td>
+              <td><span class="badge badge-pending">Pending</span></td>
+              <td><span class="badge badge-pending">Pending</span></td>
+              <td><button class="action-manage-btn" onclick="openManageModal(this)">Manage</button></td>
             </tr>
-            <tr data-role="Therapist" data-status="Active">
-              <td>Dr. Heinz Doofenshmirtz</td>
-              <td>Therapist</td>
-              <td><span class="status-badge status-active">Active</span></td>
-              <td>Verified</td>
-              <td><button class="action-manage-btn" onclick="alert('Manage user: Dr. Heinz Doofenshmirtz')">Manage</button></td>
+            <tr data-role="Therapist" data-status="Active" data-email="doof@email.com" data-joined="January 5, 2024" data-verif="Verified">
+              <td>Dr. Heinz Doofenshmirtz</td><td>Therapist</td>
+              <td><span class="badge status-active">Active</span></td>
+              <td><span class="badge badge-resolved">Verified</span></td>
+              <td><button class="action-manage-btn" onclick="openManageModal(this)">Manage</button></td>
             </tr>
-            <tr data-role="Client" data-status="Flagged">
-              <td>Anonymous User #6767</td>
-              <td>Client</td>
-              <td><span class="status-badge status-flagged">Flagged</span></td>
-              <td>Under Review</td>
-              <td><button class="action-manage-btn" onclick="alert('Manage user: Anonymous User #6767')">Manage</button></td>
+            <tr data-role="Client" data-status="Flagged" data-email="anon6767@email.com" data-joined="September 10, 2026" data-verif="Pending">
+              <td>Anonymous User #6767</td><td>Client</td>
+              <td><span class="badge badge-urgent">Flagged</span></td>
+              <td><span class="badge badge-pending">Pending</span></td>
+              <td><button class="action-manage-btn" onclick="openManageModal(this)">Manage</button></td>
             </tr>
-            <tr data-role="Therapist" data-status="Active">
-              <td>Dr. Shaun Murphy</td>
-              <td>Therapist</td>
-              <td><span class="status-badge status-active">Active</span></td>
-              <td>Verified</td>
-              <td><button class="action-manage-btn" onclick="alert('Manage user: Dr. Shaun Murphy')">Manage</button></td>
+            <tr data-role="Therapist" data-status="Active" data-email="shaun.murphy@email.com" data-joined="February 20, 2024" data-verif="Verified">
+              <td>Dr. Shaun Murphy</td><td>Therapist</td>
+              <td><span class="badge status-active">Active</span></td>
+              <td><span class="badge badge-resolved">Verified</span></td>
+              <td><button class="action-manage-btn" onclick="openManageModal(this)">Manage</button></td>
             </tr>
-            <tr data-role="Administrator" data-status="Active">
-              <td>Dr. Rizzler6767</td>
-              <td>Administrator</td>
-              <td><span class="status-badge status-active">Active</span></td>
-              <td>Verified</td>
-              <td><button class="action-manage-btn" onclick="alert('Manage user: Dr. Rizzler6767')">Manage</button></td>
+            <tr data-role="Administrator" data-status="Active" data-email="rizzler@email.com" data-joined="June 1, 2023" data-verif="Verified">
+              <td>Dr. Rizzler6767</td><td>Administrator</td>
+              <td><span class="badge status-active">Active</span></td>
+              <td><span class="badge badge-resolved">Verified</span></td>
+              <td><button class="action-manage-btn" onclick="openManageModal(this)">Manage</button></td>
             </tr>
           </tbody>
         </table>
-
-        <div class="table-footer">
-          <span id="footerCount">Showing 6 of 6 users</span>
-        </div>
+        <div class="table-footer"><span id="footerCount">Showing 6 of 6 users</span></div>
       </section>
-    </main>
+{% endblock %}
+{% block scripts %}
+<!-- FLOATING MODAL — Manage User -->
+  <div class="fw-overlay" id="manageModal" onclick="closeFwIfOverlay(event,'manageModal')">
+    <div class="fw-card">
+      <button class="fw-close" onclick="closeModal('manageModal')">&#x2715;</button>
+      <div class="fw-header">
+        <div class="fw-icon-badge">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+        </div>
+        <div>
+          <h2 class="fw-title" id="mName">Manage User</h2>
+          <p class="fw-subtitle" id="mRole">—</p>
+        </div>
+      </div>
+      <div class="fw-info-grid">
+        <div class="fw-info-item"><span class="fw-info-label">Email</span><span class="fw-info-value" id="mEmail">—</span></div>
+        <div class="fw-info-item"><span class="fw-info-label">Date Joined</span><span class="fw-info-value" id="mJoined">—</span></div>
+        <div class="fw-info-item"><span class="fw-info-label">Account Status</span><span class="fw-info-value" id="mAccStatus">—</span></div>
+        <div class="fw-info-item"><span class="fw-info-label">Verification</span><span class="fw-info-value" id="mVerif">—</span></div>
+      </div>
+      <hr class="fw-divider">
+      <div style="margin-bottom:14px;">
+        <div class="fw-notes-label" style="margin-bottom:10px;">Update Account Status</div>
+        <div class="fw-status-row">
+          <label for="mAccSelect">Status:</label>
+          <select class="fw-status-select" id="mAccSelect">
+            <option value="Active">Active</option>
+            <option value="Pending">Pending</option>
+            <option value="Flagged">Flagged</option>
+          </select>
+        </div>
+      </div>
+      <div style="margin-bottom:22px;">
+        <div class="fw-notes-label" style="margin-bottom:10px;">Update Verification Status</div>
+        <div class="fw-verif-row">
+          <button class="fw-verif-btn in-review" id="btnInReview" onclick="selectVerif('Pending')">Pending</button>
+          <button class="fw-verif-btn verified"   id="btnVerified" onclick="selectVerif('Verified')">Verified</button>
+        </div>
+      </div>
+      <div class="fw-actions">
+        <button class="fw-btn-danger"  onclick="closeModal('manageModal')">Suspend User</button>
+        <button class="fw-btn-cancel"  onclick="closeModal('manageModal')">Cancel</button>
+        <button class="fw-btn-primary" onclick="saveManage()">Save Changes</button>
+      </div>
+    </div>
   </div>
-
-  <script>
-    // Live Search and Filter
-    const searchInput = document.getElementById('userSearch');
-    const roleFilter = document.getElementById('roleFilter');
+<script>const searchInput  = document.getElementById('userSearch');
+    const roleFilter   = document.getElementById('roleFilter');
     const statusFilter = document.getElementById('statusFilter');
     const rows = Array.from(document.querySelectorAll('#userTableBody tr'));
 
     function filterTable() {
-      const q = (searchInput.value || '').trim().toLowerCase();
-      const role = roleFilter.value;
-      const status = statusFilter.value;
-      let count = 0;
-
+      const q = searchInput.value.trim().toLowerCase();
+      const r = roleFilter.value, s = statusFilter.value;
+      let n = 0;
       rows.forEach(row => {
-        const text = row.textContent.toLowerCase();
-        const rowRole = row.dataset.role;
-        const rowStatus = row.dataset.status;
-
-        const matchesQuery = !q || text.includes(q);
-        const matchesRole = role === 'all' || rowRole === role;
-        const matchesStatus = status === 'all' || rowStatus === status;
-
-        if (matchesQuery && matchesRole && matchesStatus) {
-          row.style.display = '';
-          count++;
-        } else {
-          row.style.display = 'none';
-        }
+        const ok = (!q || row.textContent.toLowerCase().includes(q))
+                && (r === 'all' || row.dataset.role   === r)
+                && (s === 'all' || row.dataset.status === s);
+        row.style.display = ok ? '' : 'none';
+        if (ok) n++;
       });
+      document.getElementById('footerCount').textContent = `Showing ${n} of ${rows.length} users`;
+    }
+    searchInput.addEventListener('input',   filterTable);
+    roleFilter.addEventListener('change',   filterTable);
+    statusFilter.addEventListener('change', filterTable);
 
-      document.getElementById('footerCount').textContent = `Showing ${count} of ${rows.length} users`;
+    let activeRow = null, selVerif = 'Verified';
+
+    function openManageModal(btn) {
+      activeRow = btn.closest('tr');
+      const d = activeRow.dataset;
+      document.getElementById('mName').textContent     = activeRow.cells[0].textContent;
+      document.getElementById('mRole').textContent     = d.role + ' Account';
+      document.getElementById('mEmail').textContent    = d.email   || '—';
+      document.getElementById('mJoined').textContent   = d.joined  || '—';
+      document.getElementById('mAccStatus').textContent= d.status;
+      document.getElementById('mVerif').textContent    = d.verif   || '—';
+      document.getElementById('mAccSelect').value      = d.status;
+      selectVerif(d.verif || 'Verified');
+      document.getElementById('manageModal').classList.add('fw-open');
     }
 
-    searchInput.addEventListener('input', filterTable);
-    roleFilter.addEventListener('change', filterTable);
-    statusFilter.addEventListener('change', filterTable);
-  </script>
-</body>
-</html>
+    function selectVerif(val) {
+      selVerif = val;
+      document.getElementById('btnInReview').classList.toggle('selected', val === 'Pending');
+      document.getElementById('btnVerified').classList.toggle('selected', val === 'Verified');
+    }
+
+    function saveManage() {
+      if (!activeRow) return;
+      const ns = document.getElementById('mAccSelect').value;
+      activeRow.dataset.status = ns;
+      activeRow.dataset.verif  = selVerif;
+      const sCls = ns === 'Active' ? 'status-active' : ns === 'Pending' ? 'badge-pending' : 'badge-urgent';
+      activeRow.cells[2].innerHTML = `<span class="badge ${sCls}">${ns}</span>`;
+      const vCls = selVerif === 'Verified' ? 'badge-resolved' : 'badge-pending';
+      activeRow.cells[3].innerHTML = `<span class="badge ${vCls}">${selVerif}</span>`;
+      closeModal('manageModal');
+    }
+
+    function closeModal(id) { document.getElementById(id).classList.remove('fw-open'); }
+    function closeFwIfOverlay(e, id) { if (e.target === document.getElementById(id)) closeModal(id); }</script>
+{% endblock %}

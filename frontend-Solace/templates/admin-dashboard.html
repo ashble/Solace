@@ -1,0 +1,68 @@
+{% extends "admin_base.html" %}
+{% set active_page = "dashboard" %}
+{% set page_heading = "Dashboard" %}
+
+{% block content %}
+<section class="stat-boxes-row">
+  <article class="stat-box box-total-reports">
+    <span class="stat-label-oxanium">Total Reports</span>
+    <strong class="stat-num-istok">{{ stats.total_reports if stats else 0 }}</strong>
+  </article>
+
+  <article class="stat-box box-urgent-reports">
+    <span class="stat-label-oxanium">Urgent Reports</span>
+    <strong class="stat-num-istok">{{ stats.urgent_reports if stats else 0 }}</strong>
+  </article>
+
+  <article class="stat-box box-admins">
+    <span class="stat-label-oxanium">Administrators Online</span>
+    <strong class="stat-num-istok">{{ stats.admins_online if stats and stats.admins_online is not none else '—' }}</strong>
+  </article>
+</section>
+
+<section class="admin-table-card">
+  <h3 class="table-heading">Pending Verifications</h3>
+  <div class="table-rows">
+    {% for item in pending_verifications %}
+    <div class="table-row">
+      <div class="row-subject">{{ item.name }}</div>
+      <div class="row-date">{{ item.date }}</div>
+      <a href="{{ url_for('admin.admin_therapist_verification') }}" class="check-pill-btn">
+        <span>Check</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <line x1="5" y1="12" x2="19" y2="12"/>
+          <polyline points="12 5 19 12 12 19"/>
+        </svg>
+      </a>
+    </div>
+    {% else %}
+    <div class="table-row">
+      <div class="row-subject">No current pending verifications.</div>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+
+<section class="admin-table-card">
+  <h3 class="table-heading">Recent Reports</h3>
+  <div class="table-rows">
+    {% for item in recent_reports %}
+    <div class="table-row">
+      <div class="row-subject">{{ item.name }}</div>
+      <div class="row-date">{{ item.date }}</div>
+      <a href="{{ url_for('admin.admin_reports') }}" class="check-pill-btn">
+        <span>Check</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <line x1="5" y1="12" x2="19" y2="12"/>
+          <polyline points="12 5 19 12 12 19"/>
+        </svg>
+      </a>
+    </div>
+    {% else %}
+    <div class="table-row">
+      <div class="row-subject">No current reports.</div>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}
