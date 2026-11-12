@@ -1,0 +1,50 @@
+{% extends "dashboard-base.html" %}
+{% block title %}Therapist Dashboard{% endblock %}
+
+{% block content %}
+  <h1>Welcome Back, {{ user.name }}</h1>
+  <p class="sub">Here's what's coming up today</p>
+
+  <div class="strip" id="strip" role="group" aria-label="Select a day">
+    {% for d in calendar_days %}
+      <button class="day {{ 'active' if d.active }}" data-date="{{ d.iso }}">{{ d.day }}<b>{{ d.date }}</b></button>
+    {% endfor %}
+  </div>
+
+  <a class="upcoming" href="/therapist/appointments">
+    <div>
+      <h2>Upcoming Meeting</h2>
+      {% if upcoming %}
+        <p>{{ upcoming.display_date }}, {{ upcoming.time }}</p>
+        <p>with {{ upcoming.client }}</p>
+      {% else %}
+        <p>No meetings scheduled.</p>
+      {% endif %}
+    </div>
+    <span class="arrow">→</span>
+  </a>
+
+  <div class="section">CONTENTS</div>
+  <div class="cards four" style="margin-top:0">
+    <a class="card small-card peach" href="/therapist/sessions"><span class="icon">🖥</span>Sessions</a>
+    <a class="card small-card pink" href="/therapist/clients"><span class="icon">👥</span>Clients</a>
+    <a class="card small-card yellow" href="/therapist/appointments"><span class="icon">🗓</span>Schedule</a>
+    <a class="card small-card lavender" href="/therapist/history"><span class="icon">🕘</span>Session History</a>
+  </div>
+
+  <section class="notes" aria-label="Notifications">
+    <header>Notification <a href="#">See all</a></header>
+    {% for n in notifications %}
+      <div class="note">
+        <span>{{ n.id }}<small>{{ n.duration }}</small></span>
+        <span class="badge {{ 'Progress' if n.status == 'In Progress' else n.status }}">{{ n.status }}</span>
+      </div>
+    {% else %}
+      <p style="font-size:12px;color:var(--muted)">No new notifications.</p>
+    {% endfor %}
+  </section>
+{% endblock %}
+
+{% block js %}
+<script src="{{ url_for('static', filename='js/therapist.js') }}"></script>
+{% endblock %}
