@@ -189,12 +189,12 @@ def next_appointment():
 
 
 # ==========================================
-# 5. STARTER AND CLIENT ROUTES
+# 5. LANDING AND CLIENT ROUTES
 # ==========================================
 
 @app.route("/")
-def starter():
-    return render_template("starter.html")
+def landing():
+    return render_template("landing.html")
 
 
 @app.route("/client")

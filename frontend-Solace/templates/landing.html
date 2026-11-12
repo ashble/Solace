@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Solace</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600&family=Playfair+Display:wght@500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/landing.css') }}">
+</head>
+<body>
+  <header>
+    <a class="logo" href="/" aria-label="Solace home"><img src="{{ url_for('static', filename='img/logo-light.png') }}" alt="Solace"></a>
+    <nav aria-label="Main">
+      <a class="active" href="/">Home</a>
+      <a href="#about">About Us</a>
+      <a href="#services">Services</a>
+      <a href="#contact">Contact Us</a>
+    </nav>
+    <a class="signin" href="/login">Sign in</a>
+  </header>
+
+  <main>
+    <h1>Perhaps healing is learning to<br class="desktop-br"> glow again, little by little</h1>
+    <p class="lead">Welcome to Solace — a safe space to be heard, understood, and supported. Connect anonymously with professionals or others who are willing to listen. You don’t have to face everything alone.</p>
+    <div class="actions">
+      <a class="btn btn-primary" href="/login">Start your Journey</a>
+      <a class="btn btn-ghost" href="#about">Read More <span aria-hidden="true">↗</span></a>
+    </div>
+  </main>
+</body>
+</html>
