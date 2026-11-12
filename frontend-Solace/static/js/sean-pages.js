@@ -22,9 +22,7 @@
     });
   }
 
-  async function updateAppointment(button, status) {
-    const row = button.closest('[data-appointment-id]');
-    if (!row) return;
+  async function updateAppointment(button, row, status) {
     const confirmation = status === 'Cancelled'
       ? 'Cancel this appointment request?'
       : 'Accept and confirm this appointment request?';
@@ -45,7 +43,7 @@
   }
 
   document.querySelectorAll('[data-appointment-id] [data-status]').forEach((button) => {
-    button.addEventListener('click', () => updateAppointment(button, button.dataset.status));
+    button.addEventListener('click', () => updateAppointment(button, button.closest('[data-appointment-id]'), button.dataset.status));
   });
 
   const reviewDialog = document.querySelector('#appointmentReview');
@@ -60,8 +58,7 @@
       document.querySelector('#reviewStatus').textContent = row.dataset.status;
       const confirmButton = document.querySelector('#reviewConfirm');
       confirmButton.hidden = row.dataset.status !== 'Pending';
-      confirmButton.onclick = () => updateAppointment(confirmButton, 'Confirmed');
-      confirmButton.dataset.appointmentId = row.dataset.appointmentId;
+      confirmButton.onclick = () => updateAppointment(confirmButton, row, 'Confirmed');
       reviewDialog.showModal();
     });
   });
