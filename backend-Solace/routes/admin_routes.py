@@ -20,14 +20,13 @@ def admin_dashboard():
         "admins_online": "—",
     }
     pending_verifications = [
-    {
-        "name": item.user.name if item.user else "Unknown therapist",
-        "date": item.submitted_at.strftime("%B %d, %Y")
-        if item.submitted_at else "",
-    }
-    for item in TherapistVerification.query.filter(
-        TherapistVerification.status.in_(["pending", "Pending"])
-    ).order_by(TherapistVerification.submitted_at.desc()).all()     
+        {
+            "name": item.user.name if item.user else "Unknown therapist",
+            "date": item.submitted_at.strftime("%B %d, %Y") if item.submitted_at else "",
+        }
+        for item in TherapistVerification.query.filter(
+            TherapistVerification.status.in_(["pending", "Pending"])
+        ).order_by(TherapistVerification.submitted_at.desc()).all()
     ]
     recent_reports = [
         {
@@ -64,8 +63,9 @@ def admin_reports():
     reports = Report.query.order_by(Report.created_at.desc()).all()
     total = len(reports)
     urgent = sum(1 for report in reports if (report.severity or "").lower() == "urgent")
+    pending = sum(1 for report in reports if (report.status or "").lower() == "pending")
     resolved = sum(1 for report in reports if (report.status or "").lower() == "resolved")
-    stats = {"total": total, "urgent": urgent, "resolved": resolved}
+    stats = {"total": total, "urgent": urgent, "pending": pending, "resolved": resolved}
     user = {"name": "Solace Administrator", "display_name": "User, name", "role": "Administrator"}
     return render_template("admin-reports.html", reports=reports, stats=stats, user=user, active_page="reports")
 

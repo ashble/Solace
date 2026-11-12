@@ -7,15 +7,19 @@
       <section class="stat-boxes-row">
         <article class="stat-box box-total-reports">
           <span class="stat-label-oxanium">Total Reports</span>
-          <strong class="stat-num-istok">{{ stats.total }}</strong>
+          <strong class="stat-num-istok" id="totalReportsCount">{{ stats.total }}</strong>
+        </article>
+        <article class="stat-box box-total-reports" style="background-color: #F5E6A3;">
+          <span class="stat-label-oxanium">Pending Reports</span>
+          <strong class="stat-num-istok" id="pendingReportsCount">{{ stats.pending }}</strong>
         </article>
         <article class="stat-box box-urgent-reports">
           <span class="stat-label-oxanium">Urgent Reports</span>
-          <strong class="stat-num-istok">{{ stats.urgent }}</strong>
+          <strong class="stat-num-istok" id="urgentReportsCount">{{ stats.urgent }}</strong>
         </article>
         <article class="stat-box box-resolved-reports">
           <span class="stat-label-oxanium">Resolved Reports</span>
-          <strong class="stat-num-istok">{{ stats.resolved }}</strong>
+          <strong class="stat-num-istok" id="resolvedReportsCount">{{ stats.resolved }}</strong>
         </article>
       </section>
 
@@ -60,11 +64,19 @@
               <td><button class="action-btn" onclick="openReportModal(this)">Review</button></td>
             </tr>
             {% else %}
-            <tr><td colspan="7" class="empty-state">No reports have been submitted.</td></tr>
+            <tr data-report-id="0" data-sample="true" data-log-id="RPT-TEST-001" data-status="Pending" data-concern="Sample concern" data-reporter="Sample Client" data-reporter-role="Client" data-reported="test-user-01" data-severity="Normal" data-date="Sample date" data-notes="Sample details for testing the report window." data-attachment-ids="[]" data-attachment-names="[]">
+              <td>Sample Client</td>
+              <td>test-user-01</td>
+              <td>Sample concern</td>
+              <td><span class="badge badge-normal">Normal</span></td>
+              <td>Sample date</td>
+              <td><span class="badge badge-pending">Pending</span></td>
+              <td><button class="action-btn" onclick="openReportModal(this)">Review</button></td>
+            </tr>
             {% endfor %}
           </tbody>
         </table>
-        <div class="table-footer"><span id="reportsCount">Showing {{ reports|length }} of {{ reports|length }} reports</span></div>
+        <div class="table-footer"><span id="reportsCount">Showing {{ reports|length if reports else 1 }} of {{ reports|length if reports else 1 }} reports</span></div>
       </section>
 {% endblock %}
 {% block scripts %}
@@ -116,6 +128,16 @@
     const statusFilter = document.getElementById('statusFilter');
     const rows = Array.from(document.querySelectorAll('#reportsTableBody tr[data-report-id]'));
 
+    function updateReportStats() {
+      document.getElementById('totalReportsCount').textContent = rows.length;
+      document.getElementById('pendingReportsCount').textContent =
+        rows.filter(row => row.dataset.status.toLowerCase() === 'pending').length;
+      document.getElementById('urgentReportsCount').textContent =
+        rows.filter(row => row.dataset.severity.toLowerCase() === 'urgent').length;
+      document.getElementById('resolvedReportsCount').textContent =
+        rows.filter(row => row.dataset.status.toLowerCase() === 'resolved').length;
+    }
+
     function filterReports() {
       const q = searchInput.value.trim().toLowerCase();
       const s = statusFilter.value;
@@ -130,6 +152,7 @@
     }
     searchInput.addEventListener('input', filterReports);
     statusFilter.addEventListener('change', filterReports);
+    updateReportStats();
 
     let activeRow = null;
     function openReportModal(btn) {
@@ -171,6 +194,15 @@
     async function saveReport() {
       if (!activeRow) return;
       const v = document.getElementById('mStatusSelect').value;
+      if (activeRow.dataset.sample === 'true') {
+        activeRow.dataset.status = v;
+        activeRow.cells[5].innerHTML = `<span class="badge ${v==='Resolved'?'badge-resolved':'badge-pending'}">${v}</span>`;
+        activeRow.cells[6].querySelector('button').textContent = v === 'Resolved' ? 'View' : 'Review';
+        updateReportStats();
+        closeModal('reportModal');
+        filterReports();
+        return;
+      }
       const response = await fetch(`/admin/reports/${activeRow.dataset.reportId}/status`, {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status: v })
@@ -179,6 +211,7 @@
       activeRow.dataset.status = v;
       activeRow.cells[5].innerHTML = `<span class="badge ${v==='Resolved'?'badge-resolved':'badge-pending'}">${v}</span>`;
       activeRow.cells[6].querySelector('button').textContent = v === 'Resolved' ? 'View' : 'Review';
+      updateReportStats();
       closeModal('reportModal');
       filterReports();
     }
