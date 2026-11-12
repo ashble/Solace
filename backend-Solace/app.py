@@ -3,6 +3,7 @@ import json
 import sqlite3
 from contextlib import contextmanager
 from datetime import date, datetime
+from extensions import db
 
 from flask import (
     Flask,
@@ -49,6 +50,11 @@ app.config["SECRET_KEY"] = os.environ.get(
 )
 
 DATABASE = os.path.join(CURRENT_DIR, "solace.db")
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///" + DATABASE.replace("\\", "/")
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+app.config["REPORT_UPLOAD_FOLDER"] = os.path.join(CURRENT_DIR, "uploads", "reports")
+app.config["MAX_CONTENT_LENGTH"] = 25 * 1024 * 1024
+db.init_app(app)
 
 
 # ==========================================
@@ -320,10 +326,16 @@ def update_appointment(appointment_id):
 from routes.client_routes import client_bp
 from routes.admin_routes import admin_bp
 from routes.therapist_routes import therapist_bp
+from routes.report_routes import report_bp
+from models import Report, ReportAttachment, User, TherapistVerification
 
 app.register_blueprint(client_bp)
 app.register_blueprint(admin_bp)
 app.register_blueprint(therapist_bp)
+app.register_blueprint(report_bp)
+
+with app.app_context():
+    db.create_all()
 
 
 # ==========================================
