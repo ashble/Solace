@@ -2,6 +2,7 @@ from datetime import datetime
 from flask import Blueprint, render_template, redirect, jsonify, request, abort
 from extensions import db
 from models import Report, TherapistVerification
+from auth_helpers import csrf_required
 
 admin_bp = Blueprint("admin", __name__)
 
@@ -70,6 +71,7 @@ def admin_reports():
     return render_template("admin-reports.html", reports=reports, stats=stats, user=user, active_page="reports")
 
 @admin_bp.post("/admin/reports/<int:report_id>/status")
+@csrf_required
 def admin_report_update_status(report_id):
     report = db.session.get(Report, report_id)
     if report is None:
@@ -95,6 +97,7 @@ def admin_therapist_verification():
 
 @admin_bp.route("/admin/therapist/verify/<int:id>", methods=["POST"])
 @admin_bp.route("/admin/therapist/reject/<int:id>", methods=["POST"])
+@csrf_required
 def admin_therapist_action(id):
     return redirect("/admin/therapist-verification")
 

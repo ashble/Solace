@@ -6,6 +6,7 @@ from werkzeug.utils import secure_filename
 
 from extensions import db
 from models import Report, ReportAttachment
+from auth_helpers import csrf_required
 
 report_bp = Blueprint("reports", __name__)
 ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg", "webp", "pdf"}
@@ -17,6 +18,7 @@ def allowed_file(filename):
 
 
 @report_bp.post("/api/reports")
+@csrf_required
 def create_report():
     form = request.form
     concern = form.get("concern", "").strip()

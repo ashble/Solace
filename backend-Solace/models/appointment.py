@@ -4,7 +4,8 @@ from extensions import db
 
 class Appointment(db.Model):
     """A client booking with a therapist."""
-    __tablename__ = "appointments"
+    # Keep the legacy dashboard's SQLite table intact while bookings move to ORM.
+    __tablename__ = "booking_appointments"
 
     id = db.Column(db.Integer, primary_key=True)
     client_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)

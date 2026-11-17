@@ -1,9 +1,11 @@
 import os
 import json
 import sqlite3
+import secrets
 from contextlib import contextmanager
 from datetime import date, datetime
 from extensions import db
+from auth_helpers import csrf_required
 
 from flask import (
     Flask,
@@ -30,7 +32,7 @@ else:
 
 # Auto-detect static/CSS directory
 if os.path.isfile(os.path.join(FRONTEND_DIR, "static", "css", "styles.css")):
-    STATIC_DIR = os.path.join(FRONTEND_DIR, "static", "css")
+    STATIC_DIR = os.path.join(FRONTEND_DIR, "static")
 elif os.path.isfile(os.path.join(FRONTEND_DIR, "static", "styles.css")):
     STATIC_DIR = os.path.join(FRONTEND_DIR, "static")
 elif os.path.isdir(os.path.join(CURRENT_DIR, "static")):
@@ -45,12 +47,13 @@ app = Flask(
     static_url_path="/static",
 )
 
-app.config["SECRET_KEY"] = os.environ.get(
-    "SECRET_KEY", "solace-secret-key-6767"
-)
+app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY") or secrets.token_hex(32)
+app.config["SESSION_COOKIE_HTTPONLY"] = True
+app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
+app.config["SESSION_COOKIE_SECURE"] = os.environ.get("COOKIE_SECURE", "false").lower() == "true"
 
 DATABASE = os.path.join(CURRENT_DIR, "solace.db")
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///" + DATABASE.replace("\\", "/")
+app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DATABASE_URL") or ("sqlite:///" + DATABASE.replace("\\", "/"))
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config["REPORT_UPLOAD_FOLDER"] = os.path.join(CURRENT_DIR, "uploads", "reports")
 app.config["MAX_CONTENT_LENGTH"] = 25 * 1024 * 1024
@@ -139,7 +142,7 @@ def appointment_sort_key(date_value, time_value):
 @app.route("/styles.css")
 @app.route("/<path:subpath>/styles.css")
 def serve_css(subpath=None):
-    return send_from_directory(STATIC_DIR, "styles.css")
+    return send_from_directory(os.path.join(FRONTEND_DIR, "static", "css"), "styles.css")
 
 @app.route("/solace-logo-pnjee.png")
 @app.route("/static/solace-logo-pnjee.png")
@@ -260,6 +263,7 @@ def settings_page():
 
 
 @app.route("/api/profile/<role>", methods=["PUT"])
+@csrf_required
 def update_profile(role):
     if role not in PROFILE_DEFAULTS:
         return jsonify(error="Unknown profile role."), 404
@@ -278,47 +282,6 @@ def update_profile(role):
 # 5. APPOINTMENT APIS
 # ==========================================
 
-@app.route("/api/appointments", methods=["POST"])
-def create_appointment():
-    payload = request.get_json(silent=True) or {}
-    required_fields = ("client", "therapist", "date", "time")
-    if any(not str(payload.get(f, "")).strip() for f in required_fields):
-        return jsonify(error="Client, therapist, date, and time are required."), 400
-
-    with get_db() as db:
-        cursor = db.execute(
-            """
-            INSERT INTO appointments (client, client_email, therapist, date, time, session_type)
-            VALUES (?, ?, ?, ?, ?, ?)
-            """,
-            (
-                str(payload["client"]).strip(),
-                str(payload.get("client_email", "client@solace.com")).strip(),
-                str(payload["therapist"]).strip(),
-                str(payload["date"]).strip(),
-                str(payload["time"]).strip(),
-                str(payload.get("session_type", "Online consultation")).strip(),
-            ),
-        )
-        created_row = db.execute("SELECT * FROM appointments WHERE id = ?", (cursor.lastrowid,)).fetchone()
-        created = dict(created_row)
-    return jsonify(created), 201
-
-
-@app.route("/api/appointments/<int:appointment_id>", methods=["PATCH"])
-def update_appointment(appointment_id):
-    payload = request.get_json(silent=True) or {}
-    status = payload.get("status")
-    if status not in ("Pending", "Confirmed", "Completed", "Cancelled"):
-        return jsonify(error="Invalid appointment status."), 400
-
-    with get_db() as db:
-        cursor = db.execute("UPDATE appointments SET status = ? WHERE id = ?", (status, appointment_id))
-        if cursor.rowcount == 0:
-            return jsonify(error="Appointment not found."), 404
-    return jsonify(id=appointment_id, status=status)
-
-
 # ==========================================
 # 6. REGISTER MODULAR BLUEPRINTS
 # ==========================================
@@ -327,12 +290,18 @@ from routes.client_routes import client_bp
 from routes.admin_routes import admin_bp
 from routes.therapist_routes import therapist_bp
 from routes.report_routes import report_bp
+from routes.auth_routes import auth_bp
+from routes.booking_routes import booking_bp
+from routes.chat_routes import chat_bp
 from models import Report, ReportAttachment, User, TherapistVerification
 
 app.register_blueprint(client_bp)
 app.register_blueprint(admin_bp)
 app.register_blueprint(therapist_bp)
 app.register_blueprint(report_bp)
+app.register_blueprint(auth_bp)
+app.register_blueprint(booking_bp)
+app.register_blueprint(chat_bp)
 
 with app.app_context():
     db.create_all()
