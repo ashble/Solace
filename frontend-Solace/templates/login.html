@@ -5,26 +5,26 @@
 <h1 class="card-title">Welcome back</h1>
 <p class="card-subtitle">Sign in to continue your journey.</p>
 
-<form class="form-panel" id="login-form" novalidate>
+{% if error %}<p class="auth-feedback auth-error" role="alert">{{ error }}</p>{% endif %}
+{% for message in get_flashed_messages() %}<p class="auth-feedback" role="status">{{ message }}</p>{% endfor %}
+<form class="form-panel" method="post" action="{{ url_for('auth.login') }}">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
   <div class="field">
     <label for="email">Email</label>
-    <input type="email" id="email" name="email" placeholder="you@example.com" autocomplete="email" required>
-    <small class="error" aria-live="polite"></small>
+    <input type="email" id="email" name="email" placeholder="you@example.com" value="{{ email|default('') }}" maxlength="120" autocomplete="email" required>
   </div>
 
   <div class="field">
     <label for="password">Password</label>
     <div class="input-wrap">
-      <input type="password" id="password" name="password" placeholder="Enter your password" autocomplete="current-password" required>
+      <input type="password" id="password" name="password" placeholder="Enter your password" autocomplete="current-password" maxlength="128" required>
       <button type="button" class="toggle-pw" aria-label="Show password">Show</button>
     </div>
-    <small class="error" aria-live="polite"></small>
   </div>
 
   <button type="submit" class="btn-primary">Sign In</button>
 
-  <a href="#" class="link">Forgot password?</a>
-  
   <p class="switch">New to Solace? <a href="{{ url_for('auth.register') }}" class="link strong">Create an account</a></p>
 </form>
+<p class="switch"><a href="{{ url_for('client.landing_page') }}" class="link">Back to Solace</a></p>
 {% endblock %}

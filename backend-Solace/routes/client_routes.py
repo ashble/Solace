@@ -1,30 +1,77 @@
-from flask import Blueprint, render_template, redirect
+from datetime import date
+
+from flask import Blueprint, redirect, render_template, request, url_for
+
+from auth_helpers import account_display, account_required, current_user
+from database import AccountSchemaUnavailable, get_db
 
 client_bp = Blueprint("client", __name__)
 
-@client_bp.route("/")
-@client_bp.route("/client")
+
+def listed_therapists():
+    try:
+        with get_db() as db:
+            return db.execute(
+                "SELECT id, name FROM users WHERE role = 'therapist' AND status = 'active' ORDER BY name, id"
+            ).fetchall()
+    except AccountSchemaUnavailable:
+        return []
+
+
+@client_bp.get("/")
+def landing_page():
+    return render_template("starter.html")
+
+
+@client_bp.get("/client")
+@account_required("client")
 def client_dashboard():
-    user = {"name": "Binibirocha", "display_name": "User, name", "role": "Client"}
-    return render_template("index.html", role="client", active_tab="dashboard", active_page="dashboard", user=user)
+    from app import saved_profile
 
-@client_bp.route("/search-therapist")
+    account = current_user()
+    profile = saved_profile(account)
+    return render_template(
+        "index.html", role="client", active_tab="dashboard", active_page="dashboard",
+        user=account_display(account, profile["name"]),
+    )
+
+
+@client_bp.get("/search-therapist")
 def search_therapist():
-    therapists = [
-        {"name": "Dr. Zayne Li", "title": "Licensed Therapist", "bio": "Specializes in cognitive behavioral therapy and anxiety."},
-        {"name": "Dr. Sarah Chen", "title": "Clinical Psychologist", "bio": "Specializes in stress reduction and emotional wellness."},
-        {"name": "Dr. Nyen", "title": "Mindfulness Practitioner", "bio": "Helping clients navigate personal development and therapy."},
-        {"name": "Dr. Shaun Murphy", "title": "Behavioral Specialist", "bio": "Experienced clinical psychologist focusing on youth & adult health."},
-        {"name": "Dr. Elena Gilbert", "title": "Family Counselor", "bio": "Dedicated to creating safe, empathetic spaces for holistic healing."},
-        {"name": "Dr. Alex Grey", "title": "Relationship Therapist", "bio": "Compassionate mental health professional with 10+ years experience."}
-    ]
-    user = {"name": "Binibirocha", "display_name": "User, name", "role": "Client"}
-    return render_template("search-therapist.html", therapists=therapists, user=user)
+    account = current_user()
+    if account is not None and account["status"] != "active":
+        account = None
+    return render_template(
+        "search-therapist.html", therapists=listed_therapists(),
+        role=account["role"] if account else None, active_tab="search",
+        user=account_display(account) if account else None,
+    )
 
-@client_bp.route("/schedule")
+
+@client_bp.get("/schedule")
+@account_required("client")
 def client_schedule():
-    return redirect("/client")
+    from app import TIME_SLOTS, display_appointment_date, saved_profile
 
-@client_bp.route("/chats")
+    account = current_user()
+    with get_db() as db:
+        appointments = [
+            dict(row, display_date=display_appointment_date(row["date"]))
+            for row in db.execute(
+                """SELECT therapist, date, time, status FROM appointments
+                   WHERE client_id = ? AND therapist_id IS NOT NULL ORDER BY date DESC, id DESC""",
+                (account["id"],),
+            )
+        ]
+    return render_template(
+        "schedule.html", role="client", active_tab="schedule",
+        user=account_display(account, saved_profile(account)["name"]),
+        therapists=listed_therapists(), preferred_therapist=request.args.get("therapist", type=int),
+        time_slots=TIME_SLOTS, earliest_date=date.today().isoformat(), appointments=appointments,
+    )
+
+
+@client_bp.get("/chats")
+@account_required("client")
 def client_chats():
-    return redirect("/client")
+    return redirect(url_for("client.client_dashboard"))

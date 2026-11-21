@@ -1,5 +1,6 @@
 // Loaded only by the assigned booking, appointment, and profile pages.
 (() => {
+  const csrfToken = document.querySelector('.account-logout-form input[name="csrf_token"]')?.value;
   const profileForm = document.querySelector('#profileForm');
   if (profileForm) {
     profileForm.addEventListener('submit', async (event) => {
@@ -8,7 +9,7 @@
       try {
         const response = await fetch(`/api/profile/${profileForm.dataset.role}`, {
           method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
+          headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': csrfToken },
           body: JSON.stringify(Object.fromEntries(new FormData(profileForm)))
         });
         if (!response.ok) throw new Error('Profile save failed');
@@ -31,7 +32,7 @@
     try {
       const response = await fetch(`/api/appointments/${row.dataset.appointmentId}`, {
         method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': csrfToken },
         body: JSON.stringify({ status })
       });
       if (!response.ok) throw new Error('Appointment update failed');

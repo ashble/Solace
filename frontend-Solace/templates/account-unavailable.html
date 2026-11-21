@@ -1,0 +1,7 @@
+{% extends "auth-base.html" %}
+{% block title %}Accounts unavailable Â· Solace{% endblock %}
+{% block content %}
+<h1 class="card-title">Accounts unavailable</h1>
+<p class="card-subtitle" role="alert">{{ error }}</p>
+<p class="switch"><a href="{{ url_for('client.landing_page') }}" class="link">Back to Solace</a></p>
+{% endblock %}

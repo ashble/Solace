@@ -1,25 +1,29 @@
-from flask import Blueprint, render_template, redirect
+from flask import Blueprint, abort, render_template
+
+from auth_helpers import account_display, account_required, csrf_required, current_user
+from database import get_db
 
 admin_bp = Blueprint("admin", __name__)
 
-@admin_bp.route("/admin")
+
+@admin_bp.before_request
+@account_required("admin")
+def require_administrator():
+    pass
+
+
 @admin_bp.route("/admin/dashboard")
+@admin_bp.route("/admin")
 def admin_dashboard():
-    user = {
-        "name": "Solace Administrator",
-        "display_name": "User, name",
-        "role": "Administrator",
-    }
-    stats = {
-        "total_reports": "12,345",
-        "urgent_reports": "123",
-        "admins_online": "12",
-    }
-    pending_verifications = [
-        {"name": "Dr. Doofenshmirtz", "date": "October 26, 2026"},
-        {"name": "Dr. Eggman", "date": "October 26, 2026"},
-        {"name": "Dr. Shaun Murphy", "date": "October 24, 2026"},
-    ]
+    user = account_display(current_user())
+    with get_db() as db:
+        admin_count = db.execute(
+            "SELECT COUNT(*) FROM users WHERE role = 'admin' AND status = 'active'"
+        ).fetchone()[0]
+        pending_verifications = db.execute(
+            """SELECT name, date(created_at) AS date FROM users
+               WHERE role = 'therapist' AND status = 'pending' ORDER BY id DESC LIMIT 5"""
+        ).fetchall()
     recent_reports = [
         {"name": "Anonymous User#6767", "date": "October 27, 2026"},
         {"name": "Dr. Eggman", "date": "October 26, 2026"},
@@ -31,22 +35,17 @@ def admin_dashboard():
         active_tab="dashboard",
         active_page="dashboard",
         user=user,
-        stats=stats,
+        admin_count=admin_count,
         pending_verifications=pending_verifications,
         recent_reports=recent_reports,
     )
 
 @admin_bp.route("/admin/user-management")
 def admin_user_management():
-    users = [
-        {"name": "Skibidi Ohio", "email": "skibidi.ohio@solace.internal", "role": "Client", "status": "Active"},
-        {"name": "Dr. Sigma Male", "email": "sigma.male@solace.internal", "role": "Therapist", "status": "Active"},
-        {"name": "Admin Gyatt", "email": "admin.gyatt@solace.internal", "role": "Administrator", "status": "Active"},
-        {"name": "Rizzler Jenkins", "email": "rizzler.j@solace.internal", "role": "Client", "status": "Suspended"},
-        {"name": "Dr. Livvy Dunne", "email": "livvy.d@solace.internal", "role": "Therapist", "status": "Active"}
-    ]
-    user = {"name": "Solace Administrator", "display_name": "User, name", "role": "Administrator"}
-    return render_template("admin-user-management.html", users=users, user=user)
+    with get_db() as db:
+        users = db.execute("SELECT name, email, role, status FROM users ORDER BY name, id").fetchall()
+    return render_template("admin-user-management.html", users=users, user=account_display(current_user()))
+
 
 @admin_bp.route("/admin/reports")
 def admin_reports():
@@ -57,24 +56,27 @@ def admin_reports():
         {"id": "REP-1039", "reporter": "System Monitor", "subject": "Multiple failed login attempts", "category": "Security", "severity": "Urgent", "date": "Oct 24, 2026", "status": "Pending"}
     ]
     stats = {"total": "12,345", "urgent": "123", "resolved": "11,890"}
-    user = {"name": "Solace Administrator", "display_name": "User, name", "role": "Administrator"}
+    user = account_display(current_user())
     return render_template("admin-reports.html", reports=reports, stats=stats, user=user)
 
 @admin_bp.route("/admin/therapist-verification")
 def admin_therapist_verification():
-    verifications = [
-        {"id": "VER-401", "name": "Dr. Doofenshmirtz", "license": "PSY-99482-TX", "specialty": "Clinical Psychology", "institution": "Evil Inc University", "date": "October 26, 2026", "status": "Pending", "avatar": "D"},
-        {"id": "VER-402", "name": "Dr. Eggman", "license": "MED-77123-CA", "specialty": "Cognitive Behavior", "institution": "Robotnik Institute", "date": "October 26, 2026", "status": "Pending", "avatar": "E"},
-        {"id": "VER-403", "name": "Dr. Shaun Murphy", "license": "SUR-10482-CA", "specialty": "Autism & Counseling", "institution": "St. Bonaventure Hospital", "date": "October 24, 2026", "status": "Pending", "avatar": "S"}
-    ]
-    user = {"name": "Solace Administrator", "display_name": "User, name", "role": "Administrator"}
-    return render_template("admin-therapist-verification.html", verifications=verifications, user=user)
+    with get_db() as db:
+        pending = db.execute(
+            "SELECT name, email FROM users WHERE role = 'therapist' AND status = 'pending' ORDER BY id"
+        ).fetchall()
+    return render_template(
+        "admin-therapist-verification.html", pending=pending, user=account_display(current_user()),
+    )
+
 
 @admin_bp.route("/admin/therapist/verify/<int:id>", methods=["POST"])
 @admin_bp.route("/admin/therapist/reject/<int:id>", methods=["POST"])
+@csrf_required
 def admin_therapist_action(id):
-    return redirect("/admin/therapist-verification")
+    abort(501, description="Therapist verification is not available yet.")
 
 @admin_bp.route("/admin/reports/resolve/<string:id>", methods=["POST"])
+@csrf_required
 def admin_report_resolve(id):
-    return redirect("/admin/reports")
+    abort(501, description="Report resolution is not available yet.")

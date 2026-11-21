@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Solace</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600&family=Playfair+Display:wght@500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/starter.css') }}">
+</head>
+<body>
+  <header>
+    <a class="logo" href="/" aria-label="Solace home"><img src="{{ url_for('static', filename='img/logo-light.png') }}" alt="Solace"></a>
+    <nav aria-label="Main">
+      <a class="active" href="/">Home</a>
+      <a href="#about">About Us</a>
+      <a href="{{ url_for('client.search_therapist') }}">Find a therapist</a>
+      {% if current_user() and current_user().status == 'active' %}
+        <a href="{{ dashboard_url() }}">Dashboard</a>
+      {% else %}
+        <a href="{{ url_for('auth.register') }}">Register</a>
+      {% endif %}
+    </nav>
+    {% if current_user() and current_user().status == 'active' %}
+      {% with logout_class="signin" %}{% include "account-logout.html" %}{% endwith %}
+    {% else %}
+      <a class="signin" href="{{ url_for('auth.login') }}">Sign in</a>
+    {% endif %}
+  </header>
+
+  <main>
+    <h1>Perhaps healing is learning to<br class="desktop-br"> glow again, little by little</h1>
+    <p class="lead" id="about">Welcome to Solace — a safe space to be heard, understood, and supported. Explore the therapist directory and request a consultation.</p>
+    <div class="actions">
+      <a class="btn btn-primary" href="{{ dashboard_url() }}">Start your Journey</a>
+    </div>
+  </main>
+</body>
+</html>

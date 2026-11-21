@@ -53,14 +53,14 @@
 </nav>
 <div class="sean-nav-caption account-caption">Account</div>
 <nav class="sidebar-nav account-nav">
-<a href="/profile?role=client" class="nav-item active">
+<a href="/profile" class="nav-item active">
 <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
 <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
 <circle cx="12" cy="7" r="4"/>
 </svg>
 <span>Profile</span>
 </a>
-<a href="/settings?role=client" class="nav-item">
+<a href="/settings" class="nav-item">
 <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
 <circle cx="12" cy="12" r="3"/>
 <path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1-2.8 2.8-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5v.2h-4v-.2a1.7 1.7 0 0 0-1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1-2.8-2.8.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3v-4h.2a1.7 1.7 0 0 0 1.5-1 1.7 1.7 0 0 0-.3-1.8l-.1-.1 2.8-2.8.1.1a1.7 1.7 0 0 0 1.8.3 1.7 1.7 0 0 0 1-1.5V3h4v.2a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1 2.8 2.8-.1.1a1.7 1.7 0 0 0-.3 1.8 1.7 1.7 0 0 0 1.5 1h.2v4h-.2a1.7 1.7 0 0 0-1.5 1z"/>
@@ -68,11 +68,7 @@
 <span>Settings</span>
 </a>
 </nav>
-<a class="sean-logout" href="/">
-<svg class="logout-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-<path d="M10 17l5-5-5-5m5 5H3"/>
-<path d="M12 3h7a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-7"/>
-</svg> Log Out</a>
+{% with logout_class="sean-logout" %}{% include "account-logout.html" %}{% endwith %}
 </aside>
 <main class="main-content sean-main-content">
 <header class="sean-topbar">
@@ -107,7 +103,7 @@
 </div>
 <div class="showcase-links">
 <button type="button" class="edit-profile-btn" onclick="document.getElementById('profileEditor').showModal()">Edit Profile</button>
-<a href="/settings?role=client">Privacy Settings <span>↗</span>
+<a href="/settings">Privacy Settings <span>↗</span>
 </a>
 </div>
 </div>
@@ -135,7 +131,7 @@
 <div class="profile-fields">
 <label>Display name<input name="name" value="{{ profile.name }}" required>
 </label>
-<label>Email address<input type="email" name="email" value="{{ profile.email }}" required>
+<label>Email address<input type="email" value="{{ profile.email }}" readonly>
 </label>
 <label>Profile type<input name="profile_type" value="{{ profile.profile_type }}">
 </label>

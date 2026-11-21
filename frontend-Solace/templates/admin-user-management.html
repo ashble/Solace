@@ -8,8 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Istok+Web:wght@400;700&family=Oxanium:wght@400;500;600;700&family=Roboto:wght@400;500;700&family=Rufina:wght@400;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css">
-  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
 </head>
 <body class="dashboard-body">
   <div class="app-layout">
@@ -43,19 +42,17 @@
 
       <div class="nav-section-title account-title" style="margin-top: 24px;">Account</div>
       <nav class="sidebar-nav">
-        <a href="/profile?role=admin" class="nav-item">
+        <a href="/profile" class="nav-item">
           <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
           <span>Profile</span>
         </a>
-        <a href="/settings?role=admin" class="nav-item">
+        <a href="/settings" class="nav-item">
           <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l-2.8 2.8a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5h-4a1.7 1.7 0 0 0-2.8-1.2l-2.8-2.8a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1v-4a1.7 1.7 0 0 0 1.2-2.8l2.8-2.8a1.7 1.7 0 0 0 2.8-1.2h4a1.7 1.7 0 0 0 2.8 1.2l2.8 2.8a1.7 1.7 0 0 0 1.2 2.8v4a1.7 1.7 0 0 0-1.2 1.8z"/></svg>
           <span>Settings</span>
         </a>
       </nav>
 
-      <a class="logout-btn" href="/">
-        <span>↪ Log Out</span>
-      </a>
+      {% with logout_class="logout-btn" %}{% include "account-logout.html" %}{% endwith %}
     </aside>
 
     <!-- ==========================================
@@ -75,7 +72,7 @@
         <div class="profile-chip">
           <div class="profile-chip-avatar">A</div>
           <div class="profile-info">
-            <span class="user-name">User, name</span>
+            <span class="user-name">{{ user.display_name }}</span>
             <span class="user-role">Administrator</span>
           </div>
         </div>
@@ -92,19 +89,19 @@
         <!-- Box 1: Total Users (E5D9E1) -->
         <article class="stat-box box-users">
           <span class="stat-label-oxanium">Total Users</span>
-          <strong class="stat-num-istok">1,245</strong>
+          <strong class="stat-num-istok">{{ users|length }}</strong>
         </article>
 
         <!-- Box 2: Total Therapists (D9E1D9) -->
         <article class="stat-box box-therapists">
           <span class="stat-label-oxanium">Total Therapists</span>
-          <strong class="stat-num-istok">142</strong>
+          <strong class="stat-num-istok">{{ users|selectattr('role', 'equalto', 'therapist')|list|length }}</strong>
         </article>
 
         <!-- Box 3: Total Administrators (D6E6F2) -->
         <article class="stat-box box-admins">
           <span class="stat-label-oxanium">Total Administrators</span>
-          <strong class="stat-num-istok">12</strong>
+          <strong class="stat-num-istok">{{ users|selectattr('role', 'equalto', 'admin')|list|length }}</strong>
         </article>
       </section>
 
@@ -127,6 +124,7 @@
           <option value="Active">Active</option>
           <option value="Pending">Pending</option>
           <option value="Flagged">Flagged</option>
+          <option value="Suspended">Suspended</option>
         </select>
       </section>
 
@@ -138,60 +136,26 @@
           <thead>
             <tr>
               <th>User</th>
+              <th>Email</th>
               <th>Role</th>
               <th>Status</th>
-              <th>Verification Status</th>
-              <th>Action</th>
             </tr>
           </thead>
           <tbody id="userTableBody">
-            <tr data-role="Client" data-status="Active">
-              <td>Binibirocha</td>
-              <td>Client</td>
-              <td><span class="status-badge status-active">Active</span></td>
-              <td>Verified</td>
-              <td><button class="action-manage-btn" onclick="alert('Manage user: Binibirocha')">Manage</button></td>
+            {% for account in users %}
+            {% set account_role = 'Administrator' if account.role == 'admin' else account.role|capitalize %}
+            <tr data-role="{{ account_role }}" data-status="{{ account.status|capitalize }}">
+              <td>{{ account.name }}</td>
+              <td>{{ account.email }}</td>
+              <td>{{ account_role }}</td>
+              <td><span class="status-badge status-{{ account.status }}">{{ account.status|capitalize }}</span></td>
             </tr>
-            <tr data-role="Therapist" data-status="Pending">
-              <td>Dr. Zayne Li</td>
-              <td>Therapist</td>
-              <td><span class="status-badge status-pending">Pending</span></td>
-              <td>In Review</td>
-              <td><button class="action-manage-btn" onclick="alert('Manage user: Dr. Zayne Li')">Manage</button></td>
-            </tr>
-            <tr data-role="Therapist" data-status="Active">
-              <td>Dr. Heinz Doofenshmirtz</td>
-              <td>Therapist</td>
-              <td><span class="status-badge status-active">Active</span></td>
-              <td>Verified</td>
-              <td><button class="action-manage-btn" onclick="alert('Manage user: Dr. Heinz Doofenshmirtz')">Manage</button></td>
-            </tr>
-            <tr data-role="Client" data-status="Flagged">
-              <td>Anonymous User #6767</td>
-              <td>Client</td>
-              <td><span class="status-badge status-flagged">Flagged</span></td>
-              <td>Under Review</td>
-              <td><button class="action-manage-btn" onclick="alert('Manage user: Anonymous User #6767')">Manage</button></td>
-            </tr>
-            <tr data-role="Therapist" data-status="Active">
-              <td>Dr. Shaun Murphy</td>
-              <td>Therapist</td>
-              <td><span class="status-badge status-active">Active</span></td>
-              <td>Verified</td>
-              <td><button class="action-manage-btn" onclick="alert('Manage user: Dr. Shaun Murphy')">Manage</button></td>
-            </tr>
-            <tr data-role="Administrator" data-status="Active">
-              <td>Dr. Rizzler6767</td>
-              <td>Administrator</td>
-              <td><span class="status-badge status-active">Active</span></td>
-              <td>Verified</td>
-              <td><button class="action-manage-btn" onclick="alert('Manage user: Dr. Rizzler6767')">Manage</button></td>
-            </tr>
+            {% endfor %}
           </tbody>
         </table>
 
         <div class="table-footer">
-          <span id="footerCount">Showing 6 of 6 users</span>
+          <span id="footerCount">Showing {{ users|length }} of {{ users|length }} users</span>
         </div>
       </section>
     </main>

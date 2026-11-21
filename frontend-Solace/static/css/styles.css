@@ -2174,3 +2174,75 @@ body.admin-profile-page .nav-item.active {
   .appointment-stat-card strong { font-size:18px; }
   .booking-list-heading { flex-wrap:wrap; }
 }
+
+/* Shared dashboard links and appointment request form */
+.role-dashboard-page :is(.upcoming-appointment-card, .check-pill-btn, .action-card, .content-card),
+.book-session-btn {
+  text-decoration: none;
+}
+
+.content-pills-grid.therapist-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.schedule-request {
+  max-width: 42rem;
+}
+
+.schedule-request-fields {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.schedule-request-fields label {
+  display: grid;
+  gap: 6px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.schedule-request-fields :is(input, select) {
+  width: 100%;
+  min-height: 44px;
+  border: 1px solid var(--card-border, #D6D0DE);
+  border-radius: 8px;
+  background: #fff;
+  color: inherit;
+  font: inherit;
+  font-weight: 400;
+  padding: 8px 12px;
+}
+
+.schedule-request .request-appointment-btn {
+  min-height: 44px;
+  margin-top: 16px;
+  font-family: inherit;
+}
+
+.schedule-request .request-appointment-btn:disabled {
+  opacity: 0.65;
+  cursor: default;
+}
+
+.appointment-request-status {
+  margin-top: 12px;
+  font-size: 14px;
+}
+
+@media (max-width: 480px) {
+  .content-pills-grid.therapist-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.sidebar .account-logout-form { margin-top: auto; padding-top: 12px; }
+.sidebar .account-logout-form button { width: 100%; margin: 0; border: 0; cursor: pointer; }
+.directory-list, .client-appointment-list { margin-top: 16px; }
+.directory-card { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+.directory-card[hidden] { display: none; }
+.directory-card h2 { margin: 0; }
+.directory-card .book-session-btn { width: auto; padding-inline: 20px; }
+.client-appointment-list ul { padding-left: 20px; }
+.client-appointment-list li + li { margin-top: 8px; }

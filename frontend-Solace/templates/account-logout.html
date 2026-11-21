@@ -1,0 +1,4 @@
+<form method="post" action="{{ url_for('auth.logout') }}" class="account-logout-form">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+  <button type="submit" class="{{ logout_class|default('logout-btn') }}">Log out</button>
+</form>
