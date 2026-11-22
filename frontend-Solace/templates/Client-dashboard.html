@@ -20,12 +20,12 @@
 
   <div class="cards two">
     <a class="card yellow" href="/chats">
-      <span class="icon">💬</span>
+      <span class="icon"><img src="{{ url_for('static', filename='img/icons/chat.png') }}" alt=""></span>
       <h3>Talk to someone</h3>
       <small>Anonymous peer chat</small>
     </a>
     <a class="card peach" href="/search-therapist">
-      <span class="icon">🗓</span>
+      <span class="icon"><img src="{{ url_for('static', filename='img/icons/profesional.png') }}" alt=""></span>
       <h3>See a professional</h3>
       <small>Book an appointment</small>
     </a>
@@ -33,8 +33,8 @@
 
   <div class="section">CONTENTS</div>
   <div class="cards three" style="margin-top:0">
-    <a class="card small-card pink" href="/chats"><span class="icon">💬</span>Messages</a>
-    <a class="card small-card pink" href="/schedule"><span class="icon">🗓</span>Appointments</a>
-    <a class="card small-card pink" href="/schedule"><span class="icon">🕘</span>Session History</a>
+    <a class="card small-card pink" href="/chats"><span class="icon"><img src="{{ url_for('static', filename='img/icons/messages-D.png') }}" alt=""></span>Messages</a>
+    <a class="card small-card pink" href="/schedule"><span class="icon"><img src="{{ url_for('static', filename='img/icons/appointments-D.png') }}" alt=""></span>Appointments</a>
+    <a class="card small-card pink" href="/schedule"><span class="icon"><img src="{{ url_for('static', filename='img/icons/session-history-D.png') }}" alt=""></span>Session History</a>
   </div>
 {% endblock %}
