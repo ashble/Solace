@@ -8,28 +8,30 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='css/sidebar.css') }}">
 </head>
 <body>
+
+{% set icons = url_for('static', filename='img/icons/') %}
 <div class="layout">
   <aside>
     <a class="logo" href="/" aria-label="Solace home"><img src="{{ url_for('static', filename='img/logo-dark.png') }}" alt="Solace"></a>
     <nav>
       <div class="group">Main Menu</div>
       {% if role == 'client' %}
-        <a href="/client" class="{{ 'active' if active_tab == 'dashboard' }}">⌂ Dashboard</a>
-        <a href="/chats">✉ Messages</a>
-        <a href="/schedule">▦ Appointments</a>
-        <a href="/schedule">◷ Session History</a>
+        <a href="/client" class="{{ 'active' if active_tab == 'dashboard' }}"><img class="nav-icon" src="{{ icons }}home.png" alt="">Dashboard</a>
+        <a href="/chats"><img class="nav-icon" src="{{ icons }}messages.png" alt="">Messages</a>
+        <a href="/schedule"><img class="nav-icon" src="{{ icons }}appointments.png" alt="">Appointments</a>
+        <a href="/schedule"><img class="nav-icon" src="{{ icons }}session-history.png" alt="">Session History</a>
       {% else %}
-        <a href="/therapist" class="{{ 'active' if active_tab == 'dashboard' }}">⌂ Dashboard</a>
-        <a href="/therapist/sessions">▣ Sessions</a>
-        <a href="/therapist/clients">☺ Clients</a>
-        <a href="/therapist/appointments">▦ Schedule</a>
-        <a href="/therapist/history">◷ Session History</a>
+        <a href="/therapist" class="{{ 'active' if active_tab == 'dashboard' }}"><img class="nav-icon" src="{{ icons }}home.png" alt="">Dashboard</a>
+        <a href="/therapist/sessions"><img class="nav-icon" src="{{ icons }}sessions.png" alt="">Sessions</a>
+        <a href="/therapist/clients"><img class="nav-icon" src="{{ icons }}clients.png" alt="">Clients</a>
+        <a href="/therapist/appointments"><img class="nav-icon" src="{{ icons }}appointments.png" alt="">Schedule</a>
+        <a href="/therapist/history"><img class="nav-icon" src="{{ icons }}session-history.png" alt="">Session History</a>
       {% endif %}
       <div class="group">Account</div>
-      <a href="/profile?role={{ role }}">☺ Profile</a>
-      <a href="/settings?role={{ role }}">⚙ Settings</a>
+      <a href="/profile?role={{ role }}"><img class="nav-icon" src="{{ icons }}profile.png" alt="">Profile</a>
+      <a href="/settings?role={{ role }}"><img class="nav-icon" src="{{ icons }}settings.png" alt="">Settings</a>
     </nav>
-    <a class="logout" href="/login">Log Out</a>
+    <a class="logout" href="/login"><img class="nav-icon" src="{{ icons }}log-out.png" alt="">Log Out</a>
   </aside>
 
   <main>

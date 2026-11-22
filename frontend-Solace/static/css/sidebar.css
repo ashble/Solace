@@ -98,14 +98,16 @@
 
     .yellow { 
       background: var(--yellow); } .peach { background: var(--peach); } .pink { background: var(--pink); } .lavender { background: var(--lav); }
-    :focus-visible { outline: 3px solid var(--lav-deep); outline-offset: 2px; }
+      
+    :focus-visible { 
+      outline: 3px solid var(--lav-deep); outline-offset: 2px; }
+
     @media (max-width: 800px) { .layout { grid-template-columns: 1fr; } main { padding: 20px; } .cards { grid-template-columns: 1fr !important; } }
     @media (prefers-reduced-motion: reduce) { .card { transition: none; } }
     
   
   .two { grid-template-columns: 1fr 1fr; }
   .three { grid-template-columns: repeat(3, 1fr); }
-
   .four { grid-template-columns: repeat(4, 1fr); }
   .strip { display: flex; gap: 6px; margin-top: 18px; overflow-x: auto; padding-bottom: 4px; }
   .day { flex: 1 0 36px; text-align: center; font-size: 11px; color: var(--muted); padding: 6px 0; border: 0; background: none; border-radius: 999px; font-family: inherit; cursor: pointer; }
@@ -121,3 +123,23 @@
   .Approved { color: #4a9a52; background: #eaf7ea; }
   .Progress { color: #c9961c; background: #fff7dd; }
   .Pending { color: #d0455a; background: #fdeaed; }
+
+  /* ---- Sidebar to match design ---- */
+  aside .group,
+  aside nav a,
+  .logout {
+    font-family: "Playfair Display", serif;
+}
+
+  aside .group { font-size: 14px; font-weight: 500; color: var(--plum); }
+
+  aside nav a { font-size: 14px; font-weight: 500; gap: 12px; }
+  aside nav a.active { background: #f3ecfa; box-shadow: 0 1px 4px rgba(74,53,96,.12); }
+
+  .nav-icon { width: 20px; height: 20px; flex-shrink: 0; object-fit: contain; display: block; }
+
+  .logout {
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    font-size: 13px; box-shadow: 0 1px 4px rgba(74,53,96,.12);
+}
+.logout .nav-icon { width: 16px; height: 16px; }
