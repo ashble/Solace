@@ -282,7 +282,7 @@ def saved_profile(role):
 # ==========================================
 
 @app.route("/therapist")
-def therapist_home():
+def therapist_dashboard():
     today = date.today()
 
     calendar_days = []
@@ -322,7 +322,7 @@ def therapist_home():
     }
 
     return render_template(
-        "Therapist-dashboard.html",
+        "therapist-dashboard.html",
         role="therapist",
         active_tab="dashboard",
         user=user,
