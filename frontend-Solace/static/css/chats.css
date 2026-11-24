@@ -1,530 +1,198 @@
 /* ==========================================================================
    Solace - Messages page (templates/chats.html)
+
+   This page uses the shared dashboard shell from sidebar.css (sidebar, logo,
+   topbar, user pill, h1, .sub, colour tokens). Only chat-specific components
+   live here, and they are built from the same tokens:
+     --lav  --lav-deep  --plum  --muted  --yellow  --peach  --pink
+
    Table of contents
-     1. Design variables (colours, fonts, shapes)  <- edit the theme here
-     2. Base reset
-     3. Page layout
-     4. Sidebar navigation
-     5. Page header and user badge
-     6. Profile avatars                            <- size and colour of avatars
-     7. Contacts list
-     8. Chat window (header, messages, typing indicator, input)
-     9. Chat message bubbles
-    10. Popups (Report Message, Start a New Conversation) and toast
-    11. Shared transitions
-    12. Responsive styles
+     1. Tokens reused from the dashboards
+     2. Form reset (sidebar.css does not reset buttons / inputs)
+     3. Icons and avatars
+     4. Contacts list
+     5. Chat window
+     6. Chat message bubbles (created by chats-page.js)
+     7. Popups and toast
+     8. Responsive styles
    ========================================================================== */
 
 
 /* ==========================================================================
-   1. DESIGN VARIABLES - change a value here to restyle the whole page
+   1. TOKENS REUSED FROM THE DASHBOARDS (same literal values as sidebar.css)
    ========================================================================== */
 :root {
-  /* Fonts */
-  --font-body: "Plus Jakarta Sans", sans-serif;
-  --font-heading: "Playfair Display", serif;
-
-  /* Page colours */
-  --color-page-bg: #ffffff;
-  --color-text: #332b3a;
-  --color-heading: #2f253a;
-
-  /* Sidebar colours */
-  --color-sidebar-bg: #e4daee;
-  --color-sidebar-border: #d5c7df;
-  --color-sidebar-hover: rgba(216, 203, 227, 0.6);
-  --color-sidebar-active: #cbb4e3;
-  --color-sidebar-label: #796b88;
-  --color-sidebar-text: #483d54;
-
-  /* Purple accents */
-  --color-bubble-in: #dcd0ea;        /* received bubbles, selected contact, user badge */
-  --color-bubble-out: #c4b4d8;       /* sent bubbles, send button, Start Chat button */
-  --color-button-hover: #b29ecb;
-  --color-focus: #aa8ec7;            /* outline colour when typing in an input */
-
-  /* Borders and soft backgrounds */
-  --color-border: #ebdff5;
-  --color-border-input: #d8cbe3;
-  --color-soft-bg: #fbf9fd;
-
-  /* Avatars */
-  --color-avatar-bg: #000000;
-  --color-avatar-text: #ffffff;
-
-  /* Shapes and shadows */
-  --radius-panel: 1rem;
-  --radius-pill: 9999px;
-  --shadow-small: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  --shadow-dialog: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-
-  /* Speed of hover animations */
-  --transition-speed: 150ms;
+  --tint: #f3ecfa;                       /* active nav item / menu hover */
+  --tint-hover: #eadff6;                 /* nav hover */
+  --danger: #c0394b;                     /* log-out red */
+  --danger-bg: #fdeaed;                  /* "Pending" badge background */
+  --success: #4a9a52;                    /* "Approved" badge text */
+  --success-bg: #eaf7ea;                 /* "Approved" badge background */
+  --shadow-card: 0 2px 8px rgba(74, 53, 96, .08);
+  --shadow-pop: 0 6px 20px rgba(74, 53, 96, .18);
 }
+
+body { user-select: none; }
 
 
 /* ==========================================================================
-   2. BASE RESET - removes browser default spacing so layouts are predictable
+   2. FORM RESET
    ========================================================================== */
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-  border-width: 0;
-  border-style: solid;
-  border-color: #e5e7eb;
-}
-
-html {
-  line-height: 1.5;
-  font-family: var(--font-body);
-  -webkit-text-size-adjust: 100%;
-}
-
-body,
-h1,
-h2,
-h3,
-p {
-  margin: 0;
-}
-
-h1,
-h2,
-h3 {
-  font-size: inherit;
-  font-weight: inherit;
-}
-
-a {
-  color: inherit;
-  text-decoration: inherit;
-}
-
 button,
 input,
 textarea {
-  font-family: inherit;
-  font-size: 100%;
-  font-weight: inherit;
-  line-height: inherit;
-  letter-spacing: inherit;
+  font: inherit;
   color: inherit;
-  margin: 0;
-  padding: 0;
 }
 
-button {
-  text-transform: none;
-  background-color: transparent;
-  background-image: none;
-  cursor: pointer;
-  -webkit-appearance: button;
-}
-
+button { cursor: pointer; background: none; border: 0; padding: 0; }
+input,
+textarea { border: 0; padding: 0; }
 input::placeholder,
-textarea::placeholder {
-  opacity: 1;
-}
+textarea::placeholder { color: var(--muted); opacity: 1; }
+svg { display: block; }
 
-svg {
-  display: block;
-  vertical-align: middle;
-}
-
-body {
-  min-height: 100vh;
-  font-family: var(--font-body);
-  color: var(--color-text);
-  background-color: var(--color-page-bg);
-  overflow-x: hidden;
-  user-select: none;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-/* Thin scrollbar used in the contacts list and chat messages */
-::-webkit-scrollbar {
-  width: 6px;
-}
-
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #d8cbe3;
-  border-radius: var(--radius-pill);
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #bfaecf;
-}
-
-/* Icon sizes used across the page */
-.icon-sm {
-  width: 1rem;
-  height: 1rem;
-}
-
-.icon-md {
-  width: 1.25rem;
-  height: 1.25rem;
-}
-
-.icon-lg {
-  width: 1.5rem;
-  height: 1.5rem;
-}
+/* Thin lavender scrollbar for the contacts list and messages */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--lav); border-radius: 999px; }
+::-webkit-scrollbar-thumb:hover { background: var(--lav-deep); }
 
 
 /* ==========================================================================
-   3. PAGE LAYOUT - sidebar on the left, main content on the right
+   3. ICONS AND AVATARS
    ========================================================================== */
-.app-layout {
-  display: flex;
-  min-height: 100vh;
-}
+.icon-sm { width: 16px; height: 16px; }
+.icon-md { width: 20px; height: 20px; }
+.icon-lg { width: 24px; height: 24px; }
 
-.main-content {
-  flex: 1 1 0%;
-  display: flex;
-  flex-direction: column;
-  min-width: 0;
-  background-color: #ffffff;
-}
-
-/* Holds the contacts list and the chat window side by side */
-.chat-layout {
-  flex: 1 1 0%;
-  display: flex;
-  gap: 1.5rem;
-  width: 100%;
-  max-width: 80rem;
-  margin: 0 auto;
-  padding: 1.5rem 2rem;
-  overflow: hidden;
-}
-
-
-/* ==========================================================================
-   4. SIDEBAR NAVIGATION
-   ========================================================================== */
-.sidebar {
-  display: flex;
-  flex-direction: column;
-  flex-shrink: 0;
-  width: 16rem;
-  min-height: 100vh;
-  padding: 1.5rem;
-  border-right: 1px solid var(--color-sidebar-border);
-  background-color: var(--color-sidebar-bg);
-}
-
-/* Logo: "S" + sun icon + "LACE" */
-.sidebar-logo {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 2.5rem;
-  padding-left: 0.5rem;
-  font-family: var(--font-heading);
-  font-size: 1.5rem;
-  line-height: 2rem;
-  font-weight: 700;
-  letter-spacing: 0.25em;
-  color: #443850;
-}
-
-.sidebar-logo-sun {
-  width: 1.25rem;
-  height: 1.25rem;
-}
-
-/* "MAIN MENU" and "ACCOUNT" groups */
-.sidebar-group + .sidebar-group {
-  margin-top: 1.5rem;
-}
-
-.sidebar-group-label {
-  margin-bottom: 0.75rem;
-  padding-left: 0.5rem;
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  color: var(--color-sidebar-label);
-}
-
-.sidebar-nav {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-}
-
-.nav-link {
-  display: flex;
-  align-items: center;
-  gap: 0.875rem;
-  padding: 0.625rem 0.875rem;
-  border-radius: var(--radius-pill);
-  font-size: 0.875rem;
-  line-height: 1.25rem;
-  font-weight: 500;
-  color: var(--color-sidebar-text);
-}
-
-.nav-link:hover {
-  background-color: var(--color-sidebar-hover);
-}
-
-/* Current page highlight (Messages) - must stay after :hover */
-.nav-link.is-active {
-  font-weight: 600;
-  color: #2c203b;
-  background-color: var(--color-sidebar-active);
-  box-shadow: var(--shadow-small);
-}
-
-.nav-link-icon {
-  width: 1rem;
-  height: 1rem;
-  color: #6c5e7b;
-}
-
-.nav-link.is-active .nav-link-icon {
-  color: #392c4a;
-}
-
-/* Log Out button pinned to the bottom of the sidebar */
-.sidebar-footer {
-  margin-top: auto;
-  padding-top: 1.5rem;
-}
-
-.logout-button {
-  display: flex;
-  align-items: center;
-  gap: 0.625rem;
-  padding: 0.5rem 0.75rem;
-  font-size: 0.875rem;
-  line-height: 1.25rem;
-  font-weight: 500;
-  color: #f43f5e;
-}
-
-.logout-button:hover {
-  color: #e11d48;
-}
-
-/* The icon stays the same colour when the text darkens on hover */
-.logout-button svg {
-  color: #f43f5e;
-}
-
-
-/* ==========================================================================
-   5. PAGE HEADER AND USER BADGE
-   ========================================================================== */
-.page-header {
-  display: flex;
-  flex-shrink: 0;
-  align-items: center;
-  justify-content: space-between;
-  height: 5rem;
-  padding: 0 2rem;
-  border-bottom: 1px solid #f3f4f6;
-}
-
-.page-title-group {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-}
-
-/* Small rounded square holding an icon (page title icon, popup icon) */
-.icon-badge {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 2rem;
-  height: 2rem;
-  border-radius: 0.5rem;
-  color: #6e5884;
-  background-color: #f0e8f8;
-}
-
-.page-title {
-  font-family: var(--font-heading);
-  font-size: 1.5rem;
-  line-height: 2rem;
-  font-weight: 600;
-  color: var(--color-heading);
-}
-
-.user-badge {
-  display: flex;
-  align-items: center;
-  gap: 0.625rem;
-  padding: 0.375rem 0.75rem;
-  border-radius: var(--radius-pill);
-  background-color: var(--color-bubble-in);
-  box-shadow: var(--shadow-small);
-}
-
-.user-badge-text {
-  padding-right: 0.5rem;
-  line-height: 1.25;
-}
-
-.user-badge-name {
-  font-size: 0.75rem;
-  line-height: 1rem;
-  font-weight: 700;
-  color: #2a1e36;
-}
-
-.user-badge-role {
-  font-size: 10px;
-  color: #69587c;
-}
-
-
-/* ==========================================================================
-   6. PROFILE AVATARS - adjust size, background and text colour here
-   Used as: <div class="avatar avatar-sm">A</div>
-   The letter is filled in by chats-page.js (first letter of the name).
-   ========================================================================== */
+/* Same plum circle as the user pill avatar in the dashboards.
+   The letter is filled in by chats-page.js (first letter of the name). */
 .avatar {
-  --avatar-size: 28px;               /* default size, overridden by the size classes below */
+  --avatar-size: 28px;
   display: inline-flex;
   flex-shrink: 0;
   align-items: center;
   justify-content: center;
   width: var(--avatar-size);
   height: var(--avatar-size);
-  border-radius: var(--radius-pill); /* keeps the avatar a circle */
-  background-color: var(--color-avatar-bg);
-  color: var(--color-avatar-text);
-  font-size: calc(var(--avatar-size) * 0.42); /* letter scales with the avatar */
+  border-radius: 50%;
+  background: var(--plum);
+  color: #fff;
+  font-size: calc(var(--avatar-size) * .42);
   font-weight: 600;
   line-height: 1;
   user-select: none;
 }
 
-.avatar-xs {
-  --avatar-size: 20px;               /* typing indicator */
-}
+.avatar-xs { --avatar-size: 20px; }   /* typing indicator */
+.avatar-sm { --avatar-size: 28px; }   /* contact list and chat messages */
+.avatar-md { --avatar-size: 28px; }   /* user pill */
 
-.avatar-sm {
-  --avatar-size: 28px;               /* contact list and chat messages */
-}
-
-.avatar-md {
-  --avatar-size: 32px;               /* header badge */
-}
-
-.avatar-bordered {
-  border: 1px solid #ffffff;
+/* Small rounded square holding an icon (popup title) */
+.icon-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  color: var(--plum);
+  background: var(--lav);
 }
 
 
 /* ==========================================================================
-   7. CONTACTS LIST - "New Chat" button and the list of conversations
+   4. CONTACTS LIST - "New Chat" button and the list of conversations
    ========================================================================== */
+/* Holds the contacts list and the chat window side by side */
+.chat-layout {
+  display: flex;
+  gap: 22px;
+  margin-top: 22px;
+  height: calc(100vh - 200px);
+  min-height: 440px;
+}
+
 .contacts-panel {
   display: flex;
   flex-direction: column;
   flex-shrink: 0;
-  gap: 1rem;
-  width: 16rem;
+  gap: 14px;
+  width: 240px;
 }
 
+/* Same yellow card as "Talk to someone" on the client dashboard */
 .new-chat-button {
   display: flex;
   align-items: center;
-  justify-content: flex-start;
-  gap: 0.625rem;
+  gap: 10px;
   width: 100%;
-  padding: 0.625rem 1rem;
-  border: 1px solid #cfc4dc;
-  border-radius: var(--radius-pill);
-  font-size: 0.875rem;
-  line-height: 1.25rem;
-  font-weight: 500;
-  color: #3f314f;
-  background-color: #ffffff;
-  box-shadow: var(--shadow-small);
+  padding: 11px 18px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--plum);
+  background: var(--yellow);
+  box-shadow: 0 4px 12px rgba(74, 53, 96, .12);
 }
 
-.new-chat-button:hover {
-  background-color: #faf7fc;
-}
-
-.new-chat-button svg {
-  color: #5e4f71;
-}
+.new-chat-button:hover { transform: translateY(-2px); }
 
 .contacts-list {
   flex: 1 1 0%;
   display: flex;
   flex-direction: column;
-  gap: 0.625rem;
-  padding: 0.75rem;
-  border: 1px solid #e1d5ec;
-  border-radius: var(--radius-panel);
-  background-color: rgba(251, 249, 253, 0.6);
+  gap: 4px;
+  padding: 10px;
+  border: 1px solid var(--lav);
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: var(--shadow-card);
   overflow-y: auto;
 }
 
 .contact-pill {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  padding: 0.5rem 0.75rem;
-  border: 1px solid transparent;
-  border-radius: 0.75rem;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: 8px;
   cursor: pointer;
 }
 
-.contact-pill:hover {
-  background-color: #f3edf8;
-}
+.contact-pill:hover { background: var(--tint-hover); }
 
-/* Selected contact - must stay after :hover */
+/* Selected contact - same look as the active sidebar item. Must stay after :hover */
 .contact-pill.is-active {
-  border-color: #cfbedf;
-  background-color: var(--color-bubble-in);
-  box-shadow: var(--shadow-small);
+  background: var(--tint);
+  box-shadow: 0 1px 4px rgba(74, 53, 96, .12);
 }
 
 .contact-name {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  font-size: 0.75rem;
-  line-height: 1rem;
+  font-size: 13px;
   font-weight: 500;
-  color: #4f425f;
+  color: var(--plum);
 }
 
-.contact-pill.is-active .contact-name {
-  font-weight: 600;
-  color: #281b36;
-}
+.contact-pill.is-active .contact-name { font-weight: 600; }
 
 
 /* ==========================================================================
-   8. CHAT WINDOW - header, message area, typing indicator and input bar
+   5. CHAT WINDOW - header, message area, typing indicator and input bar
    ========================================================================== */
 .chat-window {
   flex: 1 1 0%;
   display: flex;
   flex-direction: column;
-  border: 1px solid #dfd5ea;
-  border-radius: var(--radius-panel);
-  background-color: #ffffff;
-  box-shadow: var(--shadow-small);
+  min-width: 0;
+  border: 1px solid var(--lav);
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: var(--shadow-card);
   overflow: hidden;
 }
 
@@ -532,37 +200,36 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0.875rem 1.5rem;
-  border-bottom: 1px solid var(--color-border);
+  padding: 14px 22px;
+  border-bottom: 1px solid var(--lav);
 }
 
 .chat-title {
-  font-size: 0.875rem;
-  line-height: 1.25rem;
-  font-weight: 600;
-  color: #2d213b;
+  font-family: "Playfair Display", serif;
+  font-size: 18px;
+  font-weight: 500;
+  color: var(--plum);
 }
 
 .chat-status {
   display: flex;
   align-items: center;
-  gap: 0.375rem;
+  gap: 6px;
   font-size: 11px;
-  font-weight: 500;
-  color: #79678e;
+  color: var(--muted);
 }
 
 .chat-status-dot {
-  width: 0.5rem;
-  height: 0.5rem;
-  border-radius: var(--radius-pill);
-  background-color: #34d399;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--success);
 }
 
 /* Scrollable area where message bubbles appear */
 .chat-messages {
   flex: 1 1 0%;
-  padding: 1.5rem;
+  padding: 22px;
   overflow-y: auto;
 }
 
@@ -570,75 +237,55 @@ body {
 .typing-indicator {
   display: none;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.5rem 1.5rem;
-  border-top: 1px solid #f4eef9;
-  font-size: 0.75rem;
-  line-height: 1rem;
-  color: #7d6c93;
-  background-color: rgba(251, 249, 253, 0.8);
+  gap: 8px;
+  padding: 8px 22px;
+  border-top: 1px solid var(--lav);
+  font-size: 12px;
+  color: var(--muted);
+  background: var(--tint);
 }
 
-.typing-indicator.is-visible {
-  display: flex;
-}
+.typing-indicator.is-visible { display: flex; }
 
-.typing-text {
-  font-size: 11px;
-}
+.typing-text,
+.typing-author { font-size: 11px; }
 
-.typing-author {
-  font-size: 11px;
-  font-weight: 500;
-}
+.typing-author { font-weight: 500; }
 
 .typing-dots {
   display: flex;
   align-items: center;
-  gap: 0.25rem;
-  margin-left: 0.25rem;
+  gap: 4px;
+  margin-left: 4px;
 }
 
 .typing-dot {
-  width: 0.375rem;
-  height: 0.375rem;
-  border-radius: var(--radius-pill);
-  background-color: #9f8eb7;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--lav-deep);
   animation: typing-bounce 1.3s infinite ease-in-out;
 }
 
-.typing-dot:nth-child(2) {
-  animation-delay: 0.2s;
-}
-
-.typing-dot:nth-child(3) {
-  animation-delay: 0.4s;
-}
+.typing-dot:nth-child(2) { animation-delay: .2s; }
+.typing-dot:nth-child(3) { animation-delay: .4s; }
 
 @keyframes typing-bounce {
-  0%,
-  60%,
-  100% {
-    transform: translateY(0);
-    opacity: 0.4;
-  }
-  30% {
-    transform: translateY(-4px);
-    opacity: 1;
-  }
+  0%, 60%, 100% { transform: translateY(0); opacity: .4; }
+  30% { transform: translateY(-4px); opacity: 1; }
 }
 
 /* Message input bar at the bottom */
 .chat-input-bar {
-  padding: 1rem;
-  border-top: 1px solid var(--color-border);
-  background-color: #ffffff;
+  padding: 14px 16px;
+  border-top: 1px solid var(--lav);
+  background: #fff;
 }
 
 .chat-form {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 10px;
 }
 
 .chat-input-wrap {
@@ -646,73 +293,55 @@ body {
   position: relative;
 }
 
-/* Text boxes (chat message, new chat names, report reason) */
+/* Text boxes (chat message and new chat names) */
 .text-field,
 .chat-input {
   width: 100%;
-  color: #2e213d;
-  background-color: var(--color-soft-bg);
-  border: 1px solid var(--color-border-input);
-  font-size: 0.75rem;
-  line-height: 1rem;
-  outline: 2px solid transparent;
-  outline-offset: 2px;
+  font-size: 13px;
+  color: var(--plum);
+  background: #fff;
+  border: 1px solid var(--lav);
+  outline: none;
   -webkit-appearance: none;
   appearance: none;
 }
 
-.text-field::placeholder,
-.chat-input::placeholder {
-  color: #9f91af;
-}
-
 .text-field:focus,
 .chat-input:focus {
-  border-color: var(--color-focus);
-  box-shadow: 0 0 0 1px var(--color-focus);
+  border-color: var(--lav-deep);
+  box-shadow: 0 0 0 3px rgba(183, 157, 219, .3);
 }
 
-.chat-input {
-  padding: 0.625rem 2.5rem 0.625rem 1rem;
-  border-radius: var(--radius-pill);
-}
+.chat-input { padding: 10px 18px; border-radius: 999px; }
+.text-field { padding: 10px 14px; border-radius: 10px; }
 
-.text-field {
-  padding: 0.625rem 0.875rem;
-  border-radius: 0.75rem;
-}
-
+/* Send button - same filled accent as the active day in the dashboards */
 .send-button {
   display: flex;
   flex-shrink: 0;
   align-items: center;
   justify-content: center;
-  width: 2.25rem;
-  height: 2.25rem;
-  border-radius: var(--radius-pill);
-  color: #332247;
-  background-color: var(--color-bubble-out);
-  box-shadow: var(--shadow-small);
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  color: #fff;
+  background: var(--lav-deep);
+  box-shadow: 0 2px 8px rgba(74, 53, 96, .12);
 }
 
-.send-button:hover {
-  background-color: var(--color-button-hover);
-}
-
-.send-button:active {
-  transform: scale(0.95);
-}
+.send-button:hover { filter: brightness(1.05); }
+.send-button:active { transform: scale(.95); }
 
 /* Paper airplane is rotated and nudged so it looks centred */
 .send-button svg {
-  width: 1rem;
-  height: 1rem;
-  transform: translate(-0.125rem, 0.125rem) rotate(45deg);
+  width: 16px;
+  height: 16px;
+  transform: translate(-2px, 2px) rotate(45deg);
 }
 
 
 /* ==========================================================================
-   9. CHAT MESSAGE BUBBLES (created by chats-page.js)
+   6. CHAT MESSAGE BUBBLES (created by chats-page.js)
    ========================================================================== */
 /* Date divider, e.g. "Jan 5, 2027" */
 .message-divider {
@@ -720,72 +349,59 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 0.75rem 0;
+  margin: 12px 0;
 }
 
 .message-divider-line {
   width: 100%;
-  border-top: 1px solid var(--color-border);
+  border-top: 1px solid var(--lav);
 }
 
 .message-divider-label {
   position: absolute;
-  padding: 0 0.75rem;
+  padding: 0 12px;
   font-size: 11px;
-  font-weight: 500;
-  color: #8f829f;
-  background-color: #ffffff;
+  color: var(--muted);
+  background: #fff;
 }
 
 /* Space between messages. Kept after the divider rule above so it wins over the divider's own margin. */
-.chat-messages > * + * {
-  margin-top: 1rem;
-}
+.chat-messages > * + * { margin-top: 16px; }
 
-.message-animate {
-  animation: message-slide-up 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
+.message-animate { animation: message-slide-up .28s cubic-bezier(.16, 1, .3, 1) forwards; }
 
 @keyframes message-slide-up {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 /* Received message: avatar + bubble + "..." report button */
 .message-incoming {
   display: flex;
   align-items: flex-start;
-  gap: 0.625rem;
+  gap: 10px;
   max-width: 32rem;
 }
 
-.message-incoming .avatar {
-  margin-top: 0.125rem;
-}
+.message-incoming .avatar { margin-top: 2px; }
 
 .message-body {
   display: flex;
   align-items: center;
-  gap: 0.375rem;
+  gap: 6px;
 }
 
 .bubble-in,
 .bubble-out {
-  padding: 0.5rem 1rem;
-  font-size: 0.75rem;
-  line-height: 1.625;
+  padding: 8px 16px;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--plum);
 }
 
 .bubble-in {
-  color: #2b2138;
-  background-color: var(--color-bubble-in);
-  border-radius: 1.25rem 1.25rem 1.25rem 0.35rem;   /* flat corner = bottom left */
+  background: var(--lav);
+  border-radius: 18px 18px 18px 6px;     /* flat corner = bottom left */
 }
 
 /* Sent message */
@@ -797,71 +413,65 @@ body {
 .bubble-out {
   display: flex;
   align-items: flex-end;
-  gap: 0.375rem;
+  gap: 6px;
   max-width: 24rem;
-  color: #20142e;
-  background-color: var(--color-bubble-out);
-  border-radius: 1.25rem 1.25rem 0.35rem 1.25rem;   /* flat corner = bottom right */
-  box-shadow: var(--shadow-small);
+  background: var(--lav-deep);
+  border-radius: 18px 18px 6px 18px;     /* flat corner = bottom right */
+  box-shadow: 0 1px 4px rgba(74, 53, 96, .12);
 }
 
 .message-read-mark {
   display: inline-flex;
   align-items: center;
-  margin-left: 0.25rem;
+  margin-left: 4px;
   font-size: 10px;
-  font-weight: 700;
+  font-weight: 600;
   line-height: 1;
-  color: #5e4b71;
+  color: var(--plum);
   user-select: none;
 }
 
 /* "..." button next to received messages */
 .report-trigger-btn {
-  padding: 0.25rem;
-  color: #9ca3af;
-  opacity: 0.6;
+  padding: 4px;
+  color: var(--muted);
+  opacity: .6;
 }
 
-.report-trigger-btn:hover {
-  color: #374151;
-}
-
-.message-body:hover .report-trigger-btn {
-  opacity: 1;
-}
+.report-trigger-btn:hover { color: var(--plum); }
+.message-body:hover .report-trigger-btn { opacity: 1; }
 
 /* Red note under a message that was flagged as spam */
 .flagged-row {
   display: flex;
   justify-content: flex-start;
-  padding-left: 2.25rem;
+  padding-left: 38px;
 }
 
 .flagged-banner {
   max-width: 20rem;
-  padding: 0.625rem 1rem;
-  border: 1px solid #f5a8a8;
-  border-radius: 0.75rem;
-  background-color: #fce8e8;
+  padding: 10px 16px;
+  border: 1px solid var(--danger);
+  border-radius: 10px;
+  background: var(--danger-bg);
 }
 
 .flagged-title {
   font-size: 11px;
   font-weight: 600;
-  color: #e11d48;
+  color: var(--danger);
 }
 
 .flagged-quote {
-  margin-top: 0.125rem;
+  margin-top: 2px;
   font-size: 10px;
   font-style: italic;
-  color: rgba(244, 63, 94, 0.8);
+  color: var(--danger);
 }
 
 
 /* ==========================================================================
-   10. POPUPS AND TOAST
+   7. POPUPS AND TOAST
    Popups are shown by adding .is-open, the toast by adding .is-visible
    ========================================================================== */
 .modal-overlay {
@@ -871,286 +481,240 @@ body {
   display: none;
   align-items: center;
   justify-content: center;
-  padding: 1rem;
-  background-color: rgba(62, 45, 78, 0.45);
+  padding: 16px;
+  background: rgba(74, 53, 96, .45);
   -webkit-backdrop-filter: blur(2px);
   backdrop-filter: blur(2px);
 }
 
-.modal-overlay.is-open {
-  display: flex;
-}
+.modal-overlay.is-open { display: flex; }
 
 .modal-dialog {
   position: relative;
   width: 100%;
   max-width: 28rem;
-  padding: 1.5rem;
-  border: 1px solid var(--color-border-input);
-  border-radius: var(--radius-panel);
-  background-color: #ffffff;
-  box-shadow: var(--shadow-dialog);
+  padding: 24px;
+  border: 1px solid var(--lav);
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: var(--shadow-pop);
 }
 
-/* Red look for the Report Message popup */
+/* Red look for the Report Message popup (same reds as the dashboards' Pending badge) */
 .modal-dialog.is-report {
-  border-color: #f5b8b8;
-  background-color: #fce8e8;
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  border-color: var(--danger);
+  background: var(--danger-bg);
 }
 
 .modal-close-button {
   position: absolute;
-  top: 1rem;
-  right: 1rem;
-  padding: 0.25rem;
-  color: #9ca3af;
+  top: 16px;
+  right: 16px;
+  padding: 4px;
+  color: var(--muted);
 }
 
-.modal-close-button:hover {
-  color: #4b5563;
-}
+.modal-close-button:hover { color: var(--plum); }
 
 .modal-title {
-  font-family: var(--font-heading);
-  font-size: 1.25rem;
-  line-height: 1.75rem;
-  font-weight: 600;
-  color: var(--color-heading);
+  font-family: "Playfair Display", serif;
+  font-size: 20px;
+  font-weight: 500;
+  color: var(--plum);
 }
 
 .modal-title-row {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  margin-bottom: 0.5rem;
+  gap: 12px;
+  margin-bottom: 8px;
 }
 
-.modal-title-row.is-report {
-  gap: 0.5rem;
-  margin-bottom: 0.75rem;
-}
-
-.modal-title-row.is-report .modal-title {
-  color: #3c2a30;
-}
-
-.modal-warning-icon {
-  color: #e76f6f;
-}
+.modal-title-row.is-report { gap: 8px; margin-bottom: 12px; }
+.modal-warning-icon { color: var(--danger); }
 
 .modal-description {
-  margin-bottom: 1rem;
-  font-size: 0.75rem;
-  line-height: 1rem;
-  color: #6e5d80;
+  margin-bottom: 16px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--muted);
 }
 
 .modal-label {
   display: block;
-  margin-bottom: 0.25rem;
+  margin-bottom: 4px;
   font-size: 11px;
   font-weight: 600;
-  letter-spacing: 0.05em;
+  letter-spacing: .5px;
   text-transform: uppercase;
-  color: #544465;
+  color: var(--plum);
 }
 
 .modal-fields {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
-  margin-bottom: 1.25rem;
+  gap: 12px;
+  margin-bottom: 20px;
 }
 
 .modal-actions {
   display: flex;
   justify-content: flex-end;
-  gap: 0.5rem;
+  gap: 8px;
 }
 
-.modal-actions.is-report {
-  align-items: center;
-  gap: 0.625rem;
-}
+.modal-actions.is-report { align-items: center; gap: 10px; }
 
 /* Buttons inside popups */
 .modal-button {
-  padding: 0.5rem 1.25rem;
-  border-radius: var(--radius-pill);
-  font-size: 0.75rem;
-  line-height: 1rem;
+  padding: 8px 20px;
+  border-radius: 999px;
+  font-size: 12px;
   font-weight: 500;
 }
 
-.modal-button-cancel {
-  color: #645277;
-}
-
-.modal-button-cancel:hover {
-  background-color: #f4eef9;
-}
+.modal-button-cancel { color: var(--plum); }
+.modal-button-cancel:hover { background: var(--tint); }
 
 .modal-button-primary {
-  padding: 0.5rem 1.5rem;
+  padding: 8px 24px;
   font-weight: 600;
-  color: #2c1d3c;
-  background-color: var(--color-bubble-out);
-  box-shadow: var(--shadow-small);
+  color: #fff;
+  background: var(--lav-deep);
+  box-shadow: 0 2px 8px rgba(74, 53, 96, .12);
 }
 
-.modal-button-primary:hover {
-  background-color: var(--color-button-hover);
-}
+.modal-button-primary:hover,
+.modal-button-danger:hover { filter: brightness(1.05); }
 
 .modal-button-primary:active,
-.modal-button-danger:active {
-  transform: scale(0.95);
-}
+.modal-button-danger:active { transform: scale(.95); }
 
 /* Report popup: message preview, question and reason box */
 .report-preview {
-  margin-bottom: 0.75rem;
-  padding: 0.5rem 0.75rem;
-  border: 1px solid #f3c8c8;
-  border-radius: 0.5rem;
-  background-color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 12px;
+  padding: 8px 12px;
+  border: 1px solid var(--lav);
+  border-radius: 8px;
+  background: #fff;
 }
 
 .report-preview-label {
   display: block;
   font-size: 10px;
   font-weight: 600;
-  letter-spacing: 0.05em;
+  letter-spacing: .5px;
   text-transform: uppercase;
-  color: #935f67;
+  color: var(--danger);
 }
 
 .report-preview-text {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  margin-top: 0.125rem;
-  font-size: 0.75rem;
-  line-height: 1rem;
+  margin-top: 2px;
+  font-size: 12px;
   font-style: italic;
-  color: #3b2b30;
+  color: var(--plum);
 }
 
 .report-question {
   display: block;
-  margin-bottom: 0.75rem;
-  font-size: 0.75rem;
-  line-height: 1rem;
+  margin-bottom: 12px;
+  font-size: 12px;
   font-weight: 500;
-  color: #543b43;
+  color: var(--plum);
 }
 
-.report-reason-wrap {
-  margin-bottom: 1.25rem;
-}
+.report-reason-wrap { margin-bottom: 20px; }
 
 .report-reason-input {
   width: 100%;
-  padding: 0.75rem;
-  border: 1px solid #edd1d1;
-  border-radius: 0.75rem;
-  font-size: 0.75rem;
-  line-height: 1rem;
-  color: #3b2b30;
-  background-color: #ffffff;
+  padding: 12px;
+  border: 1px solid var(--lav);
+  border-radius: 10px;
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--plum);
+  background: #fff;
   resize: none;
-  outline: 2px solid transparent;
-  outline-offset: 2px;
+  outline: none;
   -webkit-appearance: none;
   appearance: none;
 }
 
-.report-reason-input::placeholder {
-  color: #a68c92;
-}
-
 .report-reason-input:focus {
-  border-color: #fb7185;
-  box-shadow: 0 0 0 1px #fb7185;
-}
-
-.modal-dialog.is-report .modal-button-cancel {
-  color: #6e4d56;
-}
-
-.modal-dialog.is-report .modal-button-cancel:hover {
-  background-color: rgba(255, 255, 255, 0.6);
+  border-color: var(--danger);
+  box-shadow: 0 0 0 3px rgba(192, 57, 75, .2);
 }
 
 .modal-button-danger {
-  padding: 0.5rem 2rem;
+  padding: 8px 28px;
   font-weight: 600;
-  color: #ffffff;
-  background-color: #f08585;
-  box-shadow: var(--shadow-small);
-}
-
-.modal-button-danger:hover {
-  background-color: #e67575;
+  color: #fff;
+  background: var(--danger);
+  box-shadow: 0 2px 8px rgba(74, 53, 96, .12);
 }
 
 /* Small confirmation message in the bottom right corner */
 .toast {
   position: fixed;
-  right: 1.5rem;
-  bottom: 1.5rem;
+  right: 24px;
+  bottom: 24px;
   z-index: 50;
-  transform: translateY(4rem);
+  transform: translateY(64px);
   opacity: 0;
   pointer-events: none;
-  transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 300ms cubic-bezier(.4, 0, .2, 1);
 }
 
-.toast.is-visible {
-  transform: translateY(0);
-  opacity: 1;
-}
+.toast.is-visible { transform: translateY(0); opacity: 1; }
 
 .toast-content {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.625rem 1rem;
-  border-radius: var(--radius-pill);
-  font-size: 0.75rem;
-  line-height: 1rem;
-  color: #ffffff;
-  background-color: #2f233a;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+  gap: 8px;
+  padding: 10px 16px;
+  border-radius: 999px;
+  font-size: 12px;
+  color: #fff;
+  background: var(--plum);
+  box-shadow: var(--shadow-pop);
 }
 
-.toast-content svg {
-  flex-shrink: 0;
-  color: #34d399;
-}
+.toast-content svg { flex-shrink: 0; color: var(--yellow); }
 
 
 /* ==========================================================================
-   11. SHARED TRANSITIONS - smooth hover and click effects
+   Shared hover / click transitions
    ========================================================================== */
-.nav-link,
-.logout-button,
 .new-chat-button,
 .contact-pill,
 .chat-input,
+.text-field,
 .send-button,
 .report-trigger-btn,
 .modal-close-button,
 .modal-button {
-  transition-property: color, background-color, border-color, opacity, box-shadow, transform;
-  transition-duration: var(--transition-speed);
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-property: color, background-color, border-color, opacity, box-shadow, transform, filter;
+  transition-duration: 150ms;
+  transition-timing-function: cubic-bezier(.4, 0, .2, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .new-chat-button,
+  .message-animate,
+  .typing-dot,
+  .toast { transition: none; animation: none; }
 }
 
 
 /* ==========================================================================
-   12. RESPONSIVE STYLES
-   This page has no breakpoints: the layout is the same at every screen width
-   (as it was before). Add @media rules here if you want a mobile layout.
+   8. RESPONSIVE STYLES (sidebar.css already stacks the shell at 800px)
    ========================================================================== */
+@media (max-width: 800px) {
+  .chat-layout { flex-direction: column; height: auto; }
+  .contacts-panel { width: 100%; }
+  .contacts-list { max-height: 180px; }
+  .chat-window { min-height: 440px; }
+}
