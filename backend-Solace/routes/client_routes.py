@@ -1,4 +1,6 @@
-from flask import Blueprint, render_template, redirect
+from flask import Blueprint, render_template, redirect, jsonify, request, abort
+from auth_helpers import current_user, role_required
+from models import TherapistProfile, User
 
 client_bp = Blueprint("client", __name__)
 
@@ -10,20 +12,44 @@ def client_dashboard():
 
 @client_bp.route("/search-therapist")
 def search_therapist():
-    therapists = [
-        {"name": "Dr. Zayne Li", "title": "Licensed Therapist", "bio": "Specializes in cognitive behavioral therapy and anxiety."},
-        {"name": "Dr. Sarah Chen", "title": "Clinical Psychologist", "bio": "Specializes in stress reduction and emotional wellness."},
-        {"name": "Dr. Nyen", "title": "Mindfulness Practitioner", "bio": "Helping clients navigate personal development and therapy."},
-        {"name": "Dr. Shaun Murphy", "title": "Behavioral Specialist", "bio": "Experienced clinical psychologist focusing on youth & adult health."},
-        {"name": "Dr. Elena Gilbert", "title": "Family Counselor", "bio": "Dedicated to creating safe, empathetic spaces for holistic healing."},
-        {"name": "Dr. Alex Grey", "title": "Relationship Therapist", "bio": "Compassionate mental health professional with 10+ years experience."}
-    ]
+    therapists = listed_therapists()
     user = {"name": "Binibirocha", "display_name": "User, name", "role": "Client"}
     return render_template("search-therapist.html", therapists=therapists, user=user)
 
+
+def listed_therapists():
+    profiles = (TherapistProfile.query.join(User).filter(
+        TherapistProfile.is_listed.is_(True), User.role == "therapist", User.status == "active"
+    ).order_by(User.name.asc()).all())
+    return [{"id": p.user.id, "name": p.user.name, "email": p.user.email,
+             "title": p.practice_name or "Therapist", "bio": p.bio or "",
+             "specialties": [s.strip() for s in (p.specialties or "").split(",") if s.strip()],
+             "languages": p.languages or "", "location": p.location or "",
+             "session_fee": float(p.session_fee) if p.session_fee is not None else None}
+            for p in profiles]
+
+
+@client_bp.get("/api/therapists")
+def therapist_directory_api():
+    return jsonify(therapists=listed_therapists())
+
 @client_bp.route("/schedule")
+@role_required("client")
 def client_schedule():
-    return redirect("/client")
+    therapist_id = request.args.get("therapist_id", type=int)
+    if not therapist_id:
+        return redirect("/search-therapist")
+    therapist = TherapistProfile.query.join(User).filter(
+        TherapistProfile.user_id == therapist_id,
+        TherapistProfile.is_listed.is_(True),
+        User.role == "therapist",
+        User.status == "active",
+    ).first()
+    if not therapist:
+        abort(404)
+    user = current_user()
+    return render_template("schedule.html", therapist=therapist,
+                           user={"name": user.name, "display_name": user.name, "role": "Client"})
 
 @client_bp.route("/chats")
 def client_chats():
