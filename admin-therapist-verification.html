@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Therapist Verification - Solace Admin</title>
+
+  <!-- Fonts: same as the Landing Page and Dashboards -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600&family=Playfair+Display:wght@500;600&display=swap" rel="stylesheet">
+
+  <!-- Shared dashboard shell (sidebar, topbar, colour tokens) + page styles -->
+  <link rel="stylesheet" href="../static/css/sidebar.css">
+  <link rel="stylesheet" href="../static/css/admin-therapist-verification.css">
+
+  <!-- Page script (filters, review popup, approve / reject) -->
+  <script src="../static/js/admin-therapist-verification-page.js" defer></script>
+</head>
+<body>
+
+<div class="layout">
+  <aside>
+    <a class="logo" href="/" aria-label="Solace home"><img src="../static/img/logo-dark.png" alt="Solace"></a>
+    <nav>
+      <div class="group">Main Menu</div>
+      <a href="/admin"><img class="nav-icon" src="../static/img/icons/home.png" alt="">Dashboard</a>
+      <a href="/admin/therapist-verification" class="active" aria-current="page"><img class="nav-icon" src="../static/img/icons/verification.png" alt="">Therapist Verification</a>
+      <a href="/admin/user-management"><img class="nav-icon" src="../static/img/icons/clients.png" alt="">User Management</a>
+      <a href="/admin/reports"><img class="nav-icon" src="../static/img/icons/session-history.png" alt="">Reports</a>
+      <div class="group">Account</div>
+      <a href="/profile?role=admin"><img class="nav-icon" src="../static/img/icons/profile.png" alt="">Profile</a>
+      <a href="/settings?role=admin"><img class="nav-icon" src="../static/img/icons/settings.png" alt="">Settings</a>
+    </nav>
+    <a class="logout" href="/login"><img class="nav-icon" src="../static/img/icons/log-out.png" alt="">Log Out</a>
+  </aside>
+
+  <main>
+    <div class="topbar">
+      <!-- User pill: the avatar letter is generated from the name -->
+      <button class="user-pill" id="userPill" aria-haspopup="true" aria-expanded="false">
+        <span class="avatar avatar-sm" data-avatar-from="current-user-name"></span>
+        <span><span id="current-user-name">Sylus Qin</span><small>Admin</small></span>
+      </button>
+      <div class="menu" id="roleMenu">
+        <a href="/client">Client view</a>
+        <a href="/therapist">Therapist view</a>
+        <a href="/admin">Administrator view</a>
+      </div>
+    </div>
+
+    <h1>Therapist Verification</h1>
+    <p class="sub">Review and approve therapist applications</p>
+
+      <div class="main-canvas">
+
+        <!-- Filter buttons: each one filters the table by status (see "Status filters" in the script) -->
+        <div class="filter-group" id="status-filter-group">
+          <button class="filter-pill is-active" type="button" data-filter="all">All</button>
+          <button class="filter-pill filter-pill-pending" type="button" data-filter="Pending">Pending</button>
+          <button class="filter-pill filter-pill-in-review" type="button" data-filter="In Review">In Review</button>
+          <button class="filter-pill filter-pill-approved" type="button" data-filter="Approved">Approved</button>
+          <button class="filter-pill filter-pill-rejected" type="button" data-filter="Rejected">Rejected</button>
+        </div>
+
+        <!-- Therapist table: each row's data-id matches therapistsData in the script, data-status is used by the filters -->
+        <section class="table-card">
+          <div class="table-scroll">
+            <table class="therapist-table">
+              <thead>
+                <tr>
+                  <th>User</th>
+                  <th>Specialty</th>
+                  <th class="cell-center">Status</th>
+                  <th>Verification Status</th>
+                  <th class="cell-center">Action</th>
+                </tr>
+              </thead>
+              <tbody id="therapist-table-body">
+                <tr class="therapist-row" data-id="1" data-status="Pending">
+                  <td class="cell-user">
+                    <div class="avatar avatar-md avatar-on-table" data-avatar-auto></div>
+                    <span>Dr. Zayne Li</span>
+                  </td>
+                  <td class="cell-specialty">Anxiety, Depression</td>
+                  <td class="cell-center status-badge-cell"><span class="status-badge status-pending">Pending</span></td>
+                  <td class="cell-verification verification-status-cell">Ongoing</td>
+                  <td class="cell-center"><button class="row-action-button is-review" type="button">Review</button></td>
+                </tr>
+                <tr class="therapist-row" data-id="2" data-status="Pending">
+                  <td class="cell-user">
+                    <div class="avatar avatar-md avatar-on-table" data-avatar-auto></div>
+                    <span>Dr. Clara Oswald</span>
+                  </td>
+                  <td class="cell-specialty">Trauma &amp; PTSD</td>
+                  <td class="cell-center status-badge-cell"><span class="status-badge status-pending">Pending</span></td>
+                  <td class="cell-verification verification-status-cell">Ongoing</td>
+                  <td class="cell-center"><button class="row-action-button is-review" type="button">Review</button></td>
+                </tr>
+                <tr class="therapist-row" data-id="3" data-status="In Review">
+                  <td class="cell-user">
+                    <div class="avatar avatar-md avatar-on-table" data-avatar-auto></div>
+                    <span>Dr. Heinz Doofenshmirtz</span>
+                  </td>
+                  <td class="cell-specialty">Behavioral Therapy</td>
+                  <td class="cell-center status-badge-cell"><span class="status-badge status-in-review">In Review</span></td>
+                  <td class="cell-verification verification-status-cell">Under Evaluation</td>
+                  <td class="cell-center"><button class="row-action-button is-review" type="button">Review</button></td>
+                </tr>
+                <tr class="therapist-row" data-id="4" data-status="In Review">
+                  <td class="cell-user">
+                    <div class="avatar avatar-md avatar-on-table" data-avatar-auto></div>
+                    <span>Dr. Meredith Grey</span>
+                  </td>
+                  <td class="cell-specialty">Clinical Psychiatry</td>
+                  <td class="cell-center status-badge-cell"><span class="status-badge status-in-review">In Review</span></td>
+                  <td class="cell-verification verification-status-cell">Under Evaluation</td>
+                  <td class="cell-center"><button class="row-action-button is-review" type="button">Review</button></td>
+                </tr>
+                <tr class="therapist-row" data-id="5" data-status="Approved">
+                  <td class="cell-user">
+                    <div class="avatar avatar-md avatar-on-table" data-avatar-auto></div>
+                    <span>Dr. Shaun Murphy</span>
+                  </td>
+                  <td class="cell-specialty">Youth Psychology</td>
+                  <td class="cell-center status-badge-cell"><span class="status-badge status-approved">Approved</span></td>
+                  <td class="cell-verification verification-status-cell">Verified</td>
+                  <td class="cell-center"><button class="row-action-button" type="button">View Details</button></td>
+                </tr>
+                <tr class="therapist-row" data-id="6" data-status="Approved">
+                  <td class="cell-user">
+                    <div class="avatar avatar-md avatar-on-table" data-avatar-auto></div>
+                    <span>Dr. Gregory House</span>
+                  </td>
+                  <td class="cell-specialty">Diagnostics &amp; Neuropsychology</td>
+                  <td class="cell-center status-badge-cell"><span class="status-badge status-approved">Approved</span></td>
+                  <td class="cell-verification verification-status-cell">Verified</td>
+                  <td class="cell-center"><button class="row-action-button" type="button">View Details</button></td>
+                </tr>
+                <tr class="therapist-row" data-id="7" data-status="Rejected">
+                  <td class="cell-user">
+                    <div class="avatar avatar-md avatar-on-table" data-avatar-auto></div>
+                    <span>Dr. Hannibal Lecter</span>
+                  </td>
+                  <td class="cell-specialty">Forensic Psychology</td>
+                  <td class="cell-center status-badge-cell"><span class="status-badge status-rejected">Rejected</span></td>
+                  <td class="cell-verification verification-status-cell">Failed Verification</td>
+                  <td class="cell-center"><button class="row-action-button" type="button">View Reason</button></td>
+                </tr>
+                <tr class="therapist-row" data-id="8" data-status="Rejected">
+                  <td class="cell-user">
+                    <div class="avatar avatar-md avatar-on-table" data-avatar-auto></div>
+                    <span>Dr. Walter White</span>
+                  </td>
+                  <td class="cell-specialty">Substance Abuse &amp; Pharmacology</td>
+                  <td class="cell-center status-badge-cell"><span class="status-badge status-rejected">Rejected</span></td>
+                  <td class="cell-verification verification-status-cell">Failed Verification</td>
+                  <td class="cell-center"><button class="row-action-button" type="button">View Reason</button></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Row count and page buttons -->
+          <div class="table-footer">
+            <div><span id="pagination-summary">Showing 1–8 of 8 users</span></div>
+            <nav class="pagination" aria-label="Pagination">
+              <button class="page-button" type="button">←</button>
+              <button class="page-button is-current" type="button" aria-current="page">1</button>
+              <button class="page-button" type="button">2</button>
+              <button class="page-button" type="button">3</button>
+              <button class="page-button" type="button">4</button>
+              <span class="page-dots">...</span>
+              <button class="page-button" type="button">→</button>
+            </nav>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+
+  <!-- ===== POPUPS (hidden until the "is-open" class is added) ===== -->
+
+  <!-- Popup 1: Therapist application review - filled in by openReviewModal() in the script -->
+  <div class="modal-overlay modal-overlay-review" id="reviewModalOverlay">
+    <div class="modal-dialog review-dialog" role="dialog" aria-labelledby="review-modal-title">
+
+      <div class="review-header">
+        <div class="review-title-group">
+          <div class="icon-circle">
+            <svg class="icon-sm" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" stroke-linecap="round" stroke-linejoin="round"></path>
+            </svg>
+          </div>
+          <h3 class="modal-title" id="review-modal-title">Therapist Verification Review</h3>
+        </div>
+        <button class="modal-close-button" type="button" data-close-modal="reviewModalOverlay" title="Close">
+          <svg class="icon-md" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round"></path>
+          </svg>
+        </button>
+      </div>
+
+      <div class="review-body">
+
+        <!-- Therapist application details: avatar, name and status badge -->
+        <div class="review-profile">
+          <div class="review-profile-info">
+            <div class="avatar avatar-xl avatar-on-popup" id="modal-avatar"></div>
+            <div>
+              <h4 class="review-name" id="modal-name">Dr. Zayne Li</h4>
+              <p class="review-role" id="modal-role">Licensed Clinical Therapist</p>
+              <p class="review-specialty" id="modal-specialty">Anxiety · Depression</p>
+            </div>
+          </div>
+          <div id="modal-status-badge"></div>
+        </div>
+
+        <!-- Rejection reason (only visible for rejected applications) -->
+        <div class="rejection-banner" id="modal-rejection-banner">
+          <div class="rejection-banner-title">
+            <svg class="icon-notice" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+            Verification Notice / Reason
+          </div>
+          <p class="rejection-banner-text" id="modal-rejection-text">Credentials expired or unverified by board registrar.</p>
+        </div>
+
+        <!-- License number, experience and office hours -->
+        <div class="review-metrics">
+          <div>
+            <div class="metric-label">License No.</div>
+            <div class="metric-value" id="modal-license">LIC-12345</div>
+          </div>
+          <div>
+            <div class="metric-label">Experience</div>
+            <div class="metric-value" id="modal-experience">6 Years</div>
+          </div>
+          <div>
+            <div class="metric-label">Office Hours</div>
+            <div class="metric-value" id="modal-hours">8:00 AM - 5:00 PM</div>
+          </div>
+        </div>
+
+        <!-- Uploaded credentials: "Preview" opens the certificate popup -->
+        <div>
+          <h5 class="credentials-heading">
+            <span>Uploaded Credentials &amp; Board Certificates</span>
+            <span class="credentials-hint">Click 'Preview' to view verified official documents</span>
+          </h5>
+
+          <div class="credential-row">
+            <div class="credential-file">
+              <svg class="credential-icon" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round"></path>
+              </svg>
+              <div>
+                <span class="credential-name">Professional License.pdf</span>
+                <span class="credential-meta">State Clinical Board Seal · Certified PDF · 2.4 MB</span>
+              </div>
+            </div>
+            <div class="credential-actions">
+              <span class="credential-badge">Attached</span>
+              <button class="preview-button" type="button" data-doc-type="license">Preview</button>
+            </div>
+          </div>
+
+          <div class="credential-row">
+            <div class="credential-file">
+              <svg class="credential-icon" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round"></path>
+              </svg>
+              <div>
+                <span class="credential-name">Degree Certification.pdf</span>
+                <span class="credential-meta">Doctoral Accreditation · University Registry · 4.1 MB</span>
+              </div>
+            </div>
+            <div class="credential-actions">
+              <span class="credential-badge">Attached</span>
+              <button class="preview-button" type="button" data-doc-type="degree">Preview</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Approval / rejection actions -->
+      <div class="review-footer" id="modal-action-bar">
+        <div>
+          <span class="review-decision" id="modal-decision-state">Status: Under Review</span>
+        </div>
+        <div class="review-buttons">
+          <button class="button button-reject" id="open-reject-btn" type="button">Reject Application</button>
+          <button class="button button-approve" id="open-approve-btn" type="button">Approve Application</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Popup 2: Document preview (mock certificate) -->
+  <div class="modal-overlay modal-overlay-preview" id="docPreviewModal">
+    <div class="modal-dialog preview-dialog" role="dialog" aria-labelledby="preview-doc-title">
+
+      <div class="preview-header">
+        <div class="preview-header-title">
+          <div class="icon-circle">
+            <svg class="icon-verified" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+          </div>
+          <div>
+            <h4 class="preview-doc-title" id="preview-doc-title">State Board Medical License</h4>
+            <p class="preview-doc-subtitle" id="preview-doc-subtitle">Official Credential Verification Record</p>
+          </div>
+        </div>
+        <button class="modal-close-button" type="button" data-close-modal="docPreviewModal" title="Close">
+          <svg class="icon-md" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round"></path>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Certificate -->
+      <div class="preview-body">
+        <div class="certificate">
+          <div class="certificate-corner is-top-left">❖</div>
+          <div class="certificate-corner is-top-right">❖</div>
+          <div class="certificate-corner is-bottom-left">❖</div>
+          <div class="certificate-corner is-bottom-right">❖</div>
+
+          <div class="certificate-authority">State Board of Behavioral Health &amp; Sciences</div>
+          <h3 class="certificate-name" id="preview-doc-certname">Certificate of Professional Licensure</h3>
+          <p class="certificate-text">
+            This is to certify that
+            <span class="certificate-therapist" id="preview-doc-therapist">Dr. Zayne Li</span>
+            has fulfilled all state statutory clinical prerequisites and examinations in
+            <span class="certificate-specialty" id="preview-doc-specialty">Psychiatry &amp; Mental Health Counseling</span>.
+          </p>
+
+          <div class="certificate-details">
+            <div>
+              <span class="certificate-detail-label">Credential ID</span>
+              <span class="certificate-license-id" id="preview-doc-license-id">LIC-98421-MD</span>
+            </div>
+            <div>
+              <span class="certificate-detail-label">Issue Date</span>
+              <span class="certificate-detail-value">May 14, 2021</span>
+            </div>
+            <div>
+              <span class="certificate-detail-label">Expiration</span>
+              <span class="certificate-detail-value">May 14, 2027</span>
+            </div>
+          </div>
+
+          <div class="certificate-bottom">
+            <div class="certificate-validation">
+              Official Electronic Validation • Solace Healthcare Network
+            </div>
+            <div class="certificate-seal">
+              <span class="certificate-seal-star">★</span>
+              VERIFIED
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="preview-footer">
+        <span class="preview-footer-text">Document ID: <strong class="preview-footer-id">DOC-VER-2025</strong></span>
+        <button class="preview-close-button" type="button" data-close-modal="docPreviewModal">Close Document Preview</button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Popup 3: Approve confirmation -->
+  <div class="modal-overlay modal-overlay-confirm" id="approveConfirmModal">
+    <div class="modal-dialog confirm-dialog" role="dialog" aria-labelledby="approve-modal-title">
+      <div class="confirm-icon is-approve">✓</div>
+      <h3 class="confirm-title" id="approve-modal-title">Approve Application</h3>
+      <p class="confirm-text">
+        Approve this therapist application for <strong id="approve-therapist-name">Dr. Zayne Li</strong>?<br>
+        The therapist will be notified and verified on the public directory.
+      </p>
+      <div class="confirm-buttons">
+        <button class="button button-cancel" type="button" data-close-modal="approveConfirmModal">Cancel</button>
+        <button class="button button-approve" id="confirm-approve-btn" type="button">Approve</button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Popup 4: Reject confirmation (asks for the reason) -->
+  <div class="modal-overlay modal-overlay-confirm" id="rejectConfirmModal">
+    <div class="modal-dialog confirm-dialog" role="dialog" aria-labelledby="reject-modal-title">
+      <div class="confirm-icon is-reject">✕</div>
+      <h3 class="confirm-title" id="reject-modal-title">Reject Application</h3>
+      <p class="confirm-text is-above-field">
+        Reject application for <strong id="reject-therapist-name">Dr. Zayne Li</strong>.<br>
+        Please specify the rejection grounds:
+      </p>
+      <div class="reason-field">
+        <textarea class="reason-input" id="rejection-reason-input" rows="3" placeholder="e.g. Expired license certification, clinical discrepancies..." aria-label="Rejection reason"></textarea>
+      </div>
+      <div class="confirm-buttons">
+        <button class="button button-cancel" type="button" data-close-modal="rejectConfirmModal">Cancel</button>
+        <button class="button button-reject-confirm" id="confirm-reject-btn" type="button">Confirm Reject</button>
+      </div>
+    </div>
+  </div>
+
+<!-- Role menu behaviour (shared with the dashboards) -->
+<script src="../static/js/sidebar.js"></script>
+</body>
+</html>
