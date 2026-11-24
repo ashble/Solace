@@ -1,289 +1,223 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Messages - Solace</title>
 
-  <!-- Fonts: Playfair Display (headings) and Plus Jakarta Sans (body text) -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" />
+  <!-- Fonts: same as the Landing Page and Dashboards -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600&family=Playfair+Display:wght@500;600&display=swap" rel="stylesheet">
 
-  <!-- Page styles (colours, fonts, avatars and layout live in this file) -->
-  <link rel="stylesheet" href="../static/css/chats.css" />
+  <!-- Shared dashboard shell (sidebar, topbar, colour tokens) + page styles -->
+  <link rel="stylesheet" href="../static/css/sidebar.css">
+  <link rel="stylesheet" href="../static/css/chats.css">
 
   <!-- Page script (conversations, sending messages, popups) -->
   <script src="../static/js/chats-page.js" defer></script>
 </head>
-
 <body>
-  <div class="app-layout">
 
-    <!-- ===== SIDEBAR NAVIGATION ===== -->
-    <aside class="sidebar">
+<div class="layout">
+  <aside>
+    <a class="logo" href="/" aria-label="Solace home"><img src="../static/img/logo-dark.png" alt="Solace"></a>
+    <nav>
+      <div class="group">Main Menu</div>
+      <a href="/client"><img class="nav-icon" src="../static/img/icons/home.png" alt="">Dashboard</a>
+      <a href="/chats" class="active" aria-current="page"><img class="nav-icon" src="../static/img/icons/messages.png" alt="">Messages</a>
+      <a href="/schedule"><img class="nav-icon" src="../static/img/icons/appointments.png" alt="">Appointments</a>
+      <a href="/schedule"><img class="nav-icon" src="../static/img/icons/session-history.png" alt="">Session History</a>
+      <div class="group">Account</div>
+      <a href="/profile?role=client"><img class="nav-icon" src="../static/img/icons/profile.png" alt="">Profile</a>
+      <a href="/settings?role=client"><img class="nav-icon" src="../static/img/icons/settings.png" alt="">Settings</a>
+    </nav>
+    <a class="logout" href="/login"><img class="nav-icon" src="../static/img/icons/log-out.png" alt="">Log Out</a>
+  </aside>
 
-      <!-- Logo: the sun icon replaces the "O" in SOLACE -->
-      <div class="sidebar-logo">
-        <span>S</span>
-        <svg class="sidebar-logo-sun" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
-          <circle cx="12" cy="12" fill="#d99b38" r="4" stroke="#d99b38"></circle>
-          <path d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32l1.41 1.41M2 12h2m16 0h2M6.34 17.66l-1.41 1.41m14.14-14.14l-1.41 1.41" stroke="#d99b38" stroke-linecap="round"></path>
-        </svg>
-        <span>LACE</span>
+  <main>
+    <div class="topbar">
+      <!-- User pill: the avatar letter is generated from the name -->
+      <button class="user-pill" id="userPill" aria-haspopup="true" aria-expanded="false">
+        <span class="avatar avatar-md" data-avatar-from="current-user-name"></span>
+        <span><span id="current-user-name">Sylus Qin</span><small>Client</small></span>
+      </button>
+      <div class="menu" id="roleMenu">
+        <a href="/client">Client view</a>
+        <a href="/therapist">Therapist view</a>
+        <a href="/admin">Administrator view</a>
       </div>
+    </div>
 
-      <!-- Main menu (the current page, Messages, has the "is-active" class) -->
-      <div class="sidebar-group">
-        <p class="sidebar-group-label">MAIN MENU</p>
-        <nav class="sidebar-nav" aria-label="Main menu">
-          <a class="nav-link" href="#">
-            <svg class="nav-link-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" stroke-linecap="round" stroke-linejoin="round"></path>
-            </svg>
-            <span>Dashboard</span>
-          </a>
-          <a class="nav-link is-active" href="#" aria-current="page">
-            <svg class="nav-link-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" stroke-linecap="round" stroke-linejoin="round"></path>
-            </svg>
-            <span>Messages</span>
-          </a>
-          <a class="nav-link" href="#">
-            <svg class="nav-link-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round"></path>
-            </svg>
-            <span>Appointments</span>
-          </a>
-          <a class="nav-link" href="#">
-            <svg class="nav-link-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round"></path>
-            </svg>
-            <span>Session History</span>
-          </a>
-        </nav>
-      </div>
+    <h1>Messages</h1>
+    <p class="sub">Anonymous peer chat</p>
 
-      <!-- Account menu -->
-      <div class="sidebar-group">
-        <p class="sidebar-group-label">ACCOUNT</p>
-        <nav class="sidebar-nav" aria-label="Account menu">
-          <a class="nav-link" href="#">
-            <svg class="nav-link-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" stroke-linecap="round" stroke-linejoin="round"></path>
-            </svg>
-            <span>Profile</span>
-          </a>
-          <a class="nav-link" href="#">
-            <svg class="nav-link-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" stroke-linecap="round" stroke-linejoin="round"></path>
-              <path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round"></path>
-            </svg>
-            <span>Settings</span>
-          </a>
-        </nav>
-      </div>
+    <!-- Contacts (left) and chat window (right) -->
+    <div class="chat-layout">
 
-      <!-- Log out button (pinned to the bottom) -->
-      <div class="sidebar-footer">
-        <button class="logout-button" type="button">
+      <!-- Contacts: clicking a .contact-pill opens that conversation (data-contact-id matches conversationData in chats-page.js) -->
+      <section class="contacts-panel">
+        <button class="new-chat-button" id="new-chat-btn" type="button">
           <svg class="icon-sm" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" stroke-linecap="round" stroke-linejoin="round"></path>
+            <path d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" stroke-linecap="round" stroke-linejoin="round"></path>
           </svg>
-          <span>Log Out</span>
+          <span>New Chat</span>
         </button>
-      </div>
-    </aside>
 
-
-    <!-- ===== MAIN CONTENT ===== -->
-    <main class="main-content">
-
-      <!-- Page title and signed-in user -->
-      <header class="page-header">
-        <div class="page-title-group">
-          <div class="icon-badge">
-            <svg class="icon-md" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M8 10h.01M12 10h.01M16 10h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" stroke-linecap="round" stroke-linejoin="round"></path>
-            </svg>
+        <!-- Avatar letters come from the contact name next to each avatar -->
+        <div class="contacts-list" id="contacts-list-container">
+          <div class="contact-pill is-active" data-contact-id="235">
+            <div class="avatar avatar-sm" data-avatar-auto></div>
+            <span class="contact-name">Anonymous 235</span>
           </div>
-          <h1 class="page-title">Messages</h1>
-        </div>
-
-        <!-- User badge: the avatar letter is generated from the name -->
-        <div class="user-badge">
-          <div class="avatar avatar-md avatar-bordered" data-avatar-from="current-user-name"></div>
-          <div class="user-badge-text">
-            <p class="user-badge-name" id="current-user-name">Sylus Qin</p>
-            <p class="user-badge-role">Client</p>
+          <div class="contact-pill" data-contact-id="359">
+            <div class="avatar avatar-sm" data-avatar-auto></div>
+            <span class="contact-name">Anonymous 359</span>
+          </div>
+          <div class="contact-pill" data-contact-id="964">
+            <div class="avatar avatar-sm" data-avatar-auto></div>
+            <span class="contact-name">Anonymous 964</span>
+          </div>
+          <div class="contact-pill" data-contact-id="179">
+            <div class="avatar avatar-sm" data-avatar-auto></div>
+            <span class="contact-name">Anonymous 179</span>
           </div>
         </div>
-      </header>
+      </section>
 
-      <!-- Contacts (left) and chat window (right) -->
-      <div class="chat-layout">
+      <!-- Chat window -->
+      <section class="chat-window">
+        <header class="chat-window-header">
+          <h2 class="chat-title" id="active-chat-title">Anonymous 235</h2>
+          <span class="chat-status">
+            <span class="chat-status-dot"></span>
+            Active now
+          </span>
+        </header>
 
-        <!-- Contacts: clicking a .contact-pill opens that conversation (data-contact-id matches conversationData in chats-page.js) -->
-        <section class="contacts-panel">
-          <button class="new-chat-button" id="new-chat-btn" type="button">
-            <svg class="icon-sm" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" stroke-linecap="round" stroke-linejoin="round"></path>
-            </svg>
-            <span>New Chat</span>
-          </button>
+        <!-- Message bubbles are drawn here by chats-page.js (renderConversation) -->
+        <div class="chat-messages" id="chat-messages-box"></div>
 
-          <!-- Avatar letters come from the contact name next to each avatar -->
-          <div class="contacts-list" id="contacts-list-container">
-            <div class="contact-pill is-active" data-contact-id="235">
-              <div class="avatar avatar-sm" data-avatar-auto></div>
-              <span class="contact-name">Anonymous 235</span>
-            </div>
-            <div class="contact-pill" data-contact-id="359">
-              <div class="avatar avatar-sm" data-avatar-auto></div>
-              <span class="contact-name">Anonymous 359</span>
-            </div>
-            <div class="contact-pill" data-contact-id="964">
-              <div class="avatar avatar-sm" data-avatar-auto></div>
-              <span class="contact-name">Anonymous 964</span>
-            </div>
-            <div class="contact-pill" data-contact-id="179">
-              <div class="avatar avatar-sm" data-avatar-auto></div>
-              <span class="contact-name">Anonymous 179</span>
-            </div>
+        <!-- "is typing" bar (shown while a reply is on its way) -->
+        <div class="typing-indicator" id="typing-indicator">
+          <div class="avatar avatar-xs" data-avatar-from="typing-author"></div>
+          <span class="typing-author" id="typing-author">Anonymous 235</span>
+          <span class="typing-text">is typing</span>
+          <div class="typing-dots">
+            <span class="typing-dot"></span>
+            <span class="typing-dot"></span>
+            <span class="typing-dot"></span>
           </div>
-        </section>
-
-        <!-- Chat window -->
-        <section class="chat-window">
-          <header class="chat-window-header">
-            <h2 class="chat-title" id="active-chat-title">Anonymous 235</h2>
-            <span class="chat-status">
-              <span class="chat-status-dot"></span>
-              Active now
-            </span>
-          </header>
-
-          <!-- Message bubbles are drawn here by chats-page.js (renderConversation) -->
-          <div class="chat-messages" id="chat-messages-box"></div>
-
-          <!-- "is typing" bar (shown while a reply is on its way) -->
-          <div class="typing-indicator" id="typing-indicator">
-            <div class="avatar avatar-xs" data-avatar-from="typing-author"></div>
-            <span class="typing-author" id="typing-author">Anonymous 235</span>
-            <span class="typing-text">is typing</span>
-            <div class="typing-dots">
-              <span class="typing-dot"></span>
-              <span class="typing-dot"></span>
-              <span class="typing-dot"></span>
-            </div>
-          </div>
-
-          <!-- Message input: submitting this form sends a message -->
-          <div class="chat-input-bar">
-            <form class="chat-form" id="chat-input-form" autocomplete="off">
-              <div class="chat-input-wrap">
-                <input class="chat-input" id="chat-message-input" type="text" placeholder="Type a message..." aria-label="Type a message" />
-              </div>
-              <button class="send-button" id="chat-send-btn" type="submit" title="Send message">
-                <svg fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-                  <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"></path>
-                </svg>
-              </button>
-            </form>
-          </div>
-        </section>
-      </div>
-    </main>
-  </div>
-
-
-  <!-- ===== POPUPS (hidden until the "is-open" class is added) ===== -->
-
-  <!-- Popup 1: Report Message -->
-  <div class="modal-overlay" id="report-modal">
-    <div class="modal-dialog is-report" role="dialog" aria-labelledby="report-modal-title">
-      <button class="modal-close-button" id="modal-close-btn" type="button" title="Close">
-        <svg class="icon-md" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round"></path>
-        </svg>
-      </button>
-
-      <div class="modal-title-row is-report">
-        <div class="modal-warning-icon">
-          <svg class="icon-lg" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" stroke-linecap="round" stroke-linejoin="round"></path>
-          </svg>
         </div>
-        <h3 class="modal-title" id="report-modal-title">Report Message</h3>
-      </div>
 
-      <!-- The message being reported -->
-      <div class="report-preview">
-        <span class="report-preview-label">Flagged message text:</span>
-        <p class="report-preview-text" id="report-modal-msg-preview">"Great!"</p>
-      </div>
-
-      <label class="report-question" for="report-reason-input">Why are you reporting this message?</label>
-      <div class="report-reason-wrap">
-        <textarea class="report-reason-input" id="report-reason-input" rows="3" placeholder="e.g. The message was inappropriate, spam, etc."></textarea>
-      </div>
-
-      <div class="modal-actions is-report">
-        <button class="modal-button modal-button-cancel" id="modal-cancel-btn" type="button">Cancel</button>
-        <button class="modal-button modal-button-danger" id="submit-report-btn" type="button">Report</button>
-      </div>
+        <!-- Message input: submitting this form sends a message -->
+        <div class="chat-input-bar">
+          <form class="chat-form" id="chat-input-form" autocomplete="off">
+            <div class="chat-input-wrap">
+              <input class="chat-input" id="chat-message-input" type="text" placeholder="Type a message..." aria-label="Type a message">
+            </div>
+            <button class="send-button" id="chat-send-btn" type="submit" title="Send message">
+              <svg fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"></path>
+              </svg>
+            </button>
+          </form>
+        </div>
+      </section>
     </div>
-  </div>
-
-  <!-- Popup 2: Start a New Conversation -->
-  <div class="modal-overlay" id="new-chat-modal">
-    <div class="modal-dialog" role="dialog" aria-labelledby="new-chat-modal-title">
-      <button class="modal-close-button" id="new-chat-close-btn" type="button" title="Close">
-        <svg class="icon-md" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round"></path>
-        </svg>
-      </button>
-
-      <div class="modal-title-row">
-        <div class="icon-badge">
-          <svg class="icon-sm" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M12 4v16m8-8H4" stroke-linecap="round" stroke-linejoin="round"></path>
-          </svg>
-        </div>
-        <h3 class="modal-title" id="new-chat-modal-title">Start a New Conversation</h3>
-      </div>
-      <p class="modal-description">Choose a certified counselor or enter an anonymous partner handle to begin a private, secure dialogue.</p>
-
-      <form id="new-chat-form">
-        <div class="modal-fields">
-          <div>
-            <label class="modal-label" for="new-chat-input-name">Partner or Counselor</label>
-            <input class="text-field" id="new-chat-input-name" type="text" placeholder="e.g. Dr. Marianne Wells or Anonymous 412" required />
-          </div>
-          <div>
-            <label class="modal-label" for="new-chat-input-intro">Initial Topic or Message (Optional)</label>
-            <input class="text-field" id="new-chat-input-intro" type="text" placeholder="e.g. Seeking guidance regarding work stress..." />
-          </div>
-        </div>
-
-        <div class="modal-actions">
-          <button class="modal-button modal-button-cancel" id="new-chat-cancel-btn" type="button">Cancel</button>
-          <button class="modal-button modal-button-primary" id="create-new-chat-btn" type="submit">Start Chat</button>
-        </div>
-      </form>
-    </div>
-  </div>
+  </main>
+</div>
 
 
-  <!-- ===== TOAST (small confirmation message, shown by adding "is-visible") ===== -->
-  <div class="toast" id="toast-notification" role="status" aria-live="polite">
-    <div class="toast-content">
-      <svg class="icon-sm" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
-        <path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"></path>
+<!-- ===== POPUPS (hidden until the "is-open" class is added) ===== -->
+
+<!-- Popup 1: Report Message -->
+<div class="modal-overlay" id="report-modal">
+  <div class="modal-dialog is-report" role="dialog" aria-labelledby="report-modal-title">
+    <button class="modal-close-button" id="modal-close-btn" type="button" title="Close">
+      <svg class="icon-md" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round"></path>
       </svg>
-      <span id="toast-message">Message reported successfully</span>
+    </button>
+
+    <div class="modal-title-row is-report">
+      <div class="modal-warning-icon">
+        <svg class="icon-lg" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" stroke-linecap="round" stroke-linejoin="round"></path>
+        </svg>
+      </div>
+      <h3 class="modal-title" id="report-modal-title">Report Message</h3>
+    </div>
+
+    <!-- The message being reported -->
+    <div class="report-preview">
+      <span class="report-preview-label">Flagged message text:</span>
+      <p class="report-preview-text" id="report-modal-msg-preview">"Great!"</p>
+    </div>
+
+    <label class="report-question" for="report-reason-input">Why are you reporting this message?</label>
+    <div class="report-reason-wrap">
+      <textarea class="report-reason-input" id="report-reason-input" rows="3" placeholder="e.g. The message was inappropriate, spam, etc."></textarea>
+    </div>
+
+    <div class="modal-actions is-report">
+      <button class="modal-button modal-button-cancel" id="modal-cancel-btn" type="button">Cancel</button>
+      <button class="modal-button modal-button-danger" id="submit-report-btn" type="button">Report</button>
     </div>
   </div>
+</div>
 
+<!-- Popup 2: Start a New Conversation -->
+<div class="modal-overlay" id="new-chat-modal">
+  <div class="modal-dialog" role="dialog" aria-labelledby="new-chat-modal-title">
+    <button class="modal-close-button" id="new-chat-close-btn" type="button" title="Close">
+      <svg class="icon-md" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round"></path>
+      </svg>
+    </button>
+
+    <div class="modal-title-row">
+      <div class="icon-badge">
+        <svg class="icon-sm" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M12 4v16m8-8H4" stroke-linecap="round" stroke-linejoin="round"></path>
+        </svg>
+      </div>
+      <h3 class="modal-title" id="new-chat-modal-title">Start a New Conversation</h3>
+    </div>
+    <p class="modal-description">Choose a certified counselor or enter an anonymous partner handle to begin a private, secure dialogue.</p>
+
+    <form id="new-chat-form">
+      <div class="modal-fields">
+        <div>
+          <label class="modal-label" for="new-chat-input-name">Partner or Counselor</label>
+          <input class="text-field" id="new-chat-input-name" type="text" placeholder="e.g. Dr. Marianne Wells or Anonymous 412" required>
+        </div>
+        <div>
+          <label class="modal-label" for="new-chat-input-intro">Initial Topic or Message (Optional)</label>
+          <input class="text-field" id="new-chat-input-intro" type="text" placeholder="e.g. Seeking guidance regarding work stress...">
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <button class="modal-button modal-button-cancel" id="new-chat-cancel-btn" type="button">Cancel</button>
+        <button class="modal-button modal-button-primary" id="create-new-chat-btn" type="submit">Start Chat</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+
+<!-- ===== TOAST (small confirmation message, shown by adding "is-visible") ===== -->
+<div class="toast" id="toast-notification" role="status" aria-live="polite">
+  <div class="toast-content">
+    <svg class="icon-sm" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"></path>
+    </svg>
+    <span id="toast-message">Message reported successfully</span>
+  </div>
+</div>
+
+<!-- Role menu behaviour (shared with the dashboards) -->
+<script src="../static/js/sidebar.js"></script>
 </body>
 </html>
