@@ -1,709 +1,320 @@
 /* ==========================================================================
-   Solace - Therapist Verification page, admin (templates/admin-therapist-verification.html)
+   Solace - Therapist Verification page, admin
+   (templates/admin-therapist-verification.html)
+
+   This page uses the shared dashboard shell from sidebar.css (sidebar, logo,
+   topbar, user pill, h1, .sub, colour tokens). Only verification-specific
+   components live here, and they are built from the same tokens:
+     --lav  --lav-deep  --plum  --muted  --yellow  --peach  --pink
+   Status colours are the dashboards' own badge colours
+   (Approved / In Progress / Pending) plus the log-out red for Rejected.
+
    Table of contents
-     1. Design variables (colours, fonts, status colours)  <- edit the theme here
-     2. Base reset
-     3. Page layout
-     4. Sidebar navigation
-     5. Page header and user badge
-     6. Profile avatars                                    <- size and colour of avatars
-     7. Status filter buttons
-     8. Therapist table (rows, status badges, action buttons, pagination)
-     9. Popups: shared styles
-    10. Popup: Therapist Verification Review
-    11. Popup: Document Preview (certificate)
-    12. Popups: Approve and Reject confirmations
-    13. Shared transitions
-    14. Responsive styles
+     1. Tokens reused from the dashboards
+     2. Form reset (sidebar.css does not reset buttons / tables)
+     3. Icons and avatars
+     4. Status filter buttons
+     5. Therapist table (rows, status badges, action buttons, pagination)
+     6. Popups: shared styles
+     7. Popup: Therapist Verification Review
+     8. Popup: Document Preview (certificate)
+     9. Popups: Approve and Reject confirmations
+    10. Responsive styles
    ========================================================================== */
 
 
 /* ==========================================================================
-   1. DESIGN VARIABLES - change a value here to restyle the whole page
+   1. TOKENS REUSED FROM THE DASHBOARDS (same literal values as sidebar.css)
    ========================================================================== */
 :root {
-  /* Fonts */
-  --font-body: "Plus Jakarta Sans", sans-serif;
-  --font-heading: "Playfair Display", Georgia, serif;
-  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  --tint: #f3ecfa;                       /* active nav item / menu hover */
+  --tint-hover: #eadff6;                 /* nav hover */
+  --danger: #c0394b;                     /* log-out red */
 
-  /* Page colours */
-  --color-page-bg: #faf8fc;
-  --color-text: #2c2738;
-  --color-heading: #2d2338;
+  /* Status colours: the dashboards' .badge colours */
+  --status-approved: #4a9a52;
+  --status-approved-bg: #eaf7ea;
+  --status-progress: #c9961c;            /* used for "In Review" */
+  --status-progress-bg: #fff7dd;
+  --status-pending: #d0455a;
+  --status-pending-bg: #fdeaed;
 
-  /* Sidebar colours */
-  --color-sidebar-bg: #e6dbed;
-  --color-sidebar-border: #d9cbe4;
-  --color-sidebar-text: #4f445b;
-  --color-sidebar-active: #c5aee0;
-
-  /* Purple accents */
-  --color-accent-soft: #ddd0e8;      /* user badge, avatar border, close buttons */
-  --color-filter-active: #b89ecc;    /* selected filter button */
-  --color-hover-soft: #f2edf8;
-
-  /* Card and table colours */
-  --color-card-border: #ece5f2;
-  --color-row-divider: #f3edf8;
-
-  /* Status colours (used by filter buttons and status badges) */
-  --status-pending-text: #785918;
-  --status-pending-border: #e9c369;
-  --status-pending-bg: #fffbf0;
-  --status-review-text: #864a1f;
-  --status-review-border: #fde2cf;
-  --status-review-bg: #fffbf0;
-  --status-approved-text: #246332;
-  --status-approved-border: #bce1c4;
-  --status-approved-bg: #d4f1da;
-  --status-rejected-text: #8a2929;
-  --status-rejected-border: #e9afaf;
-  --status-rejected-bg: rgba(249, 195, 195, 0.4);
-
-  /* Avatars */
-  --color-avatar-bg: #000000;
-  --color-avatar-text: #ffffff;
-
-  /* Shadows */
-  --shadow-small: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  --shadow-dialog: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-
-  /* Speed of hover animations */
-  --transition-speed: 150ms;
+  --shadow-card: 0 2px 8px rgba(74, 53, 96, .08);
+  --shadow-pop: 0 6px 20px rgba(74, 53, 96, .18);
 }
+
+body { user-select: none; }
 
 
 /* ==========================================================================
-   2. BASE RESET - removes browser default spacing so layouts are predictable
+   2. FORM RESET
    ========================================================================== */
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-  border-width: 0;
-  border-style: solid;
-  border-color: #e5e7eb;
-}
-
-html {
-  line-height: 1.5;
-  font-family: var(--font-body);
-  -webkit-text-size-adjust: 100%;
-}
-
-body,
-h1,
-h2,
-h3,
-h4,
-h5,
-p {
-  margin: 0;
-}
-
-h1,
-h2,
-h3,
-h4,
-h5 {
-  font-size: inherit;
-  font-weight: inherit;
-}
-
-a {
-  color: inherit;
-  text-decoration: inherit;
-}
-
-strong {
-  font-weight: bolder;
-}
-
 button,
 textarea {
-  font-family: inherit;
-  font-size: 100%;
-  font-weight: inherit;
-  line-height: inherit;
-  letter-spacing: inherit;
+  font: inherit;
   color: inherit;
-  margin: 0;
-  padding: 0;
 }
 
-button {
-  text-transform: none;
-  background-color: transparent;
-  background-image: none;
-  cursor: pointer;
-  -webkit-appearance: button;
-}
+button { cursor: pointer; background: none; border: 0; padding: 0; }
+textarea { border: 0; padding: 0; }
+textarea::placeholder { color: var(--muted); opacity: 1; }
+table { border-collapse: collapse; }
+svg { display: block; }
+strong { font-weight: 600; }
 
-textarea::placeholder {
-  opacity: 1;
-}
-
-table {
-  text-indent: 0;
-  border-color: inherit;
-  border-collapse: collapse;
-}
-
-svg {
-  display: block;
-  vertical-align: middle;
-}
-
-body {
-  height: 100vh;
-  width: 100vw;
-  overflow: hidden;
-  font-family: var(--font-body);
-  font-size: 0.875rem;
-  line-height: 1.25rem;
-  color: var(--color-text);
-  background-color: var(--color-page-bg);
-  user-select: none;
-}
-
-/* Icon sizes used across the page */
-.icon-sm {
-  width: 1rem;
-  height: 1rem;
-}
-
-.icon-md {
-  width: 1.25rem;
-  height: 1.25rem;
-}
-
-/* Icons from the Material Symbols font (sizes only; the font is loaded in the HTML) */
-.icon-notice {
-  font-size: 17px;
-}
-
-.icon-verified {
-  font-size: 18px;
-}
+h2, h3, h4, h5 { font-size: inherit; font-weight: inherit; }
 
 
 /* ==========================================================================
-   3. PAGE LAYOUT - sidebar on the left, scrollable main area on the right
+   3. ICONS AND AVATARS
    ========================================================================== */
-.app-layout {
-  display: flex;
-  height: 100%;
-  width: 100%;
-}
+.icon-sm { width: 16px; height: 16px; }
+.icon-md { width: 20px; height: 20px; }
+.icon-notice { width: 17px; height: 17px; }
+.icon-verified { width: 18px; height: 18px; }
 
-.main-content {
-  flex: 1 1 0%;
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  overflow-y: auto;
-  background-color: var(--color-page-bg);
-}
-
-/* Everything under the header: filters + table */
-.main-canvas {
-  flex: 1 1 0%;
-  display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
-  padding: 0.5rem 2rem 2rem;
-}
-
-
-/* ==========================================================================
-   4. SIDEBAR NAVIGATION
-   ========================================================================== */
-.sidebar {
-  display: flex;
-  flex-direction: column;
-  flex-shrink: 0;
-  width: 230px;
-  padding: 1.5rem 1rem;
-  border-right: 1px solid var(--color-sidebar-border);
-  background-color: var(--color-sidebar-bg);
-}
-
-/* Logo: S + sun symbol + LACE */
-.sidebar-logo {
-  display: flex;
-  align-items: center;
-  margin-bottom: 2rem;
-  padding: 0 0.75rem;
-  font-family: var(--font-heading);
-  font-size: 1.5rem;
-  line-height: 2rem;
-  font-weight: 700;
-  letter-spacing: 0.2em;
-  color: #3b3045;
-}
-
-.sidebar-logo-sun {
-  display: inline-block;
-  margin: 0 0.125rem;
-  font-size: 1.25rem;
-  line-height: 1.75rem;
-  color: #d39e42;
-  transform: translateY(-0.125rem);
-}
-
-.sidebar-nav {
-  display: flex;
-  flex-direction: column;
-  gap: 0.375rem;
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--color-sidebar-text);
-}
-
-.nav-link {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 0.625rem 0.875rem;
-  border-radius: 0.75rem;
-}
-
-.nav-link:hover {
-  background-color: rgba(255, 255, 255, 0.4);
-}
-
-/* Current page highlight (Therapist Verification) - must stay after :hover */
-.nav-link.is-active {
-  font-weight: 600;
-  color: #2c2138;
-  background-color: var(--color-sidebar-active);
-  box-shadow: var(--shadow-small);
-}
-
-.nav-link-icon {
-  width: 1rem;
-  height: 1rem;
-  opacity: 0.8;
-}
-
-.nav-link.is-active .nav-link-icon {
-  color: #432a60;
-  opacity: 1;
-}
-
-/* Log Out button pinned to the bottom of the sidebar */
-.sidebar-footer {
-  margin-top: auto;
-  padding: 1rem 0.75rem 0;
-  border-top: 1px solid rgba(217, 203, 228, 0.6);
-}
-
-.logout-button {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 0.75rem;
-  line-height: 1rem;
-  font-weight: 500;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  color: #e05252;
-}
-
-.logout-button:hover {
-  color: #c73e3e;
-}
-
-.logout-button svg {
-  transform: rotate(180deg);
-}
-
-
-/* ==========================================================================
-   5. PAGE HEADER AND USER BADGE
-   ========================================================================== */
-.page-header {
-  display: flex;
-  flex-shrink: 0;
-  align-items: center;
-  justify-content: space-between;
-  height: 4rem;
-  padding: 0 2rem;
-}
-
-.page-title-group {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-}
-
-/* Round icon holder (page title icon and popup title icons) */
+/* Round icon holder (popup title icons) */
 .icon-circle {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 2rem;
-  height: 2rem;
-  border-radius: 9999px;
-  color: #553c6e;
-  background-color: #e5d7ee;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  color: var(--plum);
+  background: var(--lav);
 }
 
-.page-title,
-.modal-title {
-  font-family: var(--font-heading);
-  font-size: 1.25rem;
-  line-height: 1.75rem;
-  font-weight: 600;
-  color: var(--color-heading);
-}
-
-.user-badge {
-  display: flex;
-  align-items: center;
-  gap: 0.625rem;
-  padding: 0.25rem 1rem 0.25rem 0.375rem;
-  border-radius: 9999px;
-  background-color: var(--color-accent-soft);
-  box-shadow: var(--shadow-small);
-}
-
-.user-badge-text {
-  display: flex;
-  flex-direction: column;
-  line-height: 1.25;
-}
-
-.user-badge-name {
-  font-size: 0.75rem;
-  line-height: 1rem;
-  font-weight: 600;
-  color: #30253b;
-}
-
-.user-badge-role {
-  margin-top: -0.125rem;
-  font-size: 10px;
-  color: #5e516c;
-}
-
-
-/* ==========================================================================
-   6. PROFILE AVATARS - adjust size, background and text colour here
-   Used as: <div class="avatar avatar-md">Z</div>
-   The letter is filled in by admin-therapist-verification-page.js.
-   ========================================================================== */
+/* Same plum circle as the user pill avatar in the dashboards.
+   The letter is filled in by admin-therapist-verification-page.js. */
 .avatar {
-  --avatar-size: 28px;               /* default size, overridden by the size classes below */
+  --avatar-size: 28px;
   display: inline-flex;
   flex-shrink: 0;
   align-items: center;
   justify-content: center;
   width: var(--avatar-size);
   height: var(--avatar-size);
-  border-radius: 9999px;             /* keeps the avatar a circle */
-  background-color: var(--color-avatar-bg);
-  color: var(--color-avatar-text);
-  font-size: calc(var(--avatar-size) * 0.42);  /* letter scales with the avatar */
+  border-radius: 50%;
+  background: var(--plum);
+  color: #fff;
+  font-size: calc(var(--avatar-size) * .42);
   font-weight: 600;
   line-height: 1;
   user-select: none;
 }
 
-.avatar-sm {
-  --avatar-size: 28px;               /* header badge */
-}
+.avatar-sm { --avatar-size: 28px; }   /* user pill */
+.avatar-md { --avatar-size: 32px; }   /* table rows */
+.avatar-xl { --avatar-size: 80px; }   /* review popup */
 
-.avatar-md {
-  --avatar-size: 32px;               /* table rows */
-}
-
-.avatar-xl {
-  --avatar-size: 80px;               /* review popup */
-}
-
-.avatar-on-badge {
-  border: 1px solid rgba(255, 255, 255, 0.6);
-}
-
-.avatar-on-table {
-  border: 1px solid var(--color-accent-soft);
-}
-
-.avatar-on-popup {
-  border: 2px solid var(--color-accent-soft);
-  box-shadow: var(--shadow-small);
-}
+.avatar-on-table { border: 1px solid var(--lav); }
+.avatar-on-popup { border: 2px solid var(--lav); box-shadow: var(--shadow-card); }
 
 
 /* ==========================================================================
-   7. STATUS FILTER BUTTONS - All / Pending / In Review / Approved / Rejected
+   4. STATUS FILTER BUTTONS - All / Pending / In Review / Approved / Rejected
    The selected button gets .is-active (set by the script)
    ========================================================================== */
+.main-canvas {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-top: 22px;
+}
+
 .filter-group {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 0.875rem;
+  gap: 10px;
 }
 
 .filter-pill {
-  padding: 0.5rem 1.5rem;
-  border: 1px solid var(--color-card-border);
-  border-radius: 0.75rem;
-  font-size: 0.75rem;
-  line-height: 1rem;
+  padding: 7px 20px;
+  border: 1px solid var(--lav);
+  border-radius: 999px;
+  font-size: 12px;
   font-weight: 500;
-  color: var(--color-sidebar-text);
-  background-color: #ffffff;
+  color: var(--plum);
+  background: #fff;
 }
 
-.filter-pill:hover {
-  background-color: var(--color-hover-soft);
-}
+.filter-pill:hover { background: var(--tint-hover); }
 
-/* One colour set per status */
-.filter-pill-pending {
-  color: #705615;
-  border-color: rgba(233, 195, 105, 0.4);
-}
+/* One colour per status, same as the badge colours */
+.filter-pill-pending { color: var(--status-pending); border-color: var(--status-pending); }
+.filter-pill-in-review { color: var(--status-progress); border-color: var(--status-progress); }
+.filter-pill-approved { color: var(--status-approved); border-color: var(--status-approved); }
+.filter-pill-rejected { color: var(--danger); border-color: var(--danger); }
 
-.filter-pill-pending:hover {
-  background-color: rgba(252, 236, 184, 0.3);
-}
+.filter-pill-pending:hover { background: var(--status-pending-bg); }
+.filter-pill-in-review:hover { background: var(--status-progress-bg); }
+.filter-pill-approved:hover { background: var(--status-approved-bg); }
+.filter-pill-rejected:hover { background: var(--status-pending-bg); }
 
-.filter-pill-in-review {
-  color: var(--status-review-text);
-  border-color: var(--status-review-border);
-}
-
-.filter-pill-in-review:hover {
-  background-color: rgba(253, 226, 207, 0.4);
-}
-
-.filter-pill-approved {
-  color: var(--status-approved-text);
-  border-color: #d3eed8;
-}
-
-.filter-pill-approved:hover {
-  background-color: rgba(211, 238, 216, 0.4);
-}
-
-.filter-pill-rejected {
-  color: var(--status-rejected-text);
-  border-color: #f9c3c3;
-}
-
-.filter-pill-rejected:hover {
-  background-color: rgba(249, 195, 195, 0.4);
-}
-
-/* Selected filter - must stay after the :hover rules above */
+/* Selected filter - same as the active day in the therapist dashboard.
+   Must stay after the :hover rules above */
 .filter-pill.is-active {
   font-weight: 600;
-  color: #ffffff;
-  border-color: var(--color-filter-active);
-  background-color: var(--color-filter-active);
-  box-shadow: var(--shadow-small);
+  color: #fff;
+  border-color: var(--lav-deep);
+  background: var(--lav-deep);
 }
 
 
 /* ==========================================================================
-   8. THERAPIST TABLE
+   5. THERAPIST TABLE
    ========================================================================== */
 .table-card {
-  flex: 1 1 0%;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  border: 1px solid var(--color-card-border);
-  border-radius: 1rem;
-  background-color: #ffffff;
-  box-shadow: var(--shadow-small);
+  border: 1px solid var(--lav);
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: var(--shadow-card);
   overflow: hidden;
 }
 
-.table-scroll {
-  overflow-x: auto;
-}
+.table-scroll { overflow-x: auto; }
 
 .therapist-table {
   width: 100%;
   text-align: left;
-  font-size: 0.75rem;
-  line-height: 1rem;
+  font-size: 12px;
 }
 
 .therapist-table thead tr {
-  border-bottom: 1px solid var(--color-card-border);
-  font-weight: 500;
-  color: #857b94;
+  border-bottom: 1px solid var(--lav);
+  color: var(--muted);
 }
 
 .therapist-table th {
-  padding: 1rem 1.5rem;
-  font-weight: 500;
+  padding: 14px 22px;
+  font-weight: 600;
+  white-space: nowrap;
 }
 
 .therapist-table td {
-  padding: 1rem 1.5rem;
+  padding: 12px 22px;
+  vertical-align: middle;
 }
 
-.therapist-table tbody {
-  color: #342a42;
-}
+.therapist-table tbody { color: var(--plum); }
 
 /* Centered columns (Status and Action) */
-.cell-center {
-  text-align: center;
-}
+.cell-center { text-align: center; }
 
 /* Thin line between rows. Rows hidden by a filter still count as neighbours, as before. */
-.therapist-row + .therapist-row {
-  border-top: 1px solid var(--color-row-divider);
-}
+.therapist-row + .therapist-row { border-top: 1px solid var(--lav); }
+.therapist-row:hover { background: var(--tint); }
+.therapist-row.is-hidden { display: none; }
 
-.therapist-row:hover {
-  background-color: rgba(250, 248, 252, 0.7);
-}
-
-.therapist-row.is-hidden {
-  display: none;
-}
-
-/* First column: avatar + name. The cell is a flex box so the avatar and name sit side by side. */
+/* First column: avatar + name side by side */
 .therapist-table td.cell-user {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
   font-size: 13px;
   font-weight: 500;
-  color: #2b2337;
+  white-space: nowrap;
 }
 
-.cell-specialty {
-  color: #6b6179;
+.cell-user .avatar {
+  margin-right: 12px;
+  vertical-align: middle;
 }
 
-.cell-verification {
-  color: #584d67;
-}
+.cell-user span { vertical-align: middle; }
 
-/* Status badge (Pending / In Review / Approved / Rejected) - also used in the review popup */
+.cell-specialty,
+.cell-verification { color: var(--plum); }
+
+/* Status badge (Pending / In Review / Approved / Rejected) - also used in the review popup.
+   Same shape as the dashboards' .badge */
 .status-badge {
   display: inline-block;
-  padding: 0.125rem 0.75rem;
+  padding: 3px 14px;
   border: 1px solid;
-  border-radius: 9999px;
-  font-size: 11px;
-  font-weight: 500;
+  border-radius: 999px;
+  font-size: 10px;
+  white-space: nowrap;
 }
 
 .status-badge.is-large {
-  padding: 0.25rem 0.875rem;
-  font-size: 0.75rem;
-  line-height: 1rem;
+  padding: 4px 16px;
+  font-size: 12px;
   font-weight: 600;
 }
 
-.status-pending {
-  color: var(--status-pending-text);
-  border-color: var(--status-pending-border);
-  background-color: var(--status-pending-bg);
-}
+.status-pending { color: var(--status-pending); background: var(--status-pending-bg); }
+.status-in-review { color: var(--status-progress); background: var(--status-progress-bg); }
+.status-approved { color: var(--status-approved); background: var(--status-approved-bg); }
+.status-rejected { color: #fff; background: var(--danger); border-color: var(--danger); }
 
-.status-in-review {
-  color: var(--status-review-text);
-  border-color: var(--status-review-border);
-  background-color: var(--status-review-bg);
-}
-
-.status-approved {
-  color: var(--status-approved-text);
-  border-color: var(--status-approved-border);
-  background-color: var(--status-approved-bg);
-}
-
-.status-rejected {
-  color: var(--status-rejected-text);
-  border-color: var(--status-rejected-border);
-  background-color: var(--status-rejected-bg);
-}
-
-/* Button at the end of each row: "Review" (dark outline) or "View Details" / "View Reason" (light outline) */
+/* Button at the end of each row: "Review" (filled) or "View Details" / "View Reason" (outline) */
 .row-action-button {
-  padding: 0.25rem 1rem;
-  border: 1px solid #cec3d9;
-  border-radius: 9999px;
+  padding: 5px 16px;
+  border: 1px solid var(--lav-deep);
+  border-radius: 999px;
   font-size: 11px;
   font-weight: 500;
-  color: #4e3f63;
+  color: var(--plum);
 }
 
-.row-action-button:hover {
-  background-color: var(--color-hover-soft);
-}
+.row-action-button:hover { background: var(--tint-hover); }
 
 .row-action-button.is-review {
-  color: #2e233e;
-  border-color: #3a2d4a;
+  font-weight: 600;
+  color: #fff;
+  background: var(--lav-deep);
 }
 
-.row-action-button.is-review:hover {
-  color: #ffffff;
-  background-color: #2e233e;
-}
+.row-action-button.is-review:hover { filter: brightness(1.05); background: var(--lav-deep); }
 
 /* "Showing 1-8 of 8 users" and page number buttons */
 .table-footer {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  padding: 1rem 1.5rem;
-  border-top: 1px solid var(--color-card-border);
-  font-size: 0.75rem;
-  line-height: 1rem;
-  color: #7b708a;
+  gap: 10px;
+  padding: 14px 22px;
+  border-top: 1px solid var(--lav);
+  font-size: 12px;
+  color: var(--muted);
 }
 
 .pagination {
   display: flex;
   align-items: center;
-  gap: 0.375rem;
-  font-weight: 500;
-  color: #463955;
+  gap: 6px;
+  color: var(--plum);
 }
 
 .page-button {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 1.75rem;
-  height: 1.75rem;
-  border: 1px solid #e6deee;
-  border-radius: 0.375rem;
+  width: 28px;
+  height: 28px;
+  border: 1px solid var(--lav);
+  border-radius: 8px;
+  font-size: 12px;
 }
 
-.page-button:hover {
-  background-color: var(--color-hover-soft);
-}
+.page-button:hover { background: var(--tint-hover); }
 
 .page-button.is-current {
   font-weight: 600;
-  color: #2f243e;
-  border-color: var(--color-sidebar-active);
-  background-color: #f5f0fa;
+  color: #fff;
+  border-color: var(--lav-deep);
+  background: var(--lav-deep);
 }
 
-.page-dots {
-  padding: 0 0.25rem;
-  color: #9ca3af;
-}
+.page-dots { padding: 0 4px; color: var(--muted); }
 
 
 /* ==========================================================================
-   9. POPUPS - shared styles
+   6. POPUPS - shared styles
    Popups are shown by adding the .is-open class (see the script)
    ========================================================================== */
 .modal-overlay {
@@ -712,99 +323,83 @@ body {
   display: none;
   align-items: center;
   justify-content: center;
-  padding: 1rem;
-  background-color: rgba(44, 39, 56, 0.45);
-  -webkit-backdrop-filter: blur(3px);
-  backdrop-filter: blur(3px);
+  padding: 16px;
+  background: rgba(74, 53, 96, .45);
+  -webkit-backdrop-filter: blur(2px);
+  backdrop-filter: blur(2px);
 }
 
-.modal-overlay.is-open {
-  display: flex;
-}
+.modal-overlay.is-open { display: flex; }
 
 /* Stacking order: preview is above the confirm popups, which are above the review popup */
-.modal-overlay-review {
-  z-index: 9999;
-}
-
-.modal-overlay-confirm {
-  z-index: 10001;
-}
-
-.modal-overlay-preview {
-  z-index: 10002;
-}
+.modal-overlay-review { z-index: 9999; }
+.modal-overlay-confirm { z-index: 10001; }
+.modal-overlay-preview { z-index: 10002; }
 
 .modal-dialog {
   display: flex;
   flex-direction: column;
   width: 100%;
-  border: 1px solid var(--color-card-border);
-  border-radius: 1.5rem;
-  background-color: #ffffff;
-  box-shadow: var(--shadow-dialog);
-  animation: modal-pop 0.18s ease-out forwards;
+  border: 1px solid var(--lav);
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: var(--shadow-pop);
+  animation: modal-pop .18s ease-out forwards;
 }
 
 @keyframes modal-pop {
-  from {
-    opacity: 0;
-    transform: scale(0.97);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
+  from { opacity: 0; transform: scale(.97); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.modal-title {
+  font-family: "Playfair Display", serif;
+  font-size: 20px;
+  font-weight: 500;
+  color: var(--plum);
 }
 
 /* Round "x" button in popup headers */
 .modal-close-button {
-  padding: 0.375rem;
-  border-radius: 9999px;
-  color: #9ca3af;
+  padding: 6px;
+  border-radius: 50%;
+  color: var(--muted);
 }
 
-.modal-close-button:hover {
-  color: #4b5563;
-  background-color: #f3f4f6;
-}
+.modal-close-button:hover { color: var(--plum); background: var(--tint); }
 
 /* Cancel / confirm buttons used by the review and confirm popups */
 .button {
-  border-radius: 0.75rem;
-  font-size: 0.75rem;
-  line-height: 1rem;
+  border-radius: 999px;
+  font-size: 12px;
   font-weight: 600;
 }
 
 .button-approve {
-  color: #246633;
-  background-color: #cce8ce;
+  color: var(--status-approved);
+  border: 1px solid var(--status-approved);
+  background: var(--status-approved-bg);
 }
 
-.button-approve:hover {
-  background-color: #bfdec1;
-}
+.button-approve:hover { filter: brightness(.97); }
 
 .button-reject {
-  color: #c13a3a;
-  border: 1px solid #e9afaf;
+  color: var(--danger);
+  border: 1px solid var(--danger);
+  background: #fff;
 }
 
-.button-reject:hover {
-  background-color: #fdecec;
-}
+.button-reject:hover { background: var(--status-pending-bg); }
 
 
 /* ==========================================================================
-   10. POPUP: THERAPIST VERIFICATION REVIEW
+   7. POPUP: THERAPIST VERIFICATION REVIEW
    ========================================================================== */
 .review-dialog {
   position: relative;
   max-width: 56rem;
   max-height: 92vh;
-  padding: 2rem;
-  border-color: #e9e1f0;
+  padding: 28px;
   overflow-y: auto;
 }
 
@@ -812,229 +407,206 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding-bottom: 1.25rem;
-  border-bottom: 1px solid #f0eaf5;
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--lav);
 }
 
 .review-title-group {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 12px;
 }
 
-.review-body {
-  padding: 1.5rem 0 1rem;
-}
+.review-body { padding: 22px 0 14px; }
 
 /* Avatar, name and status badge */
 .review-profile {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 1.5rem;
+  margin-bottom: 22px;
 }
 
 .review-profile-info {
   display: flex;
   align-items: center;
-  gap: 1.25rem;
+  gap: 18px;
 }
 
 .review-name {
-  font-family: var(--font-heading);
-  font-size: 1.25rem;
-  line-height: 1.75rem;
-  font-weight: 700;
-  color: #2a2036;
+  font-family: "Playfair Display", serif;
+  font-size: 22px;
+  font-weight: 500;
+  color: var(--plum);
 }
 
 .review-role,
 .review-specialty {
-  font-size: 0.75rem;
-  line-height: 1rem;
-  color: #7a6f87;
+  font-size: 12px;
+  color: var(--muted);
 }
 
-.review-role {
-  margin-top: 0.125rem;
-  font-weight: 500;
-}
+.review-role { margin-top: 2px; font-weight: 500; color: var(--plum); }
 
 /* Red box shown for rejected applications */
 .rejection-banner {
   display: none;
-  margin-bottom: 1.5rem;
-  padding: 1rem;
-  border: 1px solid #e9afaf;
-  border-radius: 1rem;
-  font-size: 0.75rem;
-  line-height: 1rem;
-  color: #8a2929;
-  background-color: #fdecec;
+  margin-bottom: 22px;
+  padding: 14px 16px;
+  border: 1px solid var(--danger);
+  border-radius: 14px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--danger);
+  background: var(--status-pending-bg);
 }
 
-.rejection-banner.is-visible {
-  display: block;
-}
+.rejection-banner.is-visible { display: block; }
 
 .rejection-banner-title {
   display: flex;
   align-items: center;
-  gap: 0.375rem;
-  margin-bottom: 0.25rem;
+  gap: 6px;
+  margin-bottom: 4px;
   font-weight: 600;
-}
-
-.rejection-banner-text {
-  color: #a63030;
 }
 
 /* License number, experience and office hours */
 .review-metrics {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 1.5rem;
-  margin-bottom: 2rem;
-  padding: 1rem 1.5rem;
-  border: 1px solid #efe8f5;
-  border-radius: 1rem;
+  gap: 22px;
+  margin-bottom: 28px;
+  padding: 16px 22px;
+  border: 1px solid var(--lav);
+  border-radius: 14px;
   text-align: center;
-  background-color: #faf7fc;
+  background: var(--tint);
 }
 
 .metric-label {
   font-size: 11px;
-  font-weight: 500;
-  color: #867b94;
+  color: var(--muted);
 }
 
 .metric-value {
-  margin-top: 0.125rem;
-  font-size: 0.75rem;
-  line-height: 1rem;
+  margin-top: 2px;
+  font-size: 12px;
   font-weight: 600;
-  color: #2c213b;
+  color: var(--plum);
 }
 
 /* Uploaded credentials list */
 .credentials-heading {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 0.75rem;
-  font-size: 0.75rem;
-  line-height: 1rem;
+  gap: 4px 12px;
+  margin-bottom: 12px;
+  font-size: 13px;
   font-weight: 600;
-  color: #483b5a;
+  color: var(--plum);
 }
 
 .credentials-hint {
   font-size: 11px;
   font-weight: 400;
-  color: #7a6f87;
+  color: var(--muted);
 }
 
 .credential-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0.875rem;
-  border: 1px solid #ede5f4;
-  border-radius: 0.75rem;
-  background-color: #fcfbfd;
+  gap: 12px;
+  padding: 14px;
+  border: 1px solid var(--lav);
+  border-radius: 12px;
+  background: #fff;
 }
 
-.credential-row + .credential-row {
-  margin-top: 0.75rem;
-}
-
-.credential-row:hover {
-  background-color: #ffffff;
-}
+.credential-row + .credential-row { margin-top: 12px; }
+.credential-row:hover { background: var(--tint); }
 
 .credential-file,
 .credential-actions {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 12px;
 }
 
 .credential-icon {
-  width: 1.25rem;
-  height: 1.25rem;
-  color: #6d5d82;
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  color: var(--lav-deep);
 }
 
 .credential-name {
   display: block;
-  font-size: 0.75rem;
-  line-height: 1rem;
+  font-size: 12px;
   font-weight: 500;
-  color: #372b47;
+  color: var(--plum);
 }
 
 .credential-meta {
   font-size: 10px;
-  color: #867b94;
+  color: var(--muted);
 }
 
 .credential-badge {
-  padding: 0.125rem 0.625rem;
-  border: 1px solid var(--status-approved-border);
-  border-radius: 9999px;
+  padding: 2px 12px;
+  border: 1px solid var(--status-approved);
+  border-radius: 999px;
   font-size: 10px;
-  font-weight: 600;
-  color: #276435;
-  background-color: var(--status-approved-bg);
+  color: var(--status-approved);
+  background: var(--status-approved-bg);
 }
 
 .preview-button {
-  padding: 0.25rem 0.875rem;
-  border: 1px solid #cec3d9;
-  border-radius: 9999px;
-  font-size: 0.75rem;
-  line-height: 1rem;
+  padding: 5px 16px;
+  border: 1px solid var(--lav-deep);
+  border-radius: 999px;
+  font-size: 12px;
   font-weight: 500;
-  color: #4e3f63;
+  color: var(--plum);
 }
 
-.preview-button:hover {
-  background-color: var(--color-hover-soft);
-}
+.preview-button:hover { background: var(--tint-hover); }
 
 /* Bottom bar with the decision text and the Approve / Reject buttons */
 .review-footer {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  margin-top: 2rem;
-  padding-top: 1.25rem;
-  border-top: 1px solid #f0eaf5;
+  gap: 12px;
+  margin-top: 28px;
+  padding-top: 18px;
+  border-top: 1px solid var(--lav);
 }
 
 .review-decision {
-  font-size: 0.75rem;
-  line-height: 1rem;
-  color: #8a7f99;
+  font-size: 12px;
+  color: var(--muted);
 }
 
 .review-buttons {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 12px;
 }
 
-.review-buttons .button {
-  padding: 0.5rem 1.5rem;
-}
+.review-buttons .button { padding: 9px 24px; }
 
 
 /* ==========================================================================
-   11. POPUP: DOCUMENT PREVIEW (mock certificate)
+   8. POPUP: DOCUMENT PREVIEW (mock certificate)
+   The paper uses the dashboards' yellow; fonts are the page fonts.
    ========================================================================== */
 .preview-dialog {
   max-width: 42rem;
-  border-color: #e7deef;
   overflow: hidden;
 }
 
@@ -1042,228 +614,195 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 1rem 1.5rem;
-  border-bottom: 1px solid #ece4f2;
-  background-color: #faf7fc;
+  padding: 14px 22px;
+  border-bottom: 1px solid var(--lav);
+  background: var(--tint);
 }
 
 .preview-header-title {
   display: flex;
   align-items: center;
-  gap: 0.625rem;
+  gap: 10px;
 }
 
 .preview-doc-title {
-  font-size: 0.875rem;
-  line-height: 1.25rem;
+  font-size: 13px;
   font-weight: 600;
-  color: #2c2138;
+  color: var(--plum);
 }
 
 .preview-doc-subtitle {
   font-size: 11px;
-  color: #7e738c;
+  color: var(--muted);
 }
 
 .preview-body {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 2rem;
-  background-color: #f6f4f9;
+  padding: 28px;
+  background: var(--tint);
 }
 
 /* The certificate paper */
 .certificate {
   position: relative;
   width: 100%;
-  padding: 2rem;
-  border: 4px double #d4c3a3;
-  border-radius: 1rem;
+  padding: 28px;
+  border: 4px double var(--yellow);
+  border-radius: 14px;
   text-align: center;
-  background-color: #fffefa;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+  background: #fff;
+  box-shadow: var(--shadow-card);
 }
 
 /* Four small corner decorations */
 .certificate-corner {
   position: absolute;
-  font-size: 0.75rem;
-  line-height: 1rem;
-  color: #c9a96e;
+  font-size: 12px;
+  line-height: 1;
+  color: var(--lav-deep);
 }
 
-.certificate-corner.is-top-left {
-  top: 0.75rem;
-  left: 0.75rem;
-}
-
-.certificate-corner.is-top-right {
-  top: 0.75rem;
-  right: 0.75rem;
-}
-
-.certificate-corner.is-bottom-left {
-  bottom: 0.75rem;
-  left: 0.75rem;
-}
-
-.certificate-corner.is-bottom-right {
-  bottom: 0.75rem;
-  right: 0.75rem;
-}
+.certificate-corner.is-top-left { top: 12px; left: 12px; }
+.certificate-corner.is-top-right { top: 12px; right: 12px; }
+.certificate-corner.is-bottom-left { bottom: 12px; left: 12px; }
+.certificate-corner.is-bottom-right { bottom: 12px; right: 12px; }
 
 .certificate-authority {
-  margin-bottom: 0.25rem;
+  margin-bottom: 4px;
   font-size: 11px;
   font-weight: 600;
-  letter-spacing: 0.25em;
+  letter-spacing: .2em;
   text-transform: uppercase;
-  color: #8c764e;
+  color: var(--muted);
 }
 
 .certificate-name {
-  margin-bottom: 0.75rem;
-  font-family: var(--font-heading);
-  font-size: 1.25rem;
-  line-height: 1.75rem;
-  font-weight: 700;
-  color: #352842;
+  margin-bottom: 12px;
+  font-family: "Playfair Display", serif;
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--plum);
 }
 
 .certificate-text {
   max-width: 28rem;
-  margin: 0 auto 1rem;
-  font-size: 0.75rem;
-  line-height: 1.625;
-  color: #736a7d;
+  margin: 0 auto 16px;
+  font-size: 12px;
+  line-height: 1.7;
+  color: var(--plum);
 }
 
 .certificate-therapist {
   display: block;
-  margin: 0.25rem 0;
-  font-family: var(--font-heading);
-  font-size: 0.875rem;
-  line-height: 1.25rem;
+  margin: 4px 0;
+  font-family: "Playfair Display", serif;
+  font-size: 16px;
   font-weight: 600;
-  color: #2c2138;
+  color: var(--plum);
 }
 
-.certificate-specialty {
-  font-weight: 600;
-  color: #4a3b5d;
-}
+.certificate-specialty { font-weight: 600; }
 
 .certificate-details {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 1rem;
-  margin-bottom: 1rem;
-  padding-top: 1rem;
-  border-top: 1px solid #efe5d3;
-  font-size: 0.75rem;
-  line-height: 1rem;
+  gap: 16px;
+  margin-bottom: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--lav);
+  font-size: 12px;
   text-align: left;
-  color: #5e5569;
+  color: var(--plum);
 }
 
 .certificate-detail-label {
   display: block;
   font-size: 10px;
   text-transform: uppercase;
-  color: #9a8b73;
+  color: var(--muted);
 }
 
-.certificate-detail-value {
-  font-weight: 500;
-  color: #2e243a;
-}
+.certificate-detail-value { font-weight: 500; }
 
 .certificate-license-id {
-  font-family: var(--font-mono);
-  font-weight: 700;
-  color: #2e243a;
+  font-weight: 600;
+  letter-spacing: .04em;
 }
 
 .certificate-bottom {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding-top: 0.5rem;
+  padding-top: 8px;
 }
 
 .certificate-validation {
   font-size: 10px;
   text-align: left;
-  color: #867894;
+  color: var(--muted);
 }
 
-/* Round gold "VERIFIED" stamp */
+/* Round "VERIFIED" stamp */
 .certificate-seal {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 3.5rem;
-  height: 3.5rem;
-  border: 2px solid #cbb070;
-  border-radius: 9999px;
+  width: 56px;
+  height: 56px;
+  border: 2px solid var(--lav-deep);
+  border-radius: 50%;
   font-size: 8px;
-  font-weight: 700;
+  font-weight: 600;
   text-transform: uppercase;
-  color: #957427;
-  background-color: #fff8e7;
-  box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.05);
+  color: var(--plum);
+  background: var(--yellow);
   transform: rotate(-6deg);
 }
 
-.certificate-seal-star {
-  font-size: 0.75rem;
-  line-height: 1rem;
-}
+.certificate-seal-star { font-size: 12px; line-height: 1; }
 
 .preview-footer {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0.875rem 1.5rem;
-  border-top: 1px solid #ece4f2;
-  background-color: #ffffff;
+  gap: 12px;
+  padding: 14px 22px;
+  border-top: 1px solid var(--lav);
+  background: #fff;
 }
 
 .preview-footer-text {
-  font-size: 0.75rem;
-  line-height: 1rem;
-  color: #81768e;
+  font-size: 12px;
+  color: var(--muted);
 }
 
 .preview-footer-id {
-  font-family: var(--font-mono);
-  color: #433654;
+  font-weight: 600;
+  letter-spacing: .04em;
+  color: var(--plum);
 }
 
 .preview-close-button {
-  padding: 0.5rem 1.25rem;
-  border-radius: 0.75rem;
-  font-size: 0.75rem;
-  line-height: 1rem;
+  padding: 8px 20px;
+  border-radius: 999px;
+  font-size: 12px;
   font-weight: 600;
-  color: #342742;
-  background-color: var(--color-accent-soft);
+  color: var(--plum);
+  background: var(--lav);
 }
 
-.preview-close-button:hover {
-  background-color: #d0bfdc;
-}
+.preview-close-button:hover { background: var(--tint-hover); }
 
 
 /* ==========================================================================
-   12. POPUPS: APPROVE AND REJECT CONFIRMATIONS
+   9. POPUPS: APPROVE AND REJECT CONFIRMATIONS
    ========================================================================== */
 .confirm-dialog {
   max-width: 28rem;
-  border-color: #ece4f2;
-  padding: 1.75rem;
+  padding: 28px;
   text-align: center;
 }
 
@@ -1271,124 +810,94 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 3rem;
-  height: 3rem;
-  margin: 0 auto 0.75rem;
-  border-radius: 9999px;
-  font-size: 1.25rem;
-  line-height: 1.75rem;
-  font-weight: 700;
+  width: 48px;
+  height: 48px;
+  margin: 0 auto 12px;
+  border-radius: 50%;
+  font-size: 20px;
+  font-weight: 600;
 }
 
-.confirm-icon.is-approve {
-  color: #246633;
-  background-color: var(--status-approved-bg);
-}
-
-.confirm-icon.is-reject {
-  font-size: 1.125rem;
-  line-height: 1.75rem;
-  color: #c13a3a;
-  background-color: #fceaea;
-}
+.confirm-icon.is-approve { color: var(--status-approved); background: var(--status-approved-bg); }
+.confirm-icon.is-reject { color: var(--danger); background: var(--status-pending-bg); }
 
 .confirm-title {
-  margin-bottom: 0.5rem;
-  font-family: var(--font-heading);
-  font-size: 1.25rem;
-  line-height: 1.75rem;
-  font-weight: 700;
-  color: #2e233c;
+  margin-bottom: 8px;
+  font-family: "Playfair Display", serif;
+  font-size: 20px;
+  font-weight: 500;
+  color: var(--plum);
 }
 
 .confirm-text {
-  margin-bottom: 1.5rem;
-  padding: 0 1rem;
-  font-size: 0.75rem;
-  line-height: 1.625;
-  color: #6f647e;
+  margin-bottom: 22px;
+  padding: 0 16px;
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--muted);
 }
 
-.confirm-text strong {
-  color: #2c2138;
-}
+.confirm-text strong { color: var(--plum); }
 
 /* The reject popup has a reason box, so its text sits closer to it */
-.confirm-text.is-above-field {
-  margin-bottom: 1rem;
-  padding: 0;
-}
+.confirm-text.is-above-field { margin-bottom: 16px; padding: 0; }
 
-.reason-field {
-  margin-bottom: 1.5rem;
-  text-align: left;
-}
+.reason-field { margin-bottom: 22px; text-align: left; }
 
 .reason-input {
   width: 100%;
-  padding: 0.75rem;
-  border: 1px solid #dacfe3;
-  border-radius: 0.75rem;
-  font-size: 0.75rem;
-  line-height: 1rem;
-  color: #372a47;
-  background-color: #fcfbfd;
-  outline: 2px solid transparent;
-  outline-offset: 2px;
+  padding: 12px;
+  border: 1px solid var(--lav);
+  border-radius: 10px;
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--plum);
+  background: #fff;
+  outline: none;
   -webkit-appearance: none;
   appearance: none;
 }
 
-.reason-input::placeholder {
-  color: #aaa0b7;
-}
+.reason-input::placeholder { color: var(--muted); }
 
 .reason-input:focus {
-  border-color: #9e7bbf;
-  box-shadow: 0 0 0 1px #9e7bbf;
+  border-color: var(--lav-deep);
+  box-shadow: 0 0 0 3px rgba(183, 157, 219, .3);
 }
 
 .confirm-buttons {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.75rem;
+  gap: 12px;
 }
 
 .confirm-buttons .button {
-  width: 8rem;
-  padding: 0.5rem 0;
+  width: 128px;
+  padding: 9px 0;
 }
 
 .button-cancel {
   font-weight: 500;
-  color: #55466a;
-  border: 1px solid #d5c9e0;
+  color: var(--plum);
+  border: 1px solid var(--lav);
+  background: #fff;
 }
 
-.button-cancel:hover {
-  background-color: #f7f4fa;
-}
-
-.confirm-buttons .button-approve:hover {
-  background-color: #bfdfc1;
-}
+.button-cancel:hover { background: var(--tint); }
 
 .button-reject-confirm {
-  color: #a63030;
-  background-color: #f9c6c6;
+  color: #fff;
+  background: var(--danger);
+  box-shadow: 0 2px 8px rgba(74, 53, 96, .12);
 }
 
-.button-reject-confirm:hover {
-  background-color: #f1b6b6;
-}
+.button-reject-confirm:hover { filter: brightness(1.05); }
 
 
 /* ==========================================================================
-   13. SHARED TRANSITIONS - smooth hover effects
+   Shared hover transitions
    ========================================================================== */
-.nav-link,
-.logout-button,
 .filter-pill,
 .therapist-row,
 .row-action-button,
@@ -1398,18 +907,35 @@ body {
 .preview-button,
 .button,
 .preview-close-button {
-  transition-property: color, background-color, border-color, opacity, box-shadow, transform;
-  transition-duration: var(--transition-speed);
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-property: color, background-color, border-color, opacity, box-shadow, transform, filter;
+  transition-duration: 150ms;
+  transition-timing-function: cubic-bezier(.4, 0, .2, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .modal-dialog { animation: none; }
+  .filter-pill,
+  .therapist-row,
+  .row-action-button,
+  .page-button,
+  .modal-close-button,
+  .credential-row,
+  .preview-button,
+  .button,
+  .preview-close-button { transition: none; }
 }
 
 
 /* ==========================================================================
-   14. RESPONSIVE STYLES
-   Small screens and up (640px): popup numbers are left-aligned instead of centred
+   10. RESPONSIVE STYLES (sidebar.css already stacks the shell at 800px)
    ========================================================================== */
+/* Small screens and up (640px): popup numbers are left-aligned instead of centred */
 @media (min-width: 640px) {
-  .review-metrics {
-    text-align: left;
-  }
+  .review-metrics { text-align: left; }
+}
+
+@media (max-width: 640px) {
+  .review-dialog { padding: 20px; }
+  .review-profile { flex-direction: column; align-items: flex-start; gap: 12px; }
+  .credential-row { flex-direction: column; align-items: flex-start; }
 }
