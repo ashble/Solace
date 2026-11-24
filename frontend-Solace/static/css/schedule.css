@@ -1,364 +1,79 @@
 /* ==========================================================================
    Solace - Schedule page (templates/schedule.html)
+
+   This page uses the shared dashboard shell from sidebar.css (sidebar, logo,
+   topbar, user pill, h1, .sub, colour tokens). Only schedule-specific
+   components live here, and they are built from the same tokens:
+     --lav  --lav-deep  --plum  --muted  --yellow  --peach  --pink
+
    Table of contents
-     1. Design variables (colours, fonts, spacing)  <- edit the theme here
-     2. Base reset
-     3. Page layout
-     4. Sidebar navigation
-     5. Page header and user badge
-     6. Cards (shared look for calendar, time slots, booking summary)
-     7. Calendar
-     8. Time slots
-     9. Booking summary
-    10. Popups (request + success)
-    11. Responsive styles (tablet and desktop)
+     1. Tokens reused from the dashboards
+     2. Form reset (sidebar.css does not reset buttons)
+     3. Panels (calendar, time slots, booking summary)
+     4. Calendar
+     5. Time slots
+     6. Booking summary
+     7. Popups (request + success)
+     8. Responsive styles
    ========================================================================== */
 
 
 /* ==========================================================================
-   1. DESIGN VARIABLES - change a value here to restyle the whole page
+   1. TOKENS REUSED FROM THE DASHBOARDS (same literal values as sidebar.css)
    ========================================================================== */
 :root {
-  /* Fonts */
-  --font-body: "Plus Jakarta Sans", system-ui, sans-serif;
-  --font-heading: "Playfair Display", Georgia, serif;
-
-  /* Page colours */
-  --color-page-bg: #ffffff;
-  --color-text: #1e293b;
-  --color-heading: #2b2333;
-
-  /* Sidebar colours */
-  --color-sidebar-bg: #e4daee;
-  --color-sidebar-hover: #dcd0e6;
-  --color-sidebar-active: #d6c8e4;
-  --color-sidebar-label: #806b92;
-  --color-sidebar-text: #504060;
-  --color-logout: #e15252;
-  --color-logout-hover: #c53f3f;
-
-  /* Card colours */
-  --color-card-border: #e2dbe8;
-  --color-card-shadow: rgba(0, 0, 0, 0.02);
-  --color-card-title: #3c3247;
-  --color-hover-soft: #f2edf7;
-
-  /* Purple accents (selected day, selected time, buttons) */
-  --color-accent: #a888c9;
-  --color-accent-day: #b090d2;
-  --color-button: #bfa9d6;
-  --color-button-hover: #b399cd;
-
-  /* Spacing and shape */
-  --radius-card: 0.75rem;
-  --radius-dialog: 1rem;
+  --tint: #f3ecfa;                       /* active nav item / menu hover */
+  --tint-hover: #eadff6;                 /* nav hover */
+  --danger: #c0394b;                     /* log-out red */
+  --danger-bg: #fdeaed;                  /* "Pending" badge background */
+  --success: #4a9a52;                    /* "Approved" badge text */
+  --success-bg: #eaf7ea;                 /* "Approved" badge background */
+  --shadow-card: 0 2px 8px rgba(74, 53, 96, .08);
+  --shadow-pop: 0 6px 20px rgba(74, 53, 96, .18);
 }
 
 
 /* ==========================================================================
-   2. BASE RESET - removes browser default spacing so layouts are predictable
+   2. FORM RESET
    ========================================================================== */
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-  border-width: 0;
-  border-style: solid;
-  border-color: #e5e7eb;
-}
-
-html {
-  line-height: 1.5;
-  font-family: var(--font-body);
-  -webkit-text-size-adjust: 100%;
-}
-
-body,
-h1,
-h2,
-h3,
-h4,
-p {
-  margin: 0;
-}
-
-h1,
-h2,
-h3,
-h4 {
-  font-size: inherit;
-  font-weight: inherit;
-}
-
-a {
-  color: inherit;
-  text-decoration: inherit;
-}
-
-strong {
-  font-weight: bolder;
-}
-
 button {
-  font-family: inherit;
-  font-size: 100%;
-  font-weight: inherit;
-  line-height: inherit;
-  letter-spacing: inherit;
+  font: inherit;
   color: inherit;
-  margin: 0;
+  cursor: pointer;
+  background: none;
+  border: 0;
   padding: 0;
-  text-transform: none;
-  background-color: transparent;
-  background-image: none;
-  cursor: pointer;
-  -webkit-appearance: button;
 }
 
-svg {
-  display: block;
-  vertical-align: middle;
-}
+svg { display: block; }
 
-body {
-  min-height: 100vh;
-  font-family: var(--font-body);
-  color: var(--color-text);
-  background-color: var(--color-page-bg);
-  overflow-x: hidden;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-body *::selection,
-body::selection {
-  background-color: #e9d5ff;
-}
+.user-pill .avatar { flex-shrink: 0; }
 
 
 /* ==========================================================================
-   3. PAGE LAYOUT - sidebar on the left, main content on the right
+   3. PANELS - shared look for the calendar, time slots and booking summary
+   (same border, radius and shadow as the dashboards' "Upcoming Appointment")
    ========================================================================== */
-.app-layout {
-  display: flex;
-  min-height: 100vh;
-  width: 100%;
-}
-
-.main-content {
-  flex: 1 1 0%;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  max-width: 72rem;
-  padding: 2rem 2.5rem;
-}
-
-
-/* ==========================================================================
-   4. SIDEBAR NAVIGATION
-   ========================================================================== */
-.sidebar {
-  display: flex;
-  flex-direction: column;
-  flex-shrink: 0;
-  width: 16rem;
-  min-width: 16rem;
-  padding: 1.5rem;
-  background-color: var(--color-sidebar-bg);
-  user-select: none;
-}
-
-/* Logo: "S" + spinning sun + "LACE" */
-.sidebar-logo {
-  display: flex;
-  align-items: center;
-  gap: 0.375rem;
-  padding: 0.5rem 0.25rem 1.5rem;
-  font-family: var(--font-heading);
-  font-size: 1.5rem;
-  line-height: 2rem;
-  font-weight: 700;
-  letter-spacing: 0.22em;
-  color: #4a3b58;
-}
-
-.sidebar-logo-sun {
-  display: inline-block;
-  width: 1.25rem;
-  height: 1.25rem;
-  color: #c38e5a;
-  animation: sun-spin 20s linear infinite;
-}
-
-@keyframes sun-spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-/* "Main Menu" and "Account" groups */
-.sidebar-group {
-  margin-top: 1rem;
-}
-
-.sidebar-group + .sidebar-group {
-  margin-top: 2rem;
-}
-
-.sidebar-group-label {
-  margin-bottom: 0.75rem;
-  padding: 0 0.75rem;
-  font-size: 0.75rem;
-  line-height: 1rem;
-  font-weight: 600;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  color: var(--color-sidebar-label);
-}
-
-.sidebar-nav {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-  font-size: 0.875rem;
-  line-height: 1.25rem;
-  font-weight: 500;
-  color: var(--color-sidebar-text);
-}
-
-.nav-link {
-  display: flex;
-  align-items: center;
-  gap: 0.875rem;
-  padding: 0.625rem 0.875rem;
-  border-radius: 9999px;
-  transition: background-color 150ms, color 150ms;
-}
-
-.nav-link:hover {
-  background-color: var(--color-sidebar-hover);
-}
-
-/* Current page highlight (Appointments) */
-.nav-link.is-active {
-  font-weight: 600;
-  color: #462f59;
-  background-color: var(--color-sidebar-active);
-}
-
-.nav-icon {
-  width: 18px;
-  height: 18px;
-  min-width: 18px;
-  min-height: 18px;
-}
-
-.nav-link.is-active .nav-icon {
-  color: #5f4673;
-}
-
-/* Log Out button pinned to the bottom of the sidebar */
-.sidebar-footer {
-  margin-top: auto;
-  padding-top: 1.5rem;
-}
-
-.logout-button {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.5rem 0.75rem;
-  border-radius: 0.5rem;
-  font-size: 0.875rem;
-  line-height: 1.25rem;
-  font-weight: 600;
-  color: var(--color-logout);
-  transition: background-color 150ms, color 150ms;
-}
-
-.logout-button:hover {
-  color: var(--color-logout-hover);
-  background-color: rgba(255, 241, 242, 0.5);
-}
-
-
-/* ==========================================================================
-   5. PAGE HEADER AND USER BADGE
-   ========================================================================== */
-.page-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding-bottom: 2rem;
-}
-
-.page-title {
-  font-family: var(--font-heading);
-  font-size: 32px;
-  font-weight: 400;
-  letter-spacing: -0.025em;
-  color: var(--color-heading);
-}
-
-.user-badge {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 0.375rem 0.75rem;
-  border-radius: 9999px;
-  background-color: var(--color-sidebar-bg);
-  cursor: pointer;
-  transition: opacity 150ms;
-}
-
-.user-badge:hover {
-  opacity: 0.95;
-}
-
-.user-badge-text {
-  padding-right: 0.5rem;
-  line-height: 1.25;
-  text-align: left;
-}
-
-.user-badge-name {
-  font-size: 0.75rem;
-  line-height: 1rem;
-  font-weight: 600;
-  color: #3b2c4a;
-}
-
-.user-badge-role {
-  font-size: 10px;
-  font-weight: 500;
-  color: #786788;
-}
-
-
-/* ==========================================================================
-   6. CARDS - shared look for the calendar, time slots and booking summary
-   ========================================================================== */
-.card {
-  padding: 1.25rem;
-  border: 1px solid var(--color-card-border);
-  border-radius: var(--radius-card);
-  background-color: #ffffff;
-  box-shadow: 0 2px 10px var(--color-card-shadow);
+.panel {
+  padding: 20px 22px;
+  border: 1px solid var(--lav);
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: var(--shadow-card);
 }
 
 .card-title {
-  font-size: 15px;
+  font-size: 13px;
   font-weight: 600;
-  color: var(--color-card-title);
+  color: var(--plum);
 }
 
-/* Calendar card (left) and time card (right) sit side by side */
+/* Calendar panel (left) and time panel (right) sit side by side */
 .booking-picker {
   display: grid;
-  grid-template-columns: repeat(1, minmax(0, 1fr));
-  gap: 2rem;
-  margin-bottom: 2rem;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 22px;
+  margin: 22px 0;
 }
 
 .calendar-card,
@@ -367,208 +82,181 @@ body::selection {
   flex-direction: column;
 }
 
-.calendar-card {
-  justify-content: space-between;
-}
+.calendar-card { justify-content: space-between; }
 
 
 /* ==========================================================================
-   7. CALENDAR - month title, arrows, weekday row and day buttons
+   4. CALENDAR - month title, arrows, weekday row and day buttons
    ========================================================================== */
 .calendar-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 1rem;
-  padding: 0 0.5rem;
+  margin-bottom: 14px;
+}
+
+.calendar-header .card-title {
+  font-family: "Playfair Display", serif;
+  font-size: 20px;
+  font-weight: 500;
 }
 
 .calendar-arrows {
   display: flex;
   align-items: center;
-  gap: 0.375rem;
-  color: #635574;
+  gap: 6px;
+  color: var(--plum);
 }
 
 .calendar-arrow {
-  padding: 0.25rem;
-  border-radius: 0.375rem;
+  padding: 4px;
+  border-radius: 8px;
   transition: background-color 150ms;
 }
 
-.calendar-arrow:hover {
-  background-color: var(--color-hover-soft);
-}
+.calendar-arrow:hover { background: var(--tint); }
 
-.calendar-arrow-icon {
-  width: 1rem;
-  height: 1rem;
-}
+.calendar-arrow-icon { width: 16px; height: 16px; }
 
 .calendar-weekdays,
 .calendar-days {
   display: grid;
   grid-template-columns: repeat(7, minmax(0, 1fr));
   text-align: center;
-  font-size: 0.75rem;
-  line-height: 1rem;
+  font-size: 12px;
 }
 
+/* Same muted small label as the day strip in the therapist dashboard */
 .calendar-weekdays {
-  margin-bottom: 0.625rem;
-  font-weight: 500;
-  color: #7d708c;
+  margin-bottom: 10px;
+  font-size: 11px;
+  color: var(--muted);
 }
 
-.calendar-days {
-  row-gap: 0.375rem;
-}
+.calendar-days { row-gap: 6px; }
 
 /* Blank cell before the 1st of the month */
-.calendar-day-empty {
-  height: 1.75rem;
-}
+.calendar-day-empty { height: 32px; }
 
 /* One day button (created by renderCalendar in schedule-page.js) */
 .calendar-day {
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 1.75rem;
-  width: 1.75rem;
+  width: 32px;
+  height: 32px;
   margin: 0 auto;
-  border-radius: 9999px;
-  font-size: 0.75rem;
-  line-height: 1rem;
-  font-weight: 400;
-  color: #4b3e5b;
+  border-radius: 999px;
+  font-size: 12px;
+  color: var(--plum);
   transition: background-color 150ms, color 150ms;
 }
 
-.calendar-day:hover {
-  background-color: var(--color-hover-soft);
-}
+.calendar-day:hover { background: var(--tint-hover); }
 
-/* Must stay after :hover so the selected day keeps its purple background */
+/* Same as the active day in the therapist dashboard. Must stay after :hover */
 .calendar-day.is-selected {
-  color: #ffffff;
-  background-color: var(--color-accent-day);
+  font-weight: 600;
+  color: #fff;
+  background: var(--lav-deep);
 }
 
 
 /* ==========================================================================
-   8. TIME SLOTS - grid of time buttons (created by renderTimeSlots)
+   5. TIME SLOTS - grid of time buttons (created by renderTimeSlots)
    ========================================================================== */
-.time-card-title {
-  margin-bottom: 1rem;
-}
+.time-card-title { margin-bottom: 14px; }
 
 .time-slots {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 0.625rem;
+  gap: 10px;
 }
 
 .time-slot {
-  padding: 0.5rem 0.25rem;
-  border: 1px solid #ded6e6;
-  border-radius: 0.375rem;
-  font-size: 0.75rem;
-  line-height: 1rem;
-  font-weight: 400;
+  padding: 8px 4px;
+  border: 1px solid var(--lav);
+  border-radius: 999px;
+  font-size: 12px;
   text-align: center;
-  color: #493e55;
-  transition: all 150ms;
+  color: var(--plum);
+  background: #fff;
+  transition: background-color 150ms, color 150ms, border-color 150ms;
 }
 
-.time-slot:hover {
-  border-color: var(--color-accent);
-}
+.time-slot:hover { background: var(--tint-hover); }
 
+/* Must stay after :hover */
 .time-slot.is-selected {
-  font-weight: 500;
-  color: #ffffff;
-  border-color: var(--color-accent);
-  background-color: var(--color-accent);
+  font-weight: 600;
+  color: #fff;
+  border-color: var(--lav-deep);
+  background: var(--lav-deep);
 }
 
 
 /* ==========================================================================
-   9. BOOKING SUMMARY - therapist, chosen date/time and the request button
+   6. BOOKING SUMMARY - therapist, chosen date/time and the request button
    ========================================================================== */
-.booking-summary {
-  margin-bottom: 0.75rem;
-  padding: 1.75rem;
-}
+.booking-summary { margin-bottom: 12px; padding: 22px; }
 
 .booking-summary-title {
-  margin-bottom: 1.25rem;
-  font-size: 1rem;
-  line-height: 1.5rem;
-  font-weight: 700;
-  letter-spacing: -0.025em;
-  color: #342a40;
+  margin-bottom: 18px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--plum);
 }
 
 .booking-summary-body {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  gap: 1.5rem;
+  gap: 22px;
 }
 
 .therapist-name {
-  font-size: 0.875rem;
-  line-height: 1.25rem;
-  font-weight: 700;
-  color: #2d2438;
+  font-family: "Playfair Display", serif;
+  font-size: 20px;
+  font-weight: 500;
+  color: var(--plum);
 }
 
 .therapist-title {
-  font-size: 0.75rem;
-  line-height: 1rem;
-  font-weight: 400;
-  color: #716180;
+  margin-top: 2px;
+  font-size: 12px;
+  color: var(--plum);
 }
 
 .therapist-specialties {
-  margin-top: 0.125rem;
+  margin-top: 2px;
   font-size: 11px;
-  color: #8e809c;
+  color: var(--muted);
 }
 
 .summary-details {
   display: flex;
   flex-direction: column;
-  gap: 0.625rem;
+  gap: 10px;
   min-width: 200px;
-  font-size: 0.75rem;
-  line-height: 1rem;
-  color: #524463;
+  font-size: 12px;
+  color: var(--plum);
 }
 
 .summary-item {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 12px;
 }
 
 .summary-item-icon {
   flex-shrink: 0;
-  width: 1rem;
-  height: 1rem;
-  color: #7c6c8f;
+  width: 16px;
+  height: 16px;
+  color: var(--lav-deep);
 }
 
-.summary-label {
-  font-weight: 600;
-  color: #3e324e;
-}
-
-.summary-value {
-  margin-left: 0.25rem;
-  color: #625373;
-}
+.summary-label { font-weight: 600; }
+.summary-value { margin-left: 4px; }
 
 .summary-action {
   display: flex;
@@ -576,41 +264,39 @@ body::selection {
   justify-content: flex-end;
 }
 
+/* Same peach as "See a professional" on the client dashboard */
 .request-button {
-  padding: 0.625rem 1.5rem;
-  border-radius: 9999px;
-  font-size: 0.75rem;
-  line-height: 1rem;
+  padding: 12px 28px;
+  border-radius: 999px;
+  font-size: 13px;
   font-weight: 600;
-  color: #ffffff;
-  background-color: var(--color-button);
-  transition: all 150ms;
+  color: var(--plum);
+  background: var(--peach);
+  box-shadow: 0 4px 12px rgba(74, 53, 96, .12);
+  transition: transform 150ms;
 }
 
-.request-button:hover {
-  background-color: var(--color-button-hover);
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
-}
+.request-button:hover { transform: translateY(-2px); }
 
 /* Small note under the booking summary */
 .request-note {
   display: flex;
   align-items: center;
-  gap: 0.375rem;
-  padding: 0 0.25rem;
+  gap: 6px;
+  padding: 0 4px;
   font-size: 11px;
-  color: #9183a0;
+  color: var(--muted);
 }
 
 .request-note-icon {
   flex-shrink: 0;
-  width: 0.875rem;
-  height: 0.875rem;
+  width: 14px;
+  height: 14px;
 }
 
 
 /* ==========================================================================
-   10. POPUPS - "Request Appointment" and "Request Submitted"
+   7. POPUPS - "Request Appointment" and "Request Submitted"
    Shown by adding the .is-open class (see schedule-page.js)
    ========================================================================== */
 .modal-overlay {
@@ -620,174 +306,142 @@ body::selection {
   display: none;
   align-items: center;
   justify-content: center;
-  padding: 1rem;
-  background-color: rgba(0, 0, 0, 0.4);
+  padding: 16px;
+  background: rgba(74, 53, 96, .45);
   -webkit-backdrop-filter: blur(2px);
   backdrop-filter: blur(2px);
 }
 
-.modal-overlay.is-open {
-  display: flex;
-}
+.modal-overlay.is-open { display: flex; }
 
 .modal-dialog {
   width: 100%;
   max-width: 24rem;
-  padding: 1.5rem;
-  border: 1px solid #f3e8ff;
-  border-radius: var(--radius-dialog);
-  background-color: #ffffff;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  padding: 24px;
+  border: 1px solid var(--lav);
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: var(--shadow-pop);
 }
 
-.modal-dialog.is-centered {
-  padding: 1.75rem;
-  text-align: center;
-}
+.modal-dialog.is-centered { padding: 28px; text-align: center; }
 
 .modal-title {
-  margin-bottom: 0.75rem;
-  font-family: var(--font-heading);
-  font-size: 1.25rem;
-  line-height: 1.75rem;
+  margin-bottom: 12px;
+  font-family: "Playfair Display", serif;
+  font-size: 20px;
   font-weight: 500;
   text-align: center;
-  color: #2e243a;
+  color: var(--plum);
 }
 
-.modal-dialog.is-centered .modal-title {
-  font-size: 1.5rem;
-  line-height: 2rem;
-}
+.modal-dialog.is-centered .modal-title { font-size: 24px; }
 
 .modal-text {
-  margin-bottom: 1.5rem;
-  padding: 0 1rem;
-  font-size: 0.75rem;
-  line-height: 1rem;
+  margin-bottom: 22px;
+  padding: 0 12px;
+  font-size: 12px;
+  line-height: 1.5;
   text-align: center;
-  color: #6b7280;
+  color: var(--muted);
 }
 
-.modal-dialog.is-centered .modal-text {
-  line-height: 1.625;
-}
-
-.modal-text strong {
-  color: #374151;
-}
-
-.modal-text .is-semibold {
-  font-weight: 600;
-}
+.modal-dialog.is-centered .modal-text { line-height: 1.6; }
+.modal-text strong { color: var(--plum); }
+.modal-text .is-semibold { font-weight: 600; }
 
 /* Date / Time / Session Type box */
 .modal-details {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
-  margin-bottom: 1.5rem;
-  padding: 0.875rem;
-  border: 1px solid #f0eaf5;
-  border-radius: 0.5rem;
-  font-size: 0.75rem;
-  line-height: 1rem;
-  color: #4b5563;
-  background-color: #faf8fc;
+  gap: 8px;
+  margin-bottom: 22px;
+  padding: 14px;
+  border: 1px solid var(--lav);
+  border-radius: 10px;
+  font-size: 12px;
+  background: var(--tint);
 }
 
-.modal-details-row {
-  display: flex;
-  justify-content: space-between;
-}
-
-.modal-details-label {
-  color: #9ca3af;
-}
-
-.modal-details-value {
-  font-weight: 500;
-  color: #374151;
-}
+.modal-details-row { display: flex; justify-content: space-between; }
+.modal-details-label { color: var(--muted); }
+.modal-details-value { font-weight: 600; color: var(--plum); }
 
 .modal-buttons {
   display: flex;
   flex-direction: column;
-  gap: 0.625rem;
+  gap: 10px;
 }
 
 .modal-button {
   width: 100%;
-  padding: 0.5rem 1rem;
-  border-radius: 0.5rem;
-  font-size: 0.75rem;
-  line-height: 1rem;
+  padding: 9px 16px;
+  border-radius: 999px;
+  font-size: 12px;
   font-weight: 600;
-  letter-spacing: 0.025em;
-  transition: background-color 150ms;
+  transition: filter 150ms, transform 150ms;
 }
 
+.modal-button:hover { filter: brightness(.97); }
+
+/* Same colours as the "Approved" and "Pending" badges in the dashboards */
 .modal-button-confirm {
-  color: #365737;
-  background-color: #d3e7d3;
-}
-
-.modal-button-confirm:hover {
-  background-color: #c2ddc2;
+  color: var(--success);
+  background: var(--success-bg);
+  border: 1px solid var(--success);
 }
 
 .modal-button-cancel {
-  color: #8e4444;
-  background-color: #fce3e3;
-}
-
-.modal-button-cancel:hover {
-  background-color: #f9d4d4;
+  color: var(--danger);
+  background: var(--danger-bg);
+  border: 1px solid var(--danger);
 }
 
 .modal-button-primary {
-  padding: 0.625rem 1rem;
-  color: #ffffff;
-  background-color: #c4b2da;
+  color: #fff;
+  background: var(--lav-deep);
+  box-shadow: 0 2px 8px rgba(74, 53, 96, .12);
 }
 
-.modal-button-primary:hover {
-  background-color: #b5a1cd;
-}
+.modal-button-primary:hover { filter: brightness(1.05); }
 
 /* Round check icon at the top of the success popup */
 .modal-success-icon {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 3rem;
-  height: 3rem;
-  margin: 0 auto 1rem;
-  border-radius: 9999px;
-  color: #9e7eb8;
-  background-color: #faf5ff;
+  width: 48px;
+  height: 48px;
+  margin: 0 auto 16px;
+  border-radius: 50%;
+  color: var(--plum);
+  background: var(--lav);
 }
 
-.modal-success-icon svg {
-  width: 1.5rem;
-  height: 1.5rem;
+.modal-success-icon svg { width: 24px; height: 24px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .request-button,
+  .modal-button,
+  .calendar-arrow,
+  .calendar-day,
+  .time-slot { transition: none; }
 }
 
 
 /* ==========================================================================
-   11. RESPONSIVE STYLES
+   8. RESPONSIVE STYLES (sidebar.css already stacks the shell at 800px)
    Tablet (768px and up): booking summary becomes one row
-   Desktop (1024px and up): calendar and time slots sit side by side
+   Desktop (900px and up): calendar and time slots sit side by side
    ========================================================================== */
 @media (min-width: 768px) {
-  .booking-summary-body {
-    flex-direction: row;
-    align-items: center;
-  }
+  .booking-summary-body { flex-direction: row; align-items: center; }
 }
 
-@media (min-width: 1024px) {
-  .booking-picker {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
+@media (min-width: 900px) {
+  .booking-picker { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 480px) {
+  .time-slots { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
