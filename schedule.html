@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Client Schedule - Solace</title>
+
+  <!-- Fonts: same as the Landing Page and Dashboards -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600&family=Playfair+Display:wght@500;600&display=swap" rel="stylesheet">
+
+  <!-- Shared dashboard shell (sidebar, topbar, colour tokens) + page styles -->
+  <link rel="stylesheet" href="../static/css/sidebar.css">
+  <link rel="stylesheet" href="../static/css/schedule.css">
+
+  <!-- Page script (calendar, time slots and popups) -->
+  <script src="../static/js/schedule-page.js" defer></script>
+</head>
+<body>
+
+<div class="layout">
+  <aside>
+    <a class="logo" href="/" aria-label="Solace home"><img src="../static/img/logo-dark.png" alt="Solace"></a>
+    <nav>
+      <div class="group">Main Menu</div>
+      <a href="/client"><img class="nav-icon" src="../static/img/icons/home.png" alt="">Dashboard</a>
+      <a href="/chats"><img class="nav-icon" src="../static/img/icons/messages.png" alt="">Messages</a>
+      <a href="/schedule" class="active" aria-current="page"><img class="nav-icon" src="../static/img/icons/appointments.png" alt="">Appointments</a>
+      <a href="/schedule"><img class="nav-icon" src="../static/img/icons/session-history.png" alt="">Session History</a>
+      <div class="group">Account</div>
+      <a href="/profile?role=client"><img class="nav-icon" src="../static/img/icons/profile.png" alt="">Profile</a>
+      <a href="/settings?role=client"><img class="nav-icon" src="../static/img/icons/settings.png" alt="">Settings</a>
+    </nav>
+    <a class="logout" href="/login"><img class="nav-icon" src="../static/img/icons/log-out.png" alt="">Log Out</a>
+  </aside>
+
+  <main>
+    <div class="topbar">
+      <button class="user-pill" id="userPill" aria-haspopup="true" aria-expanded="false">
+        <span class="avatar"></span>
+        <span>Sylus Qin<small>Client</small></span>
+      </button>
+      <div class="menu" id="roleMenu">
+        <a href="/client">Client view</a>
+        <a href="/therapist">Therapist view</a>
+        <a href="/admin">Administrator view</a>
+      </div>
+    </div>
+
+    <h1>Select Date and Time</h1>
+    <p class="sub">Booking with Dr. Zayne Li</p>
+
+    <!-- Calendar (left) and time slots (right) -->
+    <div class="booking-picker">
+
+      <!-- Calendar: the day buttons are drawn by schedule-page.js -->
+      <section class="panel calendar-card" id="calendarCard">
+        <div class="calendar-header">
+          <h2 class="card-title" id="calendarMonthTitle">January 2027</h2>
+          <div class="calendar-arrows">
+            <button class="calendar-arrow" id="prevMonthBtn" type="button" title="Previous Month">
+              <svg class="calendar-arrow-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M15 19l-7-7 7-7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+              </svg>
+            </button>
+            <button class="calendar-arrow" id="nextMonthBtn" type="button" title="Next Month">
+              <svg class="calendar-arrow-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M9 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <div>
+          <div class="calendar-weekdays">
+            <span>Mon</span>
+            <span>Tue</span>
+            <span>Wed</span>
+            <span>Thu</span>
+            <span>Fri</span>
+            <span>Sat</span>
+            <span>Sun</span>
+          </div>
+          <div class="calendar-days" id="calendarDaysGrid"></div>
+        </div>
+      </section>
+
+      <!-- Time slots: the buttons are drawn by schedule-page.js (edit AVAILABLE_TIMES there) -->
+      <section class="panel time-card">
+        <h2 class="card-title time-card-title">Select Time:</h2>
+        <div class="time-slots" id="timeSlotsContainer"></div>
+      </section>
+    </div>
+
+    <!-- Booking summary: date and time text updates automatically -->
+    <section class="panel booking-summary">
+      <h3 class="booking-summary-title">Booking Summary</h3>
+
+      <div class="booking-summary-body">
+        <!-- Therapist -->
+        <div>
+          <h4 class="therapist-name">Dr. Zayne Li</h4>
+          <p class="therapist-title">Licensed Therapist</p>
+          <p class="therapist-specialties">Anxiety · Depression</p>
+        </div>
+
+        <!-- Chosen appointment details -->
+        <div class="summary-details">
+          <div class="summary-item">
+            <svg class="summary-item-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"></path>
+            </svg>
+            <div>
+              <span class="summary-label">Date:</span>
+              <span class="summary-value" id="summaryDateLabel">January 7, 2027</span>
+            </div>
+          </div>
+          <div class="summary-item">
+            <svg class="summary-item-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"></path>
+            </svg>
+            <div>
+              <span class="summary-label">Time:</span>
+              <span class="summary-value" id="summaryTimeLabel">10:00 AM</span>
+            </div>
+          </div>
+          <div class="summary-item">
+            <svg class="summary-item-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"></path>
+            </svg>
+            <div>
+              <span class="summary-label">Session Type:</span>
+              <span class="summary-value">Online Consultation</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Opens the "Request Appointment" popup -->
+        <div class="summary-action">
+          <button class="request-button" id="openRequestModalBtn" type="button">Request Appointment</button>
+        </div>
+      </div>
+    </section>
+
+    <p class="request-note">
+      <svg class="request-note-icon" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+        <path clip-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" fill-rule="evenodd"></path>
+      </svg>
+      <span>This is a request. Your therapist will review your request and get back to you.</span>
+    </p>
+  </main>
+</div>
+
+
+<!-- ===== POPUPS (hidden until the "is-open" class is added) ===== -->
+
+<!-- Popup 1: confirm the appointment request -->
+<div class="modal-overlay" id="requestModal">
+  <div class="modal-dialog" role="dialog" aria-labelledby="requestModalTitle">
+    <h3 class="modal-title" id="requestModalTitle">Request Appointment</h3>
+    <p class="modal-text">
+      You are about to request an appointment with <strong class="is-semibold">Dr. Zayne Li</strong>.
+    </p>
+
+    <div class="modal-details">
+      <div class="modal-details-row">
+        <span class="modal-details-label">Date</span>
+        <span class="modal-details-value" id="modalDateLabel">January 7, 2027</span>
+      </div>
+      <div class="modal-details-row">
+        <span class="modal-details-label">Time</span>
+        <span class="modal-details-value" id="modalTimeLabel">10:00 AM</span>
+      </div>
+      <div class="modal-details-row">
+        <span class="modal-details-label">Session Type</span>
+        <span class="modal-details-value">Online Consultation</span>
+      </div>
+    </div>
+
+    <div class="modal-buttons">
+      <button class="modal-button modal-button-confirm" id="confirmRequestBtn" type="button">Confirm Request</button>
+      <button class="modal-button modal-button-cancel" id="cancelModalBtn" type="button">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- Popup 2: request submitted -->
+<div class="modal-overlay" id="successModal">
+  <div class="modal-dialog is-centered" role="dialog" aria-labelledby="successModalTitle">
+    <div class="modal-success-icon">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+      </svg>
+    </div>
+    <h3 class="modal-title" id="successModalTitle">Request Submitted!</h3>
+    <p class="modal-text">
+      Your appointment request has been sent to <br><strong>Dr. Zayne Li</strong>. You'll be notified once they respond.
+    </p>
+    <button class="modal-button modal-button-primary" id="backToDashboardBtn" type="button">Back to Dashboard</button>
+  </div>
+</div>
+
+<!-- Role menu behaviour (shared with the dashboards) -->
+<script src="../static/js/sidebar.js"></script>
+</body>
+</html>
