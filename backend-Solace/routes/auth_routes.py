@@ -14,6 +14,7 @@ def csrf_token():
 @auth_bp.get("/api/auth/me")
 def me():
     user = current_user()
-    if not user:
+    if not user or user.status != "active":
+        session.clear()
         return jsonify(user=None), 401
     return jsonify(user={"id": user.id, "name": user.name, "email": user.email, "role": user.role})

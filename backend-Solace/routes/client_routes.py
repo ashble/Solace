@@ -1,4 +1,5 @@
-from flask import Blueprint, render_template, redirect, jsonify
+from flask import Blueprint, render_template, redirect, jsonify, request, abort
+from auth_helpers import current_user, role_required
 from models import TherapistProfile, User
 
 client_bp = Blueprint("client", __name__)
@@ -33,8 +34,22 @@ def therapist_directory_api():
     return jsonify(therapists=listed_therapists())
 
 @client_bp.route("/schedule")
+@role_required("client")
 def client_schedule():
-    return redirect("/client")
+    therapist_id = request.args.get("therapist_id", type=int)
+    if not therapist_id:
+        return redirect("/search-therapist")
+    therapist = TherapistProfile.query.join(User).filter(
+        TherapistProfile.user_id == therapist_id,
+        TherapistProfile.is_listed.is_(True),
+        User.role == "therapist",
+        User.status == "active",
+    ).first()
+    if not therapist:
+        abort(404)
+    user = current_user()
+    return render_template("schedule.html", therapist=therapist,
+                           user={"name": user.name, "display_name": user.name, "role": "Client"})
 
 @client_bp.route("/chats")
 def client_chats():

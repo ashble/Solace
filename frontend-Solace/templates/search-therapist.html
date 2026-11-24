@@ -141,6 +141,11 @@
     </div>
 
     <script>
+      document.querySelectorAll('.book-session-btn[data-therapist-id]').forEach((button) => {
+        button.addEventListener('click', () => {
+          window.location.href = `/schedule?therapist_id=${encodeURIComponent(button.dataset.therapistId)}`;
+        });
+      });
       const searchInput = document.getElementById('therapistSearch');
       const availFilter = document.getElementById('availFilter');
       const sessionTypeFilter = document.getElementById('sessionTypeFilter');

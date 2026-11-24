@@ -24,6 +24,22 @@ def login_required(view):
     return wrapped
 
 
+def role_required(*roles):
+    """Require an active session user with one of the supplied roles."""
+    def decorate(view):
+        @wraps(view)
+        def wrapped(*args, **kwargs):
+            user = current_user()
+            if not user or user.status != "active":
+                session.clear()
+                return jsonify(error="Authentication required."), 401
+            if user.role not in roles:
+                return jsonify(error="You do not have permission to perform this action."), 403
+            return view(*args, **kwargs)
+        return wrapped
+    return decorate
+
+
 def csrf_required(view):
     @wraps(view)
     def wrapped(*args, **kwargs):

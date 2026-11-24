@@ -204,8 +204,8 @@
         return;
       }
       const response = await fetch(`/admin/reports/${activeRow.dataset.reportId}/status`, {
-        method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ status: v })
+        method: 'PATCH', headers: await window.solaceCsrfHeaders({ 'Content-Type': 'application/json' }),
+        body: JSON.stringify({ status: v.toLowerCase() })
       });
       if (!response.ok) { alert('Could not save report status. Please try again.'); return; }
       activeRow.dataset.status = v;

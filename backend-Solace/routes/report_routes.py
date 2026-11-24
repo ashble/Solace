@@ -6,7 +6,7 @@ from werkzeug.utils import secure_filename
 
 from extensions import db
 from models import Report, ReportAttachment
-from auth_helpers import csrf_required
+from auth_helpers import csrf_required, role_required
 
 report_bp = Blueprint("reports", __name__)
 ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg", "webp", "pdf"}
@@ -86,6 +86,7 @@ def create_report():
 
 
 @report_bp.get("/admin/reports/<int:report_id>/attachments/<int:attachment_id>")
+@role_required("admin")
 def download_report_attachment(report_id, attachment_id):
     attachment = ReportAttachment.query.filter_by(id=attachment_id, report_id=report_id).first_or_404()
     return send_from_directory(

@@ -93,6 +93,7 @@ button,input,select{font:inherit}.app{min-height:100dvh}.sidebar{position:fixed;
   .title-icon svg { width:40px; height:40px; }
 }
 </style>
+<script src="{{ url_for('static', filename='js/api.js') }}"></script>
 </head>
 <body data-page="admin" data-page-data='{{ {"bookings": bookings|default([]), "appointments": appointments|default([]), "stats": stats|default({}), "profile": profile|default({}), "userName": user.display_name|default("")}|tojson }}'>
 <div id="app" class="app"></div>
@@ -195,15 +196,15 @@ function visibleRows(){
 $(".search")?.addEventListener("input",visibleRows);$(".status")?.addEventListener("change",visibleRows);$(".sort")?.addEventListener("change",visibleRows);
 document.addEventListener("click",async event=>{
  const update=event.target.closest("[data-update]");
- if(update){update.disabled=true;try{const res=await fetch("/api/appointments/"+encodeURIComponent(update.dataset.update),{method:"PATCH",headers:{"Content-Type":"application/json"},body:JSON.stringify({status:update.dataset.status})});if(!res.ok)throw Error();location.reload()}catch{update.disabled=false;notify("Could not update this booking. Please try again.")}return}
+ if(update){update.disabled=true;try{const res=await fetch("/api/appointments/"+encodeURIComponent(update.dataset.update),{method:"PATCH",headers:await window.solaceCsrfHeaders({"Content-Type":"application/json"}),body:JSON.stringify({status:update.dataset.status})});if(!res.ok)throw Error();location.reload()}catch{update.disabled=false;notify("Could not update this booking. Please try again.")}return}
  const review=event.target.closest("[data-review]");
  if(review){const item=appointments.find(x=>String(x.id)===review.dataset.review);if(!item)return;$("#reviewTitle").textContent=item.client||"Appointment details";$("#reviewEmail").textContent=item.client_email||"";$("#reviewSchedule").textContent=(item.display_date||item.date||"")+" · "+(item.time||"");$("#reviewSession").textContent=item.session_type||"";$("#reviewStatus").textContent="Status: "+item.status;const confirm=$("#confirmReview");confirm.hidden=item.status!=="Pending";confirm.dataset.id=item.id;$("#reviewDialog").showModal()}
  if(event.target.closest(".edit")){$("#profileFields").innerHTML=profileFields();$("#profileDialog").showModal()}
  const closeButton=event.target.closest(".close-dialog");if(closeButton)closeButton.closest("dialog").close();if(event.target.closest(".cancel-review"))$("#reviewDialog").close();
  if(event.target.closest(".cancel-profile"))$("#profileDialog").close();
 });
-$("#confirmReview")?.addEventListener("click",async event=>{const button=event.currentTarget;button.disabled=true;try{const res=await fetch("/api/appointments/"+encodeURIComponent(button.dataset.id),{method:"PATCH",headers:{"Content-Type":"application/json"},body:JSON.stringify({status:"Confirmed"})});if(!res.ok)throw Error();location.reload()}catch{button.disabled=false;notify("Could not confirm this appointment.")}});
-$("#profileForm")?.addEventListener("submit",async event=>{event.preventDefault();const button=event.submitter;button.disabled=true;const payload=Object.fromEntries(new FormData(event.currentTarget));try{const res=await fetch("/api/profile/"+role,{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});if(!res.ok)throw Error();location.reload()}catch{button.disabled=false;notify("Could not save your profile. Please try again.")}});
+$("#confirmReview")?.addEventListener("click",async event=>{const button=event.currentTarget;button.disabled=true;try{const res=await fetch("/api/appointments/"+encodeURIComponent(button.dataset.id),{method:"PATCH",headers:await window.solaceCsrfHeaders({"Content-Type":"application/json"}),body:JSON.stringify({status:"Confirmed"})});if(!res.ok)throw Error();location.reload()}catch{button.disabled=false;notify("Could not confirm this appointment.")}});
+$("#profileForm")?.addEventListener("submit",async event=>{event.preventDefault();const button=event.submitter;button.disabled=true;const payload=Object.fromEntries(new FormData(event.currentTarget));try{const res=await fetch("/api/profile/"+role,{method:"PUT",headers:await window.solaceCsrfHeaders({"Content-Type":"application/json"}),body:JSON.stringify(payload)});if(!res.ok)throw Error();location.reload()}catch{button.disabled=false;notify("Could not save your profile. Please try again.")}});
 visibleRows();
 })();
 </script>

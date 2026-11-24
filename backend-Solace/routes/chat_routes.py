@@ -1,7 +1,7 @@
 from flask import Blueprint, jsonify, request
 from extensions import db
-from models import Conversation, Message, User
-from auth_helpers import current_user, csrf_required, login_required
+from models import Conversation, Message, TherapistProfile, User
+from auth_helpers import current_user, csrf_required, role_required
 
 chat_bp = Blueprint("chat", __name__, url_prefix="/api/conversations")
 
@@ -16,7 +16,7 @@ def message_json(message):
 
 
 @chat_bp.get("")
-@login_required
+@role_required("client", "therapist")
 def list_conversations():
     user = current_user()
     query = Conversation.query.filter(
@@ -33,7 +33,7 @@ def list_conversations():
 
 @chat_bp.post("")
 @csrf_required
-@login_required
+@role_required("client", "therapist")
 def create_conversation():
     user = current_user()
     payload = request.get_json(silent=True) or {}
@@ -42,8 +42,11 @@ def create_conversation():
     except (TypeError, ValueError):
         return jsonify(error="A conversation participant id is required."), 400
     peer = db.session.get(User, peer_id)
-    if not peer or peer.role == user.role or peer.status != "active":
+    expected_peer_role = "therapist" if user.role == "client" else "client"
+    if not peer or peer.role != expected_peer_role or peer.status != "active":
         return jsonify(error="Participant not found."), 404
+    if peer.role == "therapist" and not TherapistProfile.query.filter_by(user_id=peer.id, is_listed=True).first():
+        return jsonify(error="Therapist is unavailable."), 404
     client_id, therapist_id = (user.id, peer.id) if user.role == "client" else (peer.id, user.id)
     conversation = Conversation.query.filter_by(client_id=client_id, therapist_id=therapist_id).first()
     if not conversation:
@@ -54,7 +57,7 @@ def create_conversation():
 
 
 @chat_bp.get("/<int:conversation_id>/messages")
-@login_required
+@role_required("client", "therapist")
 def fetch_messages(conversation_id):
     conversation = db.session.get(Conversation, conversation_id)
     if not is_participant(conversation, current_user().id):
@@ -73,7 +76,7 @@ def fetch_messages(conversation_id):
 
 @chat_bp.post("/<int:conversation_id>/messages")
 @csrf_required
-@login_required
+@role_required("client", "therapist")
 def send_message(conversation_id):
     user = current_user()
     conversation = db.session.get(Conversation, conversation_id)

@@ -1,5 +1,12 @@
 // Loaded only by Bookings.html, Appointments.html, and the three profile pages.
 (() => {
+  async function csrfHeaders(headers = {}) {
+    const csrfResponse = await fetch('/api/csrf', { credentials: 'same-origin' });
+    const csrf = await csrfResponse.json();
+    if (!csrfResponse.ok || !csrf.csrf_token) throw new Error('Could not prepare a secure request');
+    return { ...headers, 'X-CSRF-Token': csrf.csrf_token };
+  }
+
   const profileForm = document.querySelector('#profileForm');
   if (profileForm) {
     profileForm.addEventListener('submit', async (event) => {
@@ -8,7 +15,7 @@
       try {
         const response = await fetch(`/api/profile/${profileForm.dataset.role}`, {
           method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
+          headers: await csrfHeaders({ 'Content-Type': 'application/json' }),
           body: JSON.stringify(Object.fromEntries(new FormData(profileForm)))
         });
         if (!response.ok) throw new Error('Profile save failed');
@@ -29,7 +36,7 @@
     try {
       const response = await fetch(`/api/appointments/${row.dataset.appointmentId}`, {
         method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
+        headers: await csrfHeaders({ 'Content-Type': 'application/json' }),
         body: JSON.stringify({ status })
       });
       if (!response.ok) throw new Error('Appointment update failed');
