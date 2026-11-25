@@ -1,4 +1,7 @@
 <form method="post" action="{{ url_for('auth.logout') }}" class="account-logout-form">
   <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-  <button type="submit" class="{{ logout_class|default('logout-btn') }}">Log out</button>
+  <button type="submit" class="{{ logout_class|default('logout-btn') }}">
+    {% if logout_class is not defined %}<img class="nav-icon" src="{{ url_for('static', filename='img/icons/log-out.png') }}" alt="">{% endif %}
+    <span>Log out</span>
+  </button>
 </form>

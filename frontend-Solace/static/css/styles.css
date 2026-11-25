@@ -9,10 +9,9 @@
 :root {
   /* Color Palette */
   --bg-main: #FFFFFF;
-  --sidebar-bg: #E4DAEE;
-  --sidebar-active: #C5AEE0;
-  --sidebar-text: #7B688E;
-  --sidebar-text-active: #FFFFFF;
+  --sidebar-bg: #d9c9ee;
+  --sidebar-active: #f3ecfa;
+  --sidebar-text: #4a3560;
   
   --text-primary: #231C2C;
   --text-secondary: #8B8196;
@@ -80,78 +79,76 @@ body.dashboard-body {
    SIDEBAR (Base Dashboard)
    ======================================================== */
 .sidebar {
-  width: 230px;
-  min-width: 230px;
-  background-color: var(--sidebar-bg);
-  padding: 32px 16px 24px 20px;
+  flex: 0 0 230px;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
-  flex-shrink: 0;
-}
-
-.sidebar-logo {
-  display: flex;
-  align-items: center;
-  gap: 1px;
-  margin-bottom: 36px;
-  padding-left: 8px;
-}
-
-.logo-text {
-  font-size: 20px;
-  font-weight: 600;
-  letter-spacing: 0.15em;
-  color: #E8A838;
-}
-
-.logo-sun {
-  width: 22px;
-  height: 22px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.logo-sun svg {
-  width: 100%;
-  height: 100%;
-}
-
-.sidebar-nav {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.nav-item {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  padding: 10px 14px;
-  border-radius: 8px;
-  text-decoration: none;
+  padding: 22px 16px;
+  background: var(--sidebar-bg);
   color: var(--sidebar-text);
-  font-size: 13.5px;
-  font-weight: 500;
-  transition: all 0.15s ease-in-out;
+  font: 500 14px var(--font-serif);
 }
 
-.nav-item:hover {
-  background-color: rgba(197, 174, 224, 0.4);
-  color: #493A57;
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid #b79ddb;
 }
 
-.nav-item.active {
-  background-color: var(--sidebar-active);
-  color: var(--sidebar-text-active);
-  font-weight: 600;
+.sidebar-logo-img { display: block; width: 130px; max-width: 100%; }
+.sidebar-toggle { display: none; }
+.sidebar-menu { flex: 1; display: flex; flex-direction: column; }
+.sidebar-section-label { margin: 18px 10px 5px; }
+.sidebar-nav { display: grid; gap: 4px; }
+.sidebar-nav[aria-label="Public navigation"] { margin-top: 14px; }
+
+.sidebar .nav-item,
+.sidebar .logout-btn {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 40px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  color: inherit;
+  font: inherit;
+  text-decoration: none;
 }
 
-.nav-icon {
-  width: 19px;
-  height: 19px;
-  flex-shrink: 0;
+.sidebar .nav-item:hover { background: #eadff6; }
+
+.sidebar .nav-item.active {
+  background: var(--sidebar-active);
+  box-shadow: 0 1px 4px rgb(74 53 96 / 12%);
 }
+
+.sidebar .nav-icon {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+  flex: none;
+}
+
+.sidebar .account-logout-form { margin-top: auto; padding-top: 18px; }
+
+.sidebar .logout-btn {
+  justify-content: center;
+  width: 100%;
+  border: 0;
+  background: #fff;
+  color: #a52e40;
+  cursor: pointer;
+}
+
+.sidebar .logout-btn:hover { background: #ffe8e8; }
+.sidebar .logout-btn .nav-icon { width: 16px; height: 16px; }
+.sidebar :focus-visible { outline: 2px solid var(--sidebar-text); outline-offset: 2px; }
 
 /* ========================================================
    MAIN CONTENT AREA
@@ -578,14 +575,31 @@ body.dashboard-body {
     flex-direction: column;
   }
   .sidebar {
-    width: 100%;
-    min-width: 100%;
-    padding: 20px;
+    flex: none;
+    position: static;
+    height: auto;
+    overflow: visible;
+    padding: 12px 16px;
+  }
+  .sidebar-header { padding-bottom: 0; border: 0; }
+  .sidebar-toggle:not([hidden]) {
+    display: block;
+    min-height: 44px;
+    padding: 6px 14px;
+    border: 1px solid #b79ddb;
+    border-radius: 8px;
+    background: var(--sidebar-active);
+    color: inherit;
+    font: inherit;
+    cursor: pointer;
+  }
+  .sidebar-header:has(.sidebar-toggle[aria-expanded="false"]) + .sidebar-menu {
+    display: none;
   }
   .sidebar-nav {
-    flex-direction: row;
-    flex-wrap: wrap;
+    grid-template-columns: repeat(auto-fit, minmax(min(145px, 100%), 1fr));
   }
+  .sidebar .nav-item { min-height: 44px; }
   .main-content {
     padding: 20px;
   }
@@ -685,23 +699,18 @@ body.dashboard-body {
 @media(max-width:540px) { .profile-fields { grid-template-columns:1fr; } .profile-field-wide { grid-column:auto; } .profile-card,.booking-list-card { padding:19px; } }
 
 /* Sean's profile, booking, and appointment layouts */
-.sean-nav-caption { margin:8px 0 4px; padding:0 10px; color:#655873; font:500 9px var(--font-serif); }
-.account-caption { margin-top:14px; }
 .account-nav { margin-top:0; }
-.sean-logout { position:static; display:block; margin: auto 0 0 -4px; padding:7px 9px; border-radius:7px; background:#fff; color:#e35d67; font:500 9px var(--font-serif); text-align:center; text-decoration:none; }
-.sean-main-content { min-width:0; }
 .sean-topbar { display:flex; gap:16px; flex-wrap:wrap; justify-content:space-between; align-items:center; min-height:43px; margin-bottom:17px; }
 .sean-topbar .profile-page-heading { margin:0; }
 .sean-topbar .profile-page-heading h1 { font-size:clamp(1.375rem, 2.1vw, 2rem); }
 .sean-topbar .profile-heading-icon { width:29px; height:29px; flex-basis:29px; font-size:17px; }
 .profile-heading-icon svg { width:18px; height:18px; }
-.sean-logout .logout-icon { width:12px; height:12px; vertical-align:middle; }
-.sean-topbar .user-pill { margin-left:auto; max-width:100%; overflow-wrap:anywhere; padding:5px 10px; border-radius:999px; background:#d3a0d0; }
+.sean-topbar .user-pill { margin-left:auto; max-width:100%; overflow-wrap:anywhere; padding:5px 10px; border-radius:999px; background:var(--sidebar-bg); }
 .sean-topbar .user-avatar { flex:none; width:23px; height:23px; font:500 11px var(--font-serif); }
 .sean-table-page { margin-top:0; }
 .sean-stats { margin-top:6px; }
 .profile-page-heading { display:flex; align-items:center; gap:12px; margin:2px 0 18px; }
-.profile-page-heading h1 { margin:0; color:#342b40; font:500 25px var(--font-serif); }
+.profile-page-heading h1 { margin:0; color:var(--sidebar-text); font:600 25px var(--font-serif); }
 .profile-heading-icon { width:34px; height:34px; flex:0 0 34px; display:grid; place-items:center; border-radius:10px; color:#fff; background:#c890c5; }
 .showcase-profile { overflow:hidden; background:#fff; border:1px solid #e1dce4; border-radius:17px; box-shadow:0 3px 9px #2b1e351a; }
 .showcase-cover { height:clamp(120px, 15vw, 245px); margin:10px 10px 0; border-radius:11px; background:linear-gradient(180deg,#dfc7e6 0%,#f1e8f3 65%,#fff 100%); }
@@ -709,8 +718,8 @@ body.dashboard-body {
 .showcase-person-row { position:relative; display:flex; align-items:flex-start; gap:clamp(10px, 1.5vw, 22px); padding-bottom:clamp(14px, 2vw, 28px); }
 .showcase-avatar { display:grid; place-items:center; width:clamp(58px, 8vw, 112px); aspect-ratio:1; flex:none; margin-top:clamp(-56px, -4vw, -29px); border:3px solid #fff; border-radius:50%; background:#dec5e7; color:#694f72; font:500 26px var(--font-serif); }
 .showcase-person { flex:1; min-width:0; overflow-wrap:anywhere; }
-.showcase-person h2 { margin:0 0 2px; color:#211b25; font:500 clamp(1.5rem, 2.4vw, 2.5rem)/1.15 var(--font-serif); }
-.showcase-person p,.showcase-person a { display:block; margin:1px 0; color:#342d39; font:400 15px var(--font-serif); }
+.showcase-person h2 { margin:0 0 2px; color:var(--text-primary); font:600 clamp(1.5rem, 2.4vw, 2.5rem)/1.15 var(--font-serif); }
+.showcase-person p,.showcase-person a { display:block; margin:1px 0; color:var(--text-primary); font:400 15px var(--font-sans); }
 .showcase-person a { text-decoration:none; }
 .showcase-links { display:flex; flex-direction:column; align-items:flex-end; gap:9px; margin:8px 2px 0 auto; white-space:nowrap; }
 .edit-profile-btn { min-height:44px; padding:8px 16px; border:0; border-radius:999px; background:#d8b7dc; color:#352c3b; font:500 14px var(--font-serif); cursor:pointer; }
@@ -718,10 +727,10 @@ body.dashboard-body {
 .showcase-links>a span { font-size:13px; }
 .showcase-info-grid { display:grid; grid-template-columns:minmax(0,.8fr) minmax(0,1.25fr); gap:clamp(12px, 1.5vw, 24px); }
 .showcase-info-card { min-width:0; padding:clamp(16px, 2vw, 28px); overflow-wrap:anywhere; border:1px solid #e4d5e9; border-radius:10px; background:#fff; }
-.showcase-info-card h3 { margin:0 0 5px; color:#302837; font:500 14px var(--font-serif); }
-.showcase-info-card p { margin:0 0 8px; color:#4e4652; font:400 9px/1.45 var(--font-serif); }
+.showcase-info-card h3 { margin:0 0 5px; color:var(--text-primary); font:600 16px var(--font-serif); }
+.showcase-info-card p { margin:0 0 8px; color:var(--text-secondary); font:400 14px/1.5 var(--font-sans); }
 .showcase-info-card small { color:#60556a; font:400 13px var(--font-serif); }
-.client-about-card p { max-width:760px; margin:0; color:#514955; font:400 15px/1.6 var(--font-serif); }
+.client-about-card p { max-width:760px; margin:0; color:var(--text-secondary); font:400 15px/1.6 var(--font-sans); }
 .profile-detail-tags { display:flex; gap:7px; flex-wrap:wrap; margin:10px 0 7px; }
 .profile-detail-tags span { padding:4px 8px; border-radius:999px; background:#f6f0f7; color:#65556b; font:400 13px var(--font-serif); }
 .client-about-card>small { color:#847888; font:400 13px var(--font-serif); }
@@ -745,7 +754,7 @@ body.dashboard-body {
 .stat-upcoming { background:#f0dfe9; }.stat-pending { background:#dcedf4; }.stat-users { background:#d7eee5; }.stat-next { background:#e9dcf2; }
 .booking-list-card { padding:0; border:0; border-radius:0; box-shadow:none; background:transparent; }
 .booking-list-heading { justify-content:flex-start; gap:9px; margin:0 0 12px; }
-.booking-list-heading h1 { margin:0; color:#27212e; font:600 clamp(1.25rem, 2vw, 1.625rem) var(--font-serif); }
+.booking-list-heading h1 { margin:0; color:var(--sidebar-text); font:600 clamp(1.25rem, 2vw, 1.625rem) var(--font-serif); }
 .appointment-table { min-width:720px; table-layout:auto; }
 .appointment-table tbody tr:hover { background:#fcf9fc; }
 .booking-action-group { display:inline-flex; gap:5px; }
@@ -1204,119 +1213,6 @@ body.dashboard-body {
    & Client Search Therapist (Concept 1)
    ========================================================
    ======================================================== */
-
-/* --------------------------------------------------------
-   1. LEFT NAVBAR (Exact Figma Specifications)
-   - Background Color: #D8C6E5
-   - Font Size: 20px
-   - Font Style: Rufina
-   - Icons: Strictly 30px by 30px
-   - Logo: S☼LACE
-   - Logout: #EBDFF2 with red text #DF1F1F
-   -------------------------------------------------------- */
-body:where(:not(.therapist-bookings-page, .therapist-appointments-page, .client-profile-page, .therapist-profile-page)) .sidebar {
-  width: 260px;
-  min-width: 260px;
-  background-color: var(--figma-sidebar-bg);
-  padding: 25px 14px 22px;
-  display: flex;
-  flex-direction: column;
-  flex-shrink: 0;
-  position: sticky;
-  top: 0;
-  height: 100vh;
-  overflow-y: auto;
-  z-index: 50;
-}
-
-.sidebar-brand {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #5A4763;
-  font-family: var(--font-rufina);
-  font-size: 24px;
-  font-weight: 700;
-  letter-spacing: 1.5px;
-  padding-bottom: 14px;
-  margin-bottom: 14px;
-  border-bottom: 2px solid var(--figma-sidebar-purple);
-}
-
-.sidebar-brand .sun {
-  color: #E9A844;
-  font-size: 20px;
-  margin: 0 2px;
-}
-
-.nav-section-title {
-  font-family: var(--font-rufina);
-  font-size: 22px;
-  color: #5A4763;
-  margin: 14px 12px 8px;
-  font-weight: 700;
-}
-
-body:not(.therapist-bookings-page):not(.therapist-appointments-page):not(.client-profile-page):not(.therapist-profile-page) .nav-item {
-  height: 50px;
-  display: flex;
-  align-items: center;
-  gap: 18px;
-  padding: 0 14px;
-  border-radius: 15px;
-  color: var(--figma-sidebar-purple);
-  font-family: var(--font-rufina);
-  font-size: 20px;
-  text-decoration: none;
-  transition: all 0.15s ease-in-out;
-  cursor: pointer;
-}
-
-body:not(.therapist-bookings-page):not(.therapist-appointments-page):not(.client-profile-page):not(.therapist-profile-page) .nav-item:hover {
-  background: rgba(255, 255, 255, 0.4);
-  color: #5A4763;
-}
-
-body:not(.therapist-bookings-page):not(.therapist-appointments-page):not(.client-profile-page):not(.therapist-profile-page) .nav-item.active {
-  background: rgba(255, 255, 255, 0.65);
-  box-shadow: 0 0 6px rgba(0, 0, 0, 0.15);
-  font-weight: 700;
-  color: #5A4763;
-}
-
-/* ALL ICONS ARE STRICTLY 30x30 */
-body:not(.therapist-bookings-page):not(.therapist-appointments-page):not(.client-profile-page):not(.therapist-profile-page) .nav-item svg,
-body:not(.therapist-bookings-page):not(.therapist-appointments-page):not(.client-profile-page):not(.therapist-profile-page) .nav-icon {
-  width: 30px !important;
-  height: 30px !important;
-  min-width: 30px !important;
-  min-height: 30px !important;
-  flex-shrink: 0;
-}
-
-.logout-btn {
-  margin: auto 8px 0;
-  height: 48px;
-  border: 0;
-  border-radius: 14px;
-  background: var(--figma-sidebar-pale);
-  color: #DF1F1F;
-  font-family: var(--font-rufina);
-  font-size: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  box-shadow: 0 0 4px rgba(0, 0, 0, 0.15);
-  cursor: pointer;
-  text-decoration: none;
-  transition: background 0.15s ease;
-}
-
-.logout-link svg, .logout-btn svg { width:22px; height:22px; flex:none; }
-
-.logout-btn:hover { background: #FFE8E8; }
-
 
 /* --------------------------------------------------------
    2. TOP BAR & USER PILL (Wireframe Aligned)
@@ -2073,62 +1969,12 @@ body:not(.therapist-bookings-page):not(.therapist-appointments-page):not(.client
   outline: none;
 }
 
-.sidebar-logo {
-  display: flex;
-  justify-content: center; /* 👈 Centers horizontally */
-  align-items: center;
-  margin: 0 auto 28px;     /* 👈 Centers container in the sidebar */
-  padding: 0;              /* 👈 Removes the left padding */
-  width: 100%;
-  text-align: center;
-}
-.sidebar-logo-img {
-  max-width: 180px;        /* Adjust size as you like */
-  width: 100%;
-  height: auto;
-  display: block;
-  margin: 0 auto;          /* 👈 Centers image perfectly */
-  mix-blend-mode: multiply;
-}
-
-/* Keep Sean's assigned pages aligned with the dashboard sidebar and prevent
-   the active state from changing label weight or shifting nearby items. */
-body.therapist-bookings-page .sidebar,
-body.therapist-appointments-page .sidebar,
-body.client-profile-page .sidebar,
-body.therapist-profile-page .sidebar,
-body.admin-profile-page .sidebar {
-  flex-shrink: 0;
-  box-sizing: border-box;
-}
-
-body.therapist-bookings-page .nav-item,
-body.therapist-appointments-page .nav-item,
-body.client-profile-page .nav-item,
-body.therapist-profile-page .nav-item,
-body.admin-profile-page .nav-item,
-body.therapist-bookings-page .nav-item.active,
-body.therapist-appointments-page .nav-item.active,
-body.client-profile-page .nav-item.active,
-body.therapist-profile-page .nav-item.active,
-body.admin-profile-page .nav-item.active {
-  font-weight: 500 !important;
-  transition-property: background-color, color, box-shadow;
-}
-
 /* Assigned page breakpoints follow the shared dashboard and table rules. */
 @media (max-width: 1100px) {
   .appointment-stat-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
   .admin-metric-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
 }
 @media (max-width: 900px) {
-  :is(body.role-dashboard-page, body.admin-profile-page, body.client-profile-page, body.therapist-profile-page, body.therapist-bookings-page, body.therapist-appointments-page) .app-layout > .sidebar {
-    position:static;
-    width:100%;
-    min-width:0;
-    height:auto;
-    overflow:visible;
-  }
   .sean-main-content .showcase-info-grid { grid-template-columns:minmax(0,1fr); }
   .sean-main-content .appointment-table-wrap { padding:0; overflow:visible; border:0; box-shadow:none; }
   .sean-main-content .appointment-table { display:block; min-width:0; width:100%; }
@@ -2237,8 +2083,6 @@ body.admin-profile-page .nav-item.active {
   }
 }
 
-.sidebar .account-logout-form { margin-top: auto; padding-top: 12px; }
-.sidebar .account-logout-form button { width: 100%; margin: 0; border: 0; cursor: pointer; }
 .directory-list, .client-appointment-list { margin-top: 16px; }
 .directory-card { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
 .directory-card[hidden] { display: none; }

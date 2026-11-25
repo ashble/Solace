@@ -1,0 +1,53 @@
+{% macro item(endpoint, label, icon=None, anchor=None) %}
+  {% set active = request.endpoint == endpoint and not anchor %}
+  <a class="nav-item{% if active %} active{% endif %}" href="{{ url_for(endpoint, **({'_anchor': anchor} if anchor else {})) }}"{% if active %} aria-current="page"{% endif %}>
+    {% if icon %}<img class="nav-icon" src="{{ url_for('static', filename='img/icons/' ~ icon ~ '.png') }}" alt="">{% endif %}
+    <span>{{ label }}</span>
+  </a>
+{% endmacro %}
+
+<aside class="sidebar">
+  <div class="sidebar-header">
+    <a class="sidebar-logo" href="{{ url_for('client.landing_page') }}">
+      <img src="{{ url_for('static', filename='img/logo-dark.png') }}" alt="Solace home" class="sidebar-logo-img">
+    </a>
+    <button type="button" class="sidebar-toggle" aria-controls="sidebar-menu" aria-expanded="true" hidden>Menu</button>
+  </div>
+  <div class="sidebar-menu" id="sidebar-menu">
+    {% if role in ('client', 'therapist', 'admin') %}
+      <div class="sidebar-section-label">Main Menu</div>
+      <nav class="sidebar-nav" aria-label="Main menu">
+        {% if role == 'client' %}
+          {{ item('client.client_dashboard', 'Dashboard', 'home') }}
+          {{ item('client.search_therapist', 'Search Therapist', 'profesional') }}
+          {{ item('client.client_schedule', 'Appointments', 'appointments') }}
+          {{ item('client.client_chats', 'Messages', 'messages') }}
+          {{ item('client.client_schedule', 'Session History', 'session-history', 'appointment-history') }}
+        {% elif role == 'therapist' %}
+          {{ item('therapist.therapist_home', 'Dashboard', 'home') }}
+          {{ item('therapist.therapist_bookings', 'Bookings', 'sessions') }}
+          {{ item('therapist.therapist_appointments', 'Appointments', 'appointments') }}
+        {% else %}
+          {{ item('admin.admin_dashboard', 'Dashboard', 'home') }}
+          {{ item('admin.admin_therapist_verification', 'Therapist Verification', 'verification') }}
+          {{ item('admin.admin_user_management', 'User Management', 'clients') }}
+          {{ item('admin.admin_reports', 'Reports', 'session-history') }}
+        {% endif %}
+      </nav>
+      <div class="sidebar-section-label">Account</div>
+      <nav class="sidebar-nav" aria-label="Account">
+        {{ item('profile_page', 'Profile', 'profile') }}
+        {{ item('settings_page', 'Settings', 'settings') }}
+      </nav>
+      {% include "account-logout.html" %}
+    {% else %}
+      <nav class="sidebar-nav" aria-label="Public navigation">
+        {{ item('client.landing_page', 'Home', 'home') }}
+        {{ item('client.search_therapist', 'Search Therapist', 'profesional') }}
+        {{ item('auth.login', 'Sign in') }}
+        {{ item('auth.register', 'Register') }}
+      </nav>
+    {% endif %}
+  </div>
+</aside>
+<script src="{{ url_for('static', filename='js/sidebar.js') }}" defer></script>
