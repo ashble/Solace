@@ -600,6 +600,9 @@ h2, h3, h4, h5 { font-size: inherit; font-weight: inherit; }
 
 .review-buttons .button { padding: 9px 24px; }
 
+/* Hidden once an application has been approved or rejected */
+.review-buttons[hidden] { display: none; }
+
 
 /* ==========================================================================
    8. POPUP: DOCUMENT PREVIEW (mock certificate)
