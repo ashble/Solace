@@ -14,8 +14,6 @@
   <link rel="stylesheet" href="../static/css/sidebar.css">
   <link rel="stylesheet" href="../static/css/schedule.css">
 
-  <!-- Page script (calendar, time slots and popups) -->
-  <script src="../static/js/schedule-page.js" defer></script>
 </head>
 <body>
 
@@ -38,8 +36,8 @@
   <main>
     <div class="topbar">
       <button class="user-pill" id="userPill" aria-haspopup="true" aria-expanded="false">
-        <span class="avatar"></span>
-        <span>Sylus Qin<small>Client</small></span>
+        <span class="avatar" data-avatar-from="current-user-name"></span>
+        <span><span id="current-user-name">Sylus Qin</span><small>Client</small></span>
       </button>
       <div class="menu" id="roleMenu">
         <a href="/client">Client view</a>
@@ -54,7 +52,7 @@
     <!-- Calendar (left) and time slots (right) -->
     <div class="booking-picker">
 
-      <!-- Calendar: the day buttons are drawn by schedule-page.js -->
+      <!-- Calendar: the day buttons are drawn by the script at the bottom of this page -->
       <section class="panel calendar-card" id="calendarCard">
         <div class="calendar-header">
           <h2 class="card-title" id="calendarMonthTitle">January 2027</h2>
@@ -86,7 +84,7 @@
         </div>
       </section>
 
-      <!-- Time slots: the buttons are drawn by schedule-page.js (edit AVAILABLE_TIMES there) -->
+      <!-- Time slots: the buttons are drawn by the script at the bottom of this page (edit AVAILABLE_TIMES there) -->
       <section class="panel time-card">
         <h2 class="card-title time-card-title">Select Time:</h2>
         <div class="time-slots" id="timeSlotsContainer"></div>
@@ -160,7 +158,7 @@
   <div class="modal-dialog" role="dialog" aria-labelledby="requestModalTitle">
     <h3 class="modal-title" id="requestModalTitle">Request Appointment</h3>
     <p class="modal-text">
-      You are about to request an appointment with <strong class="is-semibold">Dr. Zayne Li</strong>.
+      You are about to request an appointment with <strong class="is-semibold">Dr.&nbsp;Zayne&nbsp;Li</strong>.
     </p>
 
     <div class="modal-details">
@@ -203,5 +201,236 @@
 
 <!-- Role menu behaviour (shared with the dashboards) -->
 <script src="../static/js/sidebar.js"></script>
+
+<!-- Page script: calendar, time slots and popups (edit AVAILABLE_TIMES to change the time buttons) -->
+<script>
+/* ==========================================================================
+   Solace - Schedule page script (inline in templates/schedule.html)
+
+   Table of contents
+     1. Settings (edit AVAILABLE_TIMES to change the time buttons)
+     2. State and helpers
+     3. Calendar
+     4. Time slots
+     5. Booking summary
+     6. Popups (request + success)
+     7. Start
+   ========================================================================== */
+(function () {
+  'use strict';
+
+  /* ======================================================================
+     1. SETTINGS
+     ====================================================================== */
+  var AVAILABLE_TIMES = [
+    '9:00 AM', '10:00 AM', '11:00 AM', '1:00 PM',
+    '2:00 PM', '3:00 PM', '4:00 PM', '5:00 PM'
+  ];
+  var DEFAULT_DATE = new Date(2027, 0, 7);     // January 7, 2027
+  var DEFAULT_TIME = '10:00 AM';
+  var DASHBOARD_URL = '/client';
+
+  /* ======================================================================
+     2. STATE AND HELPERS
+     ====================================================================== */
+  function $(id) { return document.getElementById(id); }
+
+  function startOfDay(date) {
+    return new Date(date.getFullYear(), date.getMonth(), date.getDate());
+  }
+
+  var today = startOfDay(new Date());
+  // If the default date has already passed, start from tomorrow instead
+  var selectedDate = DEFAULT_DATE >= today
+    ? DEFAULT_DATE
+    : new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1);
+  var selectedTime = DEFAULT_TIME;
+  var viewYear = selectedDate.getFullYear();
+  var viewMonth = selectedDate.getMonth();
+
+  function formatMonth(year, month) {
+    return new Date(year, month, 1).toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+  }
+
+  function formatDate(date) {
+    return date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+  }
+
+  function sameDay(a, b) {
+    return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
+  }
+
+  /* ======================================================================
+     3. CALENDAR
+     ====================================================================== */
+  function renderCalendar() {
+    $('calendarMonthTitle').textContent = formatMonth(viewYear, viewMonth);
+
+    var grid = $('calendarDaysGrid');
+    grid.textContent = '';
+
+    // Weeks start on Monday: JS gives Sunday = 0, so shift by one
+    var firstWeekday = (new Date(viewYear, viewMonth, 1).getDay() + 6) % 7;
+    var daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate();
+
+    for (var i = 0; i < firstWeekday; i++) {
+      var blank = document.createElement('span');
+      blank.className = 'calendar-day-empty';
+      grid.appendChild(blank);
+    }
+
+    for (var day = 1; day <= daysInMonth; day++) {
+      var date = new Date(viewYear, viewMonth, day);
+      var button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'calendar-day';
+      button.textContent = String(day);
+      button.setAttribute('data-day', String(day));
+
+      if (date < today) {
+        button.disabled = true;                       // no booking in the past
+      } else if (sameDay(date, selectedDate)) {
+        button.classList.add('is-selected');
+        button.setAttribute('aria-pressed', 'true');
+      }
+      grid.appendChild(button);
+    }
+
+    // No going back before the current month
+    $('prevMonthBtn').disabled =
+      viewYear < today.getFullYear() ||
+      (viewYear === today.getFullYear() && viewMonth <= today.getMonth());
+  }
+
+  function changeMonth(step) {
+    var next = new Date(viewYear, viewMonth + step, 1);
+    viewYear = next.getFullYear();
+    viewMonth = next.getMonth();
+    renderCalendar();
+  }
+
+  /* ======================================================================
+     4. TIME SLOTS
+     ====================================================================== */
+  function renderTimeSlots() {
+    var container = $('timeSlotsContainer');
+    container.textContent = '';
+
+    AVAILABLE_TIMES.forEach(function (time) {
+      var button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'time-slot' + (time === selectedTime ? ' is-selected' : '');
+      button.textContent = time;
+      button.setAttribute('data-time', time);
+      button.setAttribute('aria-pressed', time === selectedTime ? 'true' : 'false');
+      container.appendChild(button);
+    });
+  }
+
+  /* ======================================================================
+     5. BOOKING SUMMARY (page + request popup)
+     ====================================================================== */
+  function updateSummary() {
+    var dateText = formatDate(selectedDate);
+    $('summaryDateLabel').textContent = dateText;
+    $('summaryTimeLabel').textContent = selectedTime;
+    $('modalDateLabel').textContent = dateText;
+    $('modalTimeLabel').textContent = selectedTime;
+  }
+
+  /* ======================================================================
+     6. POPUPS
+     ====================================================================== */
+  function openModal(id) { $(id).classList.add('is-open'); }
+  function closeModal(id) { $(id).classList.remove('is-open'); }
+
+  function setupPopups() {
+    $('openRequestModalBtn').addEventListener('click', function () {
+      updateSummary();
+      openModal('requestModal');
+    });
+
+    $('cancelModalBtn').addEventListener('click', function () { closeModal('requestModal'); });
+
+    $('confirmRequestBtn').addEventListener('click', function () {
+      closeModal('requestModal');
+      openModal('successModal');
+      // Other code (e.g. a backend call) can listen for this event
+      document.dispatchEvent(new CustomEvent('appointment:requested', {
+        detail: { date: formatDate(selectedDate), time: selectedTime, therapist: 'Dr. Zayne Li' }
+      }));
+    });
+
+    $('backToDashboardBtn').addEventListener('click', function () {
+      window.location.href = DASHBOARD_URL;
+    });
+
+    ['requestModal', 'successModal'].forEach(function (id) {
+      $(id).addEventListener('click', function (event) {
+        if (event.target === $(id)) closeModal(id);
+      });
+    });
+
+    document.addEventListener('keydown', function (event) {
+      if (event.key === 'Escape') { closeModal('requestModal'); closeModal('successModal'); }
+    });
+  }
+
+  /* ======================================================================
+     7. START
+     ====================================================================== */
+  // Avatar letter in the user pill (first letter of the name)
+  function fillAvatars() {
+    document.querySelectorAll('[data-avatar-from]').forEach(function (avatar) {
+      var source = $(avatar.getAttribute('data-avatar-from'));
+      var name = source ? source.textContent.replace(/^(dr|mr|mrs|ms)[.]?[ ]+/i, '').trim() : '';
+      avatar.textContent = name ? name.charAt(0).toUpperCase() : '';
+    });
+  }
+
+  function start() {
+    fillAvatars();
+    renderCalendar();
+    renderTimeSlots();
+    updateSummary();
+
+    $('prevMonthBtn').addEventListener('click', function () { changeMonth(-1); });
+    $('nextMonthBtn').addEventListener('click', function () { changeMonth(1); });
+
+    $('calendarDaysGrid').addEventListener('click', function (event) {
+      var button = event.target.closest('.calendar-day');
+      if (!button || button.disabled) return;
+      selectedDate = new Date(viewYear, viewMonth, Number(button.getAttribute('data-day')));
+      renderCalendar();
+      updateSummary();
+    });
+
+    $('timeSlotsContainer').addEventListener('click', function (event) {
+      var button = event.target.closest('.time-slot');
+      if (!button) return;
+      selectedTime = button.getAttribute('data-time');
+      renderTimeSlots();
+      updateSummary();
+    });
+
+    setupPopups();
+  }
+
+  // Run now if the page is already loaded, otherwise wait for it.
+  // If anything goes wrong, show the reason on the page instead of staying blank.
+  function safeStart() {
+    try {
+      start();
+    } catch (error) {
+      console.error('Schedule page error:', error);
+      var grid = document.getElementById('calendarDaysGrid');
+      if (grid) grid.textContent = 'The calendar could not load: ' + error.message;
+    }
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', safeStart);
+  else safeStart();
+})();
+</script>
 </body>
 </html>
