@@ -55,7 +55,7 @@
     <!-- Contacts (left) and chat window (right) -->
     <div class="chat-layout">
 
-      <!-- Contacts: clicking a .contact-pill opens that conversation (data-contact-id matches conversationData in chats-page.js) -->
+      <!-- Contacts -->
       <section class="contacts-panel">
         <button class="new-chat-button" id="new-chat-btn" type="button">
           <svg class="icon-sm" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
@@ -64,7 +64,6 @@
           <span>New Chat</span>
         </button>
 
-        <!-- Avatar letters come from the contact name next to each avatar -->
         <div class="contacts-list" id="contacts-list-container">
           <div class="contact-pill is-active" data-contact-id="235">
             <div class="avatar avatar-sm" data-avatar-auto></div>
@@ -95,10 +94,10 @@
           </span>
         </header>
 
-        <!-- Message bubbles are drawn here by chats-page.js (renderConversation) -->
+        <!-- Message bubbles -->
         <div class="chat-messages" id="chat-messages-box"></div>
 
-        <!-- "is typing" bar (shown while a reply is on its way) -->
+        <!-- "is typing" bar -->
         <div class="typing-indicator" id="typing-indicator">
           <div class="avatar avatar-xs" data-avatar-from="typing-author"></div>
           <span class="typing-author" id="typing-author">Anonymous 235</span>
@@ -128,8 +127,6 @@
   </main>
 </div>
 
-
-<!-- ===== POPUPS (hidden until the "is-open" class is added) ===== -->
 
 <!-- Popup 1: Report Message -->
 <div class="modal-overlay" id="report-modal">
@@ -207,7 +204,7 @@
 </div>
 
 
-<!-- ===== TOAST (small confirmation message, shown by adding "is-visible") ===== -->
+<!-- ===== TOAST (small confirmation message) ===== -->
 <div class="toast" id="toast-notification" role="status" aria-live="polite">
   <div class="toast-content">
     <svg class="icon-sm" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
