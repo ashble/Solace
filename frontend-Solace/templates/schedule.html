@@ -9,7 +9,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 </head>
-<body class="dashboard-body">
+<body class="dashboard-body" data-therapist-id="{{ therapist.user_id }}">
   <div class="app-layout">
     <aside class="sidebar">
       <div class="sidebar-logo">
@@ -158,9 +158,9 @@
           <div class="summary-therapist-row">
             <div class="therapist-photo-circle" style="background: url('https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=120&h=120&fit=crop&crop=face') center/cover;"></div>
             <div class="therapist-info">
-              <h4 class="therapist-doctor-name">Dr. Zayne Li</h4>
-              <p class="therapist-doc-title">Licensed Therapist</p>
-              <p class="therapist-doc-specialty">Anxiety · Depression</p>
+              <h4 class="therapist-doctor-name">{{ therapist.user.name }}</h4>
+              <p class="therapist-doc-title">{{ therapist.practice_name or 'Therapist' }}</p>
+              <p class="therapist-doc-specialty">{{ therapist.specialties or 'Specialties not listed' }}</p>
             </div>
           </div>
 
@@ -220,7 +220,14 @@
     }));
     document.getElementById('requestAppointment').addEventListener('click', async (event) => {
       const button = event.currentTarget; button.disabled = true;
-      const response = await fetch('/api/appointments', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({client:'Binibirocha', therapist:'Dr. Zayne Li', date:chosenDate, time:chosenTime, session_type:'Online consultation'})});
+      const csrfResponse = await fetch('/api/csrf', {credentials:'same-origin'});
+      const csrf = await csrfResponse.json();
+      const [clock, meridiem] = chosenTime.split(' ');
+      let [hours, minutes] = clock.split(':').map(Number);
+      if (meridiem === 'PM' && hours !== 12) hours += 12;
+      if (meridiem === 'AM' && hours === 12) hours = 0;
+      const scheduledAt = `${chosenDate}T${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:00`;
+      const response = await fetch('/api/bookings', {method:'POST', credentials:'same-origin', headers:{'Content-Type':'application/json', 'X-CSRF-Token':csrf.csrf_token}, body:JSON.stringify({therapist_id:Number(document.body.dataset.therapistId), scheduled_at:scheduledAt, session_type:'Online consultation'})});
       if (response.ok) { button.textContent = 'Request sent'; button.closest('.summary-action-col').insertAdjacentHTML('beforeend', '<p class="booking-confirmation">Your request is waiting for therapist approval.</p>'); }
       else { button.disabled = false; button.textContent = 'Try again'; }
     });

@@ -1,165 +1,220 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Reports - Solace Admin</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css">
-</head>
-<body class="dashboard-body">
-  <div class="app-layout">
-    <!-- Sidebar -->
-    <aside class="sidebar">
-      <div class="sidebar-logo">
-        <span class="logo-text">S</span>
-        <span class="logo-sun">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#E9A844" stroke-width="2"><circle cx="12" cy="12" r="4.5" fill="#E9A844" stroke="none"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="4.93" y1="4.93" x2="7.05" y2="7.05"/><line x1="16.95" y1="16.95" x2="19.07" y2="19.07"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.93" y1="19.07" x2="7.05" y2="16.95"/><line x1="16.95" y1="7.05" x2="19.07" y2="4.93"/></svg>
-        </span>
-        <span class="logo-text">LACE</span>
-      </div>
+{% extends "admin_base.html" %}
+{% set active_page = "reports" %}
+{% set page_heading = "Reports" %}
+{% block page_icon %}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8m-8 4h8"/></svg>{% endblock %}
+{% block content %}
+<!-- Stat Boxes -->
+      <section class="stat-boxes-row">
+        <article class="stat-box box-total-reports">
+          <span class="stat-label-oxanium">Total Reports</span>
+          <strong class="stat-num-istok" id="totalReportsCount">{{ stats.total }}</strong>
+        </article>
+        <article class="stat-box box-total-reports" style="background-color: #F5E6A3;">
+          <span class="stat-label-oxanium">Pending Reports</span>
+          <strong class="stat-num-istok" id="pendingReportsCount">{{ stats.pending }}</strong>
+        </article>
+        <article class="stat-box box-urgent-reports">
+          <span class="stat-label-oxanium">Urgent Reports</span>
+          <strong class="stat-num-istok" id="urgentReportsCount">{{ stats.urgent }}</strong>
+        </article>
+        <article class="stat-box box-resolved-reports">
+          <span class="stat-label-oxanium">Resolved Reports</span>
+          <strong class="stat-num-istok" id="resolvedReportsCount">{{ stats.resolved }}</strong>
+        </article>
+      </section>
 
-      <nav class="sidebar-nav">
-        <a href="/admin" class="nav-item">
-          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-          <span>Dashboard</span>
-        </a>
-        <a href="/admin/therapist-verification" class="nav-item">
-          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
-          <span style="line-height: 1.2;">Therapist<br>Verification</span>
-        </a>
-        <a href="/admin/user-management" class="nav-item">
-          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-          <span style="line-height: 1.2;">User<br>Management</span>
-        </a>
-        <a href="/admin/reports" class="nav-item active">
-          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-          <span>Reports</span>
-        </a>
-        <a href="/profile?role=admin" class="nav-item">
-          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-          <span>Profile</span>
-        </a>
-        <a href="/settings?role=admin" class="nav-item">
-          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-          <span>Settings</span>
-        </a>
-      </nav>
-    </aside>
-
-    <main class="main-content">
-      <header class="page-top-header">
-        <h1 class="serif-title" style="font-size: 28px;">Reports</h1>
-        <div class="user-pill admin-pill">
-          <div class="user-avatar admin-avatar"></div>
-          <div class="user-details">
-            <span class="user-name">User, name</span>
-            <span class="user-role">Administrator</span>
-          </div>
+      <!-- Toolbar -->
+      <section class="toolbar-card">
+        <div class="search-input-wrap">
+          <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="search" class="search-input" id="reportSearch" placeholder="Search reports by user or concern...">
         </div>
-      </header>
-
-      <!-- Clean Filter Bar replacing separate buttons -->
-      <section class="search-filter-card" style="margin-bottom: 22px;">
-        <div class="search-input-wrapper">
-          <input type="text" placeholder="Search reports by user or concern..." class="search-field">
-          <button class="search-icon-btn" aria-label="Search">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-          </button>
-        </div>
-
-        <div class="filter-dropdown-wrapper">
-          <select class="filter-select">
-            <option selected>All Statuses</option>
-            <option>Pending</option>
-            <option>Accomplished</option>
-            <option>In Review</option>
-          </select>
-          <svg class="select-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
-        </div>
-
-        <div class="filter-dropdown-wrapper">
-          <select class="filter-select">
-            <option selected>All Concerns</option>
-            <option>Spam</option>
-            <option>Troll</option>
-            <option>Death Threat</option>
-            <option>Harassment</option>
-          </select>
-          <svg class="select-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
-        </div>
-
-        <div class="filter-dropdown-wrapper sort-dropdown">
-          <select class="filter-select">
-            <option selected>Sort By: Newest</option>
-            <option>Sort By: Oldest</option>
-            <option>Sort By: Severity</option>
-          </select>
-          <svg class="select-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
-        </div>
+        <select class="filter-select" id="statusFilter">
+          <option value="all">All Statuses</option>
+          <option value="Pending">Pending</option>
+          <option value="Resolved">Resolved</option>
+        </select>
+        <select class="filter-select" id="sortFilter">
+          <option value="newest">Sort By: Newest</option>
+          <option value="oldest">Sort By: Oldest</option>
+        </select>
       </section>
 
       <!-- Table -->
-      <section class="admin-full-table-box">
-        <table class="admin-data-table">
+      <section class="table-container">
+        <table class="data-table">
           <thead>
             <tr>
-              <th>User</th>
+              <th>Reporter</th>
+              <th>Reported User</th>
               <th>Concern</th>
+              <th>Severity</th>
+              <th>Date</th>
               <th>Status</th>
-              <th style="text-align: right;">Action</th>
+              <th>Action</th>
             </tr>
           </thead>
-          <tbody>
-            <tr>
-              <td class="serif-td font-medium">Anonymous User #6767</td>
-              <td class="serif-td">Spam</td>
-              <td><span class="status-badge status-pending">Pending</span></td>
-              <td style="text-align: right;"><button class="check-pill-btn">Review</button></td>
+          <tbody id="reportsTableBody">
+            {% for report in reports %}
+            <tr data-report-id="{{ report.id }}" data-log-id="{{ report.log_id }}" data-status="{{ report.status|capitalize }}" data-concern="{{ report.concern_type|e }}" data-reporter="{{ report.reporter_label|e }}" data-reporter-role="{{ report.reporter_role|capitalize if report.reporter_role else '' }}" data-reported="{{ report.reported_user_label|e }}" data-severity="{{ report.severity|capitalize }}" data-date="{{ report.created_at.strftime('%B %d, %Y %I:%M %p') if report.created_at else '' }}" data-notes="{{ report.description|e }}" data-attachment-ids='{{ report.attachments|map(attribute="id")|list|tojson }}' data-attachment-names='{{ report.attachments|map(attribute="original_filename")|list|tojson }}'>
+              <td>{{ report.reporter_label }}</td><td>{{ report.reported_user_label }}</td><td>{{ report.concern_type }}</td>
+              <td><span class="badge {% if report.severity|lower == 'urgent' %}badge-urgent{% else %}badge-normal{% endif %}">{{ report.severity|capitalize }}</span></td>
+              <td>{{ report.created_at.strftime('%b %d, %Y') if report.created_at else '' }}</td>
+              <td><span class="badge {% if report.status|lower == 'resolved' %}badge-resolved{% else %}badge-pending{% endif %}">{{ report.status|capitalize }}</span></td>
+              <td><button class="action-btn" onclick="openReportModal(this)">Review</button></td>
             </tr>
-            <tr>
-              <td class="serif-td font-medium">Anonymous User #1234</td>
-              <td class="serif-td">Troll</td>
-              <td><span class="status-badge status-pending">Pending</span></td>
-              <td style="text-align: right;"><button class="check-pill-btn">Review</button></td>
+            {% else %}
+            <tr data-report-id="0" data-sample="true" data-log-id="RPT-TEST-001" data-status="Pending" data-concern="Sample concern" data-reporter="Sample Client" data-reporter-role="Client" data-reported="test-user-01" data-severity="Normal" data-date="Sample date" data-notes="Sample details for testing the report window." data-attachment-ids="[]" data-attachment-names="[]">
+              <td>Sample Client</td>
+              <td>test-user-01</td>
+              <td>Sample concern</td>
+              <td><span class="badge badge-normal">Normal</span></td>
+              <td>Sample date</td>
+              <td><span class="badge badge-pending">Pending</span></td>
+              <td><button class="action-btn" onclick="openReportModal(this)">Review</button></td>
             </tr>
-            <tr>
-              <td class="serif-td font-medium">Dr. Meeseeks</td>
-              <td class="serif-td">Death Threat</td>
-              <td><span class="status-badge status-pending">Pending</span></td>
-              <td style="text-align: right;"><button class="check-pill-btn">Review</button></td>
-            </tr>
-            <tr>
-              <td class="serif-td font-medium">Dr. Eggman</td>
-              <td class="serif-td">Unauthorized Access</td>
-              <td><span class="status-badge status-approved">Accomplished</span></td>
-              <td style="text-align: right;"><button class="check-pill-btn">Review</button></td>
-            </tr>
-            <tr>
-              <td class="serif-td font-medium">Anonymous User #854</td>
-              <td class="serif-td">Harassment</td>
-              <td><span class="status-badge status-approved">Accomplished</span></td>
-              <td style="text-align: right;"><button class="check-pill-btn">Review</button></td>
-            </tr>
+            {% endfor %}
           </tbody>
         </table>
-
-        <div class="table-pagination-footer">
-          <span class="pagination-count serif-td">Showing page 1 of 55 pages of reports</span>
-          <div class="pagination-controls">
-            <button class="page-btn page-arrow">&larr;</button>
-            <button class="page-btn active-page">1</button>
-            <button class="page-btn">2</button>
-            <button class="page-btn">3</button>
-            <button class="page-btn">4</button>
-            <span class="page-dots">...</span>
-            <button class="page-btn page-arrow">&rarr;</button>
-          </div>
-        </div>
+        <div class="table-footer"><span id="reportsCount">Showing {{ reports|length if reports else 1 }} of {{ reports|length if reports else 1 }} reports</span></div>
       </section>
-    </main>
+{% endblock %}
+{% block scripts %}
+<!-- FLOATING MODAL — Review / View Report -->
+  <div class="fw-overlay" id="reportModal" onclick="closeFwIfOverlay(event,'reportModal')">
+    <div class="fw-card">
+      <button class="fw-close" onclick="closeModal('reportModal')">&#x2715;</button>
+      <div class="fw-header">
+        <div class="fw-icon-badge">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8m-8 4h8"/></svg>
+        </div>
+        <div>
+          <h2 class="fw-title" id="modalTitle">Report Details</h2>
+          <p class="fw-subtitle" id="modalSubtitle">Review and update report status</p>
+        </div>
+      </div>
+      <div class="fw-info-grid">
+        <div class="fw-info-item"><span class="fw-info-label">Reporter</span><span class="fw-info-value" id="mReporter">—</span></div>
+        <div class="fw-info-item"><span class="fw-info-label">Reporter Type</span><span class="fw-info-value" id="mReporterRole">—</span></div>
+        <div class="fw-info-item"><span class="fw-info-label">Reported User</span><span class="fw-info-value" id="mReported">—</span></div>
+        <div class="fw-info-item"><span class="fw-info-label">Concern</span><span class="fw-info-value" id="mConcern">—</span></div>
+        <div class="fw-info-item"><span class="fw-info-label">Severity</span><span class="fw-info-value" id="mSeverity">—</span></div>
+        <div class="fw-info-item"><span class="fw-info-label">Date Filed</span><span class="fw-info-value" id="mDate">—</span></div>
+        <div class="fw-info-item"><span class="fw-info-label">Current Status</span><span class="fw-info-value" id="mStatus">—</span></div>
+        <div class="fw-info-item"><span class="fw-info-label">Report Log</span><span class="fw-info-value" id="mLog">—</span></div>
+      </div>
+      <div class="fw-notes-box">
+        <div class="fw-notes-label">Report Details / Notes</div>
+        <p class="fw-notes-text" id="mNotes">—</p>
+      </div>
+      <div class="fw-notes-box">
+        <div class="fw-notes-label">Attachments</div>
+        <div id="mAttachments">No attachments.</div>
+      </div>
+      <div class="fw-status-row" id="statusRow">
+        <label for="mStatusSelect">Update Status:</label>
+        <select class="fw-status-select" id="mStatusSelect">
+          <option value="Pending">Pending</option>
+          <option value="Resolved">Resolved</option>
+        </select>
+      </div>
+      <div class="fw-actions">
+        <button class="fw-btn-cancel" onclick="closeModal('reportModal')">Close</button>
+        <button class="fw-btn-primary" id="saveBtn" onclick="saveReport()">Save Changes</button>
+      </div>
+    </div>
   </div>
-</body>
-</html>
+<script>const searchInput  = document.getElementById('reportSearch');
+    const statusFilter = document.getElementById('statusFilter');
+    const rows = Array.from(document.querySelectorAll('#reportsTableBody tr[data-report-id]'));
+
+    function updateReportStats() {
+      document.getElementById('totalReportsCount').textContent = rows.length;
+      document.getElementById('pendingReportsCount').textContent =
+        rows.filter(row => row.dataset.status.toLowerCase() === 'pending').length;
+      document.getElementById('urgentReportsCount').textContent =
+        rows.filter(row => row.dataset.severity.toLowerCase() === 'urgent').length;
+      document.getElementById('resolvedReportsCount').textContent =
+        rows.filter(row => row.dataset.status.toLowerCase() === 'resolved').length;
+    }
+
+    function filterReports() {
+      const q = searchInput.value.trim().toLowerCase();
+      const s = statusFilter.value;
+      let n = 0;
+      rows.forEach(r => {
+        const ok = (!q || r.textContent.toLowerCase().includes(q))
+                && (s === 'all' || r.dataset.status.toLowerCase() === s.toLowerCase());
+        r.style.display = ok ? '' : 'none';
+        if (ok) n++;
+      });
+      document.getElementById('reportsCount').textContent = `Showing ${n} of ${rows.length} reports`;
+    }
+    searchInput.addEventListener('input', filterReports);
+    statusFilter.addEventListener('change', filterReports);
+    updateReportStats();
+
+    let activeRow = null;
+    function openReportModal(btn) {
+      activeRow = btn.closest('tr');
+      const d = activeRow.dataset, resolved = d.status === 'Resolved';
+      document.getElementById('modalTitle').textContent    = resolved ? 'View Report' : 'Review Report';
+      document.getElementById('modalSubtitle').textContent = resolved ? 'This report has been resolved.' : 'Review and update the report status.';
+      document.getElementById('mReporter').textContent  = d.reporter;
+      document.getElementById('mReporterRole').textContent = d.reporterRole || 'Not specified';
+      document.getElementById('mReported').textContent  = d.reported;
+      document.getElementById('modalSubtitle').textContent = `Report ${d.logId}`;
+      document.getElementById('mLog').textContent = d.logId;
+      document.getElementById('mConcern').textContent   = activeRow.cells[2].textContent;
+      document.getElementById('mSeverity').textContent  = d.severity;
+      document.getElementById('mDate').textContent      = d.date;
+      document.getElementById('mStatus').textContent    = d.status;
+      document.getElementById('mNotes').textContent     = d.notes || 'No additional notes.';
+      const attachmentIds = JSON.parse(d.attachmentIds || '[]');
+      const attachmentNames = JSON.parse(d.attachmentNames || '[]');
+      const attachmentList = document.getElementById('mAttachments');
+      attachmentList.replaceChildren();
+      if (!attachmentIds.length) {
+        attachmentList.textContent = 'No attachments.';
+      } else {
+        attachmentIds.forEach((id, index) => {
+          const link = document.createElement('a');
+          link.href = `/admin/reports/${d.reportId}/attachments/${id}`;
+          link.textContent = attachmentNames[index] || 'Download attachment';
+          link.style.display = 'block';
+          link.rel = 'noopener';
+          attachmentList.appendChild(link);
+        });
+      }
+      document.getElementById('mStatusSelect').value    = d.status;
+      document.getElementById('statusRow').style.display = resolved ? 'none' : '';
+      document.getElementById('saveBtn').style.display   = resolved ? 'none' : '';
+      document.getElementById('reportModal').classList.add('fw-open');
+    }
+    async function saveReport() {
+      if (!activeRow) return;
+      const v = document.getElementById('mStatusSelect').value;
+      if (activeRow.dataset.sample === 'true') {
+        activeRow.dataset.status = v;
+        activeRow.cells[5].innerHTML = `<span class="badge ${v==='Resolved'?'badge-resolved':'badge-pending'}">${v}</span>`;
+        activeRow.cells[6].querySelector('button').textContent = v === 'Resolved' ? 'View' : 'Review';
+        updateReportStats();
+        closeModal('reportModal');
+        filterReports();
+        return;
+      }
+      const response = await fetch(`/admin/reports/${activeRow.dataset.reportId}/status`, {
+        method: 'PATCH', headers: await window.solaceCsrfHeaders({ 'Content-Type': 'application/json' }),
+        body: JSON.stringify({ status: v.toLowerCase() })
+      });
+      if (!response.ok) { alert('Could not save report status. Please try again.'); return; }
+      activeRow.dataset.status = v;
+      activeRow.cells[5].innerHTML = `<span class="badge ${v==='Resolved'?'badge-resolved':'badge-pending'}">${v}</span>`;
+      activeRow.cells[6].querySelector('button').textContent = v === 'Resolved' ? 'View' : 'Review';
+      updateReportStats();
+      closeModal('reportModal');
+      filterReports();
+    }
+    function closeModal(id) { document.getElementById(id).classList.remove('fw-open'); }
+    function closeFwIfOverlay(e, id) { if (e.target === document.getElementById(id)) closeModal(id); }</script>
+{% endblock %}

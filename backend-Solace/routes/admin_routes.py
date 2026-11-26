@@ -1,112 +1,121 @@
-from flask import Blueprint, render_template, request, redirect, url_for, jsonify, flash
 from datetime import datetime
-from app import db
-from models.user import User
-from models.therapist import TherapistVerification
-from models.report import Report
+from flask import Blueprint, abort, jsonify, render_template, request
+from extensions import db
+from models import Report, TherapistVerification, User
+from auth_helpers import csrf_required, role_required
 
-admin_bp = Blueprint('admin', __name__, url_prefix='/admin')
+admin_bp = Blueprint("admin", __name__)
 
-# 1. Admin Dashboard (Stats + Quick previews)
-@admin_bp.route('/')
-@admin_bp.route('/dashboard')
-def dashboard():
+
+@admin_bp.route("/admin")
+@admin_bp.route("/admin/dashboard")
+@role_required("admin")
+def admin_dashboard():
+    all_reports = Report.query.order_by(Report.created_at.desc()).all()
     stats = {
-        "total_reports": Report.query.count(),
-        "urgent_reports": Report.query.filter_by(severity='urgent', status='pending').count(),
-        "admins_online": User.query.filter_by(role='admin', status='active').count()
+        "total_reports": len(all_reports),
+        "urgent_reports": sum(1 for report in all_reports if (report.severity or "").lower() == "urgent"),
+        "admins_online": "—",
     }
-    pending_verifications = TherapistVerification.query.filter_by(status='pending').order_by(TherapistVerification.submitted_at.desc()).limit(5).all()
-    recent_reports = Report.query.order_by(Report.created_at.desc()).limit(5).all()
-    
-    return render_template(
-        'index.html',
-        role='admin',
-        active_tab='dashboard',
-        stats=stats,
-        pending_verifications=pending_verifications,
-        recent_reports=recent_reports
-    )
+    pending_verifications = [
+        {"name": item.user.name if item.user else "Unknown therapist",
+         "date": item.submitted_at.strftime("%B %d, %Y") if item.submitted_at else ""}
+        for item in TherapistVerification.query.filter(TherapistVerification.status.in_(["pending", "Pending"]))
+        .order_by(TherapistVerification.submitted_at.desc()).all()
+    ]
+    recent_reports = [
+        {"name": f"{report.concern_type} — {report.reported_user_label}",
+         "date": report.created_at.strftime("%B %d, %Y") if report.created_at else ""}
+        for report in all_reports[:3]
+    ]
+    user = {"name": "Solace Administrator", "display_name": "Solace Administrator", "role": "Administrator"}
+    return render_template("admin-dashboard.html", role="admin", active_tab="dashboard",
+                           active_page="dashboard", user=user, stats=stats,
+                           pending_verifications=pending_verifications, recent_reports=recent_reports)
 
-# 2. Therapist Verification (List & Floating Modal Actions)
-@admin_bp.route('/therapist-verification')
-def therapist_verification():
-    applications = TherapistVerification.query.order_by(TherapistVerification.submitted_at.desc()).all()
-    return render_template('admin-therapist-verification.html', applications=applications)
 
-@admin_bp.route('/therapist-verification/<int:app_id>/approve', methods=['POST'])
-def approve_therapist(app_id):
-    verification = TherapistVerification.query.get_or_404(app_id)
-    verification.status = 'approved'
-    verification.reviewed_at = datetime.utcnow()
-    # Activate user account
-    verification.user.status = 'active'
-    db.session.commit()
-    return redirect(url_for('admin.therapist_verification'))
+@admin_bp.route("/admin/user-management")
+@role_required("admin")
+def admin_user_management():
+    role_names = {"client": "Client", "therapist": "Therapist", "admin": "Administrator"}
+    users = [{"name": item.name, "email": item.email, "role": role_names.get(item.role, item.role.title()),
+              "status": item.status.title()}
+             for item in User.query.order_by(User.created_at.desc()).all()]
+    user = {"name": "Solace Administrator", "display_name": "Solace Administrator", "role": "Administrator"}
+    return render_template("admin-user-management.html", users=users, user=user, active_page="users")
 
-@admin_bp.route('/therapist-verification/<int:app_id>/reject', methods=['POST'])
-def reject_therapist(app_id):
-    verification = TherapistVerification.query.get_or_404(app_id)
-    verification.status = 'rejected'
-    verification.rejection_reason = request.form.get('reason', 'Credentials could not be verified')
-    verification.reviewed_at = datetime.utcnow()
-    db.session.commit()
-    return redirect(url_for('admin.therapist_verification'))
 
-# 3. User Management (Filtering, Role Stats, Actions)
-@admin_bp.route('/user-management')
-def user_management():
-    role_filter = request.args.get('role')
-    status_filter = request.args.get('status')
-    search_query = request.args.get('search')
-
-    query = User.query
-    if role_filter and role_filter != 'All Roles':
-        query = query.filter(User.role == role_filter.lower())
-    if status_filter and status_filter != 'All Statuses':
-        query = query.filter(User.status == status_filter.lower())
-    if search_query:
-        query = query.filter(User.name.ilike(f"%{search_query}%") | User.email.ilike(f"%{search_query}%"))
-
-    users = query.all()
+@admin_bp.route("/admin/reports")
+@role_required("admin")
+def admin_reports():
+    reports = Report.query.order_by(Report.created_at.desc()).all()
     stats = {
-        "clients": User.query.filter_by(role='client').count(),
-        "therapists": User.query.filter_by(role='therapist').count(),
-        "admins": User.query.filter_by(role='admin').count()
+        "total": len(reports),
+        "urgent": sum(1 for report in reports if (report.severity or "").lower() == "urgent"),
+        "pending": sum(1 for report in reports if (report.status or "").lower() == "pending"),
+        "resolved": sum(1 for report in reports if (report.status or "").lower() == "resolved"),
     }
-    return render_template('admin-user-management.html', users=users, stats=stats)
+    user = {"name": "Solace Administrator", "display_name": "Solace Administrator", "role": "Administrator"}
+    return render_template("admin-reports.html", reports=reports, stats=stats, user=user, active_page="reports")
 
-@admin_bp.route('/user-management/<int:user_id>/status', methods=['POST'])
-def update_user_status(user_id):
-    user = User.query.get_or_404(user_id)
-    new_status = request.form.get('status') # 'active', 'suspended', 'flagged'
-    if new_status:
-        user.status = new_status
-        db.session.commit()
-    return redirect(url_for('admin.user_management'))
 
-# 4. Reports (Filtering, Status update)
-@admin_bp.route('/reports')
-def reports():
-    status_filter = request.args.get('status')
-    concern_filter = request.args.get('concern')
-    search_query = request.args.get('search')
-
-    query = Report.query
-    if status_filter and status_filter != 'All Statuses':
-        query = query.filter(Report.status == status_filter.lower())
-    if concern_filter and concern_filter != 'All Concerns':
-        query = query.filter(Report.concern_type == concern_filter)
-    if search_query:
-        query = query.filter(Report.description.ilike(f"%{search_query}%"))
-
-    all_reports = query.order_by(Report.created_at.desc()).all()
-    return render_template('admin-reports.html', reports=all_reports)
-
-@admin_bp.route('/reports/<int:report_id>/resolve', methods=['POST'])
-def resolve_report(report_id):
-    report = Report.query.get_or_404(report_id)
-    report.status = 'accomplished'
-    report.resolved_at = datetime.utcnow()
+@admin_bp.patch("/admin/reports/<int:report_id>/status")
+@role_required("admin")
+@csrf_required
+def admin_report_update_status(report_id):
+    report = db.session.get(Report, report_id)
+    if report is None:
+        abort(404)
+    payload = request.get_json(silent=True) or {}
+    status = str(payload.get("status", "")).strip().lower()
+    if status not in {"pending", "resolved"}:
+        return jsonify(error="Status must be pending or resolved."), 400
+    report.status = status
+    report.resolved_at = datetime.utcnow() if status == "resolved" else None
     db.session.commit()
-    return redirect(url_for('admin.reports'))
+    return jsonify(id=report.id, status=report.status,
+                   resolved_at=report.resolved_at.isoformat() if report.resolved_at else None)
+
+
+@admin_bp.route("/admin/therapist-verification")
+@role_required("admin")
+def admin_therapist_verification():
+    verifications = TherapistVerification.query.order_by(TherapistVerification.submitted_at.desc()).all()
+    user = {"name": "Solace Administrator", "display_name": "Solace Administrator", "role": "Administrator"}
+    return render_template("admin-therapist-verification.html", verifications=verifications,
+                           user=user, active_page="verification")
+
+
+@admin_bp.route("/admin/therapist/verify/<int:id>", methods=["POST"])
+@admin_bp.route("/admin/therapist/reject/<int:id>", methods=["POST"])
+@role_required("admin")
+@csrf_required
+def admin_therapist_action(id):
+    verification = db.session.get(TherapistVerification, id)
+    if verification is None:
+        return jsonify(error="Verification not found."), 404
+    if not verification.user:
+        return jsonify(error="Verification has no associated user."), 409
+    if verification.status.lower() != "pending":
+        return jsonify(error="Only pending applications can be reviewed."), 409
+
+    approve = request.path.endswith("/verify/" + str(id))
+    payload = request.get_json(silent=True) or {}
+    reason = str(payload.get("reason", "")).strip()
+    if not approve and not reason:
+        return jsonify(error="A rejection reason is required."), 400
+    verification.reviewed_at = datetime.utcnow()
+    if approve:
+        verification.status = "approved"
+        verification.rejection_reason = None
+        verification.user.status = "active"
+        if verification.user.therapist_profile:
+            verification.user.therapist_profile.is_listed = True
+    else:
+        verification.status = "rejected"
+        verification.rejection_reason = reason[:2000]
+        verification.user.status = "suspended"
+        if verification.user.therapist_profile:
+            verification.user.therapist_profile.is_listed = False
+    db.session.commit()
+    return jsonify(id=verification.id, status=verification.status, user_status=verification.user.status)

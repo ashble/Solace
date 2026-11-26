@@ -1,201 +1,209 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>User Management - Solace Admin</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css">
-</head>
-<body class="dashboard-body">
-  <div class="app-layout">
-    <aside class="sidebar">
-      <div class="sidebar-logo">
-        <span class="logo-text">S</span>
-        <span class="logo-sun">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#E9A844" stroke-width="2"><circle cx="12" cy="12" r="4.5" fill="#E9A844" stroke="none"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="4.93" y1="4.93" x2="7.05" y2="7.05"/><line x1="16.95" y1="16.95" x2="19.07" y2="19.07"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.93" y1="19.07" x2="7.05" y2="16.95"/><line x1="16.95" y1="7.05" x2="19.07" y2="4.93"/></svg>
-        </span>
-        <span class="logo-text">LACE</span>
-      </div>
-
-      <nav class="sidebar-nav">
-        <a href="/admin" class="nav-item">
-          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-          <span>Dashboard</span>
-        </a>
-        <a href="/admin/therapist-verification" class="nav-item">
-          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
-          <span style="line-height: 1.2;">Therapist<br>Verification</span>
-        </a>
-        <a href="/admin/user-management" class="nav-item active">
-          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-          <span style="line-height: 1.2;">User<br>Management</span>
-        </a>
-        <a href="/admin/reports" class="nav-item">
-          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-          <span>Reports</span>
-        </a>
-        <a href="/profile?role=admin" class="nav-item">
-          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-          <span>Profile</span>
-        </a>
-        <a href="/settings?role=admin" class="nav-item">
-          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-          <span>Settings</span>
-        </a>
-      </nav>
-    </aside>
-
-    <main class="main-content">
-      <header class="page-top-header">
-        <div class="header-title-group">
-          <div class="header-icon-badge" style="background-color: #554477;">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-          </div>
-          <h1 class="page-main-title">User Management</h1>
-        </div>
-
-        <div class="user-pill admin-pill">
-          <div class="user-avatar admin-avatar"></div>
-          <div class="user-details">
-            <span class="user-name">User, name</span>
-            <span class="user-role">Administrator</span>
-          </div>
-        </div>
-      </header>
-
-      <!-- 3 Top Stats Cards -->
-      <section class="user-mgmt-stats-grid">
-        <div class="um-stat-card card-pinkish-bg">
-          <div class="um-icon-wrapper">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
-          </div>
-          <div class="um-stat-info">
-            <span class="um-stat-label">Total Users</span>
-            <span class="um-stat-value">6,769</span>
-          </div>
-        </div>
-
-        <div class="um-stat-card card-green-bg">
-          <div class="um-icon-wrapper">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/></svg>
-          </div>
-          <div class="um-stat-info">
-            <span class="um-stat-label">Total Therapists</span>
-            <span class="um-stat-value">142</span>
-          </div>
-        </div>
-
-        <div class="um-stat-card card-blue-bg">
-          <div class="um-icon-wrapper">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-          </div>
-          <div class="um-stat-info">
-            <span class="um-stat-label">Total Administrators</span>
-            <span class="um-stat-value">12</span>
-          </div>
-        </div>
+{% extends "admin_base.html" %}
+{% set active_page = "users" %}
+{% set page_heading = "User Management" %}
+{% block page_icon %}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.9M16 3.1a4 4 0 0 1 0 7.8"/></svg>{% endblock %}
+{% block content %}
+<!-- Stat Boxes -->
+      <section class="stat-boxes-row">
+        <article class="stat-box box-users">
+          <span class="stat-label-oxanium">Total Users</span>
+          <strong class="stat-num-istok" id="totalUsersCount">0</strong>
+        </article>
+        <article class="stat-box box-therapists">
+          <span class="stat-label-oxanium">Total Therapists</span>
+          <strong class="stat-num-istok" id="totalTherapistsCount">0</strong>
+        </article>
+        <article class="stat-box box-admins">
+          <span class="stat-label-oxanium">Total Administrators</span>
+          <strong class="stat-num-istok" id="totalAdminsCount">0</strong>
+        </article>
       </section>
 
-      <!-- Filter Bar -->
-      <section class="search-filter-card" style="margin-bottom: 22px;">
-        <div class="search-input-wrapper">
-          <input type="text" placeholder="Search user by name or email" class="search-field">
-          <button class="search-icon-btn" aria-label="Search">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-          </button>
+      <!-- Toolbar -->
+      <section class="toolbar-card">
+        <div class="search-input-wrap">
+          <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="search" class="search-input" id="userSearch" placeholder="Search user by name or email">
         </div>
-
-        <div class="filter-dropdown-wrapper">
-          <select class="filter-select">
-            <option selected>All Roles</option>
-            <option>Client</option>
-            <option>Therapist</option>
-            <option>Administrator</option>
-          </select>
-          <svg class="select-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
-        </div>
-
-        <div class="filter-dropdown-wrapper">
-          <select class="filter-select">
-            <option selected>All Statuses</option>
-            <option>Active</option>
-            <option>Pending</option>
-            <option>Suspended</option>
-          </select>
-          <svg class="select-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
-        </div>
-
-        <div class="filter-dropdown-wrapper sort-dropdown">
-          <select class="filter-select">
-            <option selected>Sort By...</option>
-            <option>Name (A-Z)</option>
-            <option>Join Date</option>
-          </select>
-          <svg class="select-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
-        </div>
+        <select class="filter-select" id="roleFilter">
+          <option value="all">All Roles</option>
+          <option value="Client">Client</option>
+          <option value="Therapist">Therapist</option>
+          <option value="Administrator">Administrator</option>
+        </select>
+        <select class="filter-select" id="statusFilter">
+          <option value="all">All Statuses</option>
+          <option value="Active">Active</option>
+          <option value="Pending">Pending</option>
+          <option value="Flagged">Flagged</option>
+        </select>
       </section>
 
       <!-- Table -->
-      <section class="admin-full-table-box">
-        <table class="admin-data-table">
+      <section class="table-container">
+        <table class="data-table">
           <thead>
             <tr>
               <th>User</th>
               <th>Role</th>
               <th>Status</th>
               <th>Verification Status</th>
-              <th style="text-align: right;">Action</th>
+              <th>Action</th>
             </tr>
           </thead>
-          <tbody>
-            <tr>
-              <td class="serif-td font-medium">Binibirocha</td>
-              <td class="serif-td">Client</td>
-              <td><span class="status-badge status-approved">Active</span></td>
-              <td class="serif-td">Verified</td>
-              <td style="text-align: right;"><button class="check-pill-btn">Manage</button></td>
+          <tbody id="userTableBody">
+            <tr data-role="Client" data-status="Active" data-email="binibirocha@email.com" data-joined="March 12, 2025" data-verif="Verified">
+              <td>Binibirocha</td><td>Client</td>
+              <td><span class="badge status-active">Active</span></td>
+              <td><span class="badge badge-resolved">Verified</span></td>
+              <td><button class="action-manage-btn" onclick="openManageModal(this)">Manage</button></td>
             </tr>
-            <tr>
-              <td class="serif-td font-medium">Dr. Zayne Li</td>
-              <td class="serif-td">Therapist</td>
-              <td><span class="status-badge status-pending">Pending</span></td>
-              <td class="serif-td">In Review</td>
-              <td style="text-align: right;"><button class="check-pill-btn">Manage</button></td>
+            <tr data-role="Therapist" data-status="Pending" data-email="zayne.li@email.com" data-joined="October 1, 2026" data-verif="Pending">
+              <td>Dr. Zayne Li</td><td>Therapist</td>
+              <td><span class="badge badge-pending">Pending</span></td>
+              <td><span class="badge badge-pending">Pending</span></td>
+              <td><button class="action-manage-btn" onclick="openManageModal(this)">Manage</button></td>
             </tr>
-            <tr>
-              <td class="serif-td font-medium">Dr. Heinz Doofenshmirtz</td>
-              <td class="serif-td">Therapist</td>
-              <td><span class="status-badge status-approved">Active</span></td>
-              <td class="serif-td">Verified</td>
-              <td style="text-align: right;"><button class="check-pill-btn">Manage</button></td>
+            <tr data-role="Therapist" data-status="Active" data-email="doof@email.com" data-joined="January 5, 2024" data-verif="Verified">
+              <td>Dr. Heinz Doofenshmirtz</td><td>Therapist</td>
+              <td><span class="badge status-active">Active</span></td>
+              <td><span class="badge badge-resolved">Verified</span></td>
+              <td><button class="action-manage-btn" onclick="openManageModal(this)">Manage</button></td>
             </tr>
-            <tr>
-              <td class="serif-td font-medium">Anonymous User #6767</td>
-              <td class="serif-td">Client</td>
-              <td><span class="status-badge status-pending">Flagged</span></td>
-              <td class="serif-td">Under Review</td>
-              <td style="text-align: right;"><button class="check-pill-btn">Manage</button></td>
+            <tr data-role="Client" data-status="Flagged" data-email="anon6767@email.com" data-joined="September 10, 2026" data-verif="Pending">
+              <td>Anonymous User #6767</td><td>Client</td>
+              <td><span class="badge badge-urgent">Flagged</span></td>
+              <td><span class="badge badge-pending">Pending</span></td>
+              <td><button class="action-manage-btn" onclick="openManageModal(this)">Manage</button></td>
+            </tr>
+            <tr data-role="Therapist" data-status="Active" data-email="shaun.murphy@email.com" data-joined="February 20, 2024" data-verif="Verified">
+              <td>Dr. Shaun Murphy</td><td>Therapist</td>
+              <td><span class="badge status-active">Active</span></td>
+              <td><span class="badge badge-resolved">Verified</span></td>
+              <td><button class="action-manage-btn" onclick="openManageModal(this)">Manage</button></td>
+            </tr>
+            <tr data-role="Administrator" data-status="Active" data-email="rizzler@email.com" data-joined="June 1, 2023" data-verif="Verified">
+              <td>Dr. Rizzler6767</td><td>Administrator</td>
+              <td><span class="badge status-active">Active</span></td>
+              <td><span class="badge badge-resolved">Verified</span></td>
+              <td><button class="action-manage-btn" onclick="openManageModal(this)">Manage</button></td>
             </tr>
           </tbody>
         </table>
-
-        <div class="table-pagination-footer">
-          <span class="pagination-count serif-td">Showing 1-11 of 6769 users</span>
-          <div class="pagination-controls">
-            <button class="page-btn page-arrow">&larr;</button>
-            <button class="page-btn active-page">1</button>
-            <button class="page-btn">2</button>
-            <button class="page-btn">3</button>
-            <button class="page-btn">4</button>
-            <span class="page-dots">...</span>
-            <button class="page-btn page-arrow">&rarr;</button>
-          </div>
-        </div>
+        <div class="table-footer"><span id="footerCount">Showing 0 of 0 users</span></div>
       </section>
-    </main>
+{% endblock %}
+{% block scripts %}
+<!-- FLOATING MODAL — Manage User -->
+  <div class="fw-overlay" id="manageModal" onclick="closeFwIfOverlay(event,'manageModal')">
+    <div class="fw-card">
+      <button class="fw-close" onclick="closeModal('manageModal')">&#x2715;</button>
+      <div class="fw-header">
+        <div class="fw-icon-badge">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+        </div>
+        <div>
+          <h2 class="fw-title" id="mName">Manage User</h2>
+          <p class="fw-subtitle" id="mRole">—</p>
+        </div>
+      </div>
+      <div class="fw-info-grid">
+        <div class="fw-info-item"><span class="fw-info-label">Email</span><span class="fw-info-value" id="mEmail">—</span></div>
+        <div class="fw-info-item"><span class="fw-info-label">Date Joined</span><span class="fw-info-value" id="mJoined">—</span></div>
+        <div class="fw-info-item"><span class="fw-info-label">Account Status</span><span class="fw-info-value" id="mAccStatus">—</span></div>
+        <div class="fw-info-item"><span class="fw-info-label">Verification</span><span class="fw-info-value" id="mVerif">—</span></div>
+      </div>
+      <hr class="fw-divider">
+      <div style="margin-bottom:14px;">
+        <div class="fw-notes-label" style="margin-bottom:10px;">Update Account Status</div>
+        <div class="fw-status-row">
+          <label for="mAccSelect">Status:</label>
+          <select class="fw-status-select" id="mAccSelect">
+            <option value="Active">Active</option>
+            <option value="Pending">Pending</option>
+            <option value="Flagged">Flagged</option>
+          </select>
+        </div>
+      </div>
+      <div style="margin-bottom:22px;">
+        <div class="fw-notes-label" style="margin-bottom:10px;">Update Verification Status</div>
+        <div class="fw-verif-row">
+          <button class="fw-verif-btn in-review" id="btnInReview" onclick="selectVerif('Pending')">Pending</button>
+          <button class="fw-verif-btn verified"   id="btnVerified" onclick="selectVerif('Verified')">Verified</button>
+        </div>
+      </div>
+      <div class="fw-actions">
+        <button class="fw-btn-danger"  onclick="closeModal('manageModal')">Suspend User</button>
+        <button class="fw-btn-cancel"  onclick="closeModal('manageModal')">Cancel</button>
+        <button class="fw-btn-primary" onclick="saveManage()">Save Changes</button>
+      </div>
+    </div>
   </div>
-</body>
-</html>
+<script>const searchInput  = document.getElementById('userSearch');
+    const roleFilter   = document.getElementById('roleFilter');
+    const statusFilter = document.getElementById('statusFilter');
+    const rows = Array.from(document.querySelectorAll('#userTableBody tr'));
+
+    function updateUserStats() {
+      document.getElementById('totalUsersCount').textContent = rows.length;
+      document.getElementById('totalTherapistsCount').textContent = rows.filter(row => row.dataset.role === 'Therapist').length;
+      document.getElementById('totalAdminsCount').textContent = rows.filter(row => row.dataset.role === 'Administrator').length;
+    }
+
+    function filterTable() {
+      const q = searchInput.value.trim().toLowerCase();
+      const r = roleFilter.value, s = statusFilter.value;
+      let n = 0;
+      rows.forEach(row => {
+        const ok = (!q || row.textContent.toLowerCase().includes(q))
+                && (r === 'all' || row.dataset.role   === r)
+                && (s === 'all' || row.dataset.status === s);
+        row.style.display = ok ? '' : 'none';
+        if (ok) n++;
+      });
+      document.getElementById('footerCount').textContent = `Showing ${n} of ${rows.length} users`;
+    }
+    updateUserStats();
+    searchInput.addEventListener('input',   filterTable);
+    roleFilter.addEventListener('change',   filterTable);
+    statusFilter.addEventListener('change', filterTable);
+    filterTable();
+
+    let activeRow = null, selVerif = 'Verified';
+
+    function openManageModal(btn) {
+      activeRow = btn.closest('tr');
+      const d = activeRow.dataset;
+      document.getElementById('mName').textContent     = activeRow.cells[0].textContent;
+      document.getElementById('mRole').textContent     = d.role + ' Account';
+      document.getElementById('mEmail').textContent    = d.email   || '—';
+      document.getElementById('mJoined').textContent   = d.joined  || '—';
+      document.getElementById('mAccStatus').textContent= d.status;
+      document.getElementById('mVerif').textContent    = d.verif   || '—';
+      document.getElementById('mAccSelect').value      = d.status;
+      selectVerif(d.verif || 'Verified');
+      document.getElementById('manageModal').classList.add('fw-open');
+    }
+
+    function selectVerif(val) {
+      selVerif = val;
+      document.getElementById('btnInReview').classList.toggle('selected', val === 'Pending');
+      document.getElementById('btnVerified').classList.toggle('selected', val === 'Verified');
+    }
+
+    function saveManage() {
+      if (!activeRow) return;
+      const ns = document.getElementById('mAccSelect').value;
+      activeRow.dataset.status = ns;
+      activeRow.dataset.verif  = selVerif;
+      const sCls = ns === 'Active' ? 'status-active' : ns === 'Pending' ? 'badge-pending' : 'badge-urgent';
+      activeRow.cells[2].innerHTML = `<span class="badge ${sCls}">${ns}</span>`;
+      const vCls = selVerif === 'Verified' ? 'badge-resolved' : 'badge-pending';
+      activeRow.cells[3].innerHTML = `<span class="badge ${vCls}">${selVerif}</span>`;
+      closeModal('manageModal');
+      filterTable();
+    }
+
+    function closeModal(id) { document.getElementById(id).classList.remove('fw-open'); }
+    function closeFwIfOverlay(e, id) { if (e.target === document.getElementById(id)) closeModal(id); }</script>
+{% endblock %}

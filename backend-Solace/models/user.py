@@ -1,5 +1,5 @@
 from datetime import datetime
-from app import db  # or from extensions import db
+from extensions import db
 
 class User(db.Model):
     __tablename__ = 'users'
@@ -13,6 +13,5 @@ class User(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     # Relationships
-    therapist_profile = db.relationship('TherapistVerification', backref='user', uselist=False, cascade="all, delete-orphan")
-    reports_submitted = db.relationship('Report', foreign_keys='Report.reporter_id', backref='reporter', lazy=True)
-    reports_received = db.relationship('Report', foreign_keys='Report.reported_user_id', backref='reported_user', lazy=True)
+    therapist_profile = db.relationship('TherapistProfile', backref='user', uselist=False, cascade="all, delete-orphan")
+    therapist_verifications = db.relationship('TherapistVerification', backref='user', cascade="all, delete-orphan")
