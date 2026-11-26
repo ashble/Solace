@@ -35,7 +35,7 @@
 
   <main>
     <div class="topbar">
-      <!-- User pill: the avatar letter is generated from the name -->
+      <!-- User pill -->
       <button class="user-pill" id="userPill" aria-haspopup="true" aria-expanded="false">
         <span class="avatar avatar-sm" data-avatar-from="current-user-name"></span>
         <span><span id="current-user-name">Sylus Qin</span><small>Admin</small></span>
@@ -101,24 +101,24 @@
                   <td class="cell-verification verification-status-cell">Ongoing</td>
                   <td class="cell-center"><button class="row-action-button is-review" type="button">Review</button></td>
                 </tr>
-                <tr class="therapist-row" data-id="3" data-status="In Review">
+                <tr class="therapist-row" data-id="3" data-status="Pending">
                   <td class="cell-user">
                     <div class="avatar avatar-md avatar-on-table" data-avatar-auto></div>
                     <span>Dr. Heinz Doofenshmirtz</span>
                   </td>
                   <td class="cell-specialty">Behavioral Therapy</td>
-                  <td class="cell-center status-badge-cell"><span class="status-badge status-in-review">In Review</span></td>
-                  <td class="cell-verification verification-status-cell">Under Evaluation</td>
+                  <td class="cell-center status-badge-cell"><span class="status-badge status-pending">Pending</span></td>
+                  <td class="cell-verification verification-status-cell">Ongoing</td>
                   <td class="cell-center"><button class="row-action-button is-review" type="button">Review</button></td>
                 </tr>
-                <tr class="therapist-row" data-id="4" data-status="In Review">
+                <tr class="therapist-row" data-id="4" data-status="Pending">
                   <td class="cell-user">
                     <div class="avatar avatar-md avatar-on-table" data-avatar-auto></div>
                     <span>Dr. Meredith Grey</span>
                   </td>
                   <td class="cell-specialty">Clinical Psychiatry</td>
-                  <td class="cell-center status-badge-cell"><span class="status-badge status-in-review">In Review</span></td>
-                  <td class="cell-verification verification-status-cell">Under Evaluation</td>
+                  <td class="cell-center status-badge-cell"><span class="status-badge status-pending">Pending</span></td>
+                  <td class="cell-verification verification-status-cell">Ongoing</td>
                   <td class="cell-center"><button class="row-action-button is-review" type="button">Review</button></td>
                 </tr>
                 <tr class="therapist-row" data-id="5" data-status="Approved">
@@ -184,7 +184,7 @@
   </div>
 
 
-  <!-- ===== POPUPS ===== -->
+  <!-- ===== POPUPS  ===== -->
 
   <!-- Popup 1: Therapist application review -->
   <div class="modal-overlay modal-overlay-review" id="reviewModalOverlay">
@@ -221,7 +221,7 @@
           <div id="modal-status-badge"></div>
         </div>
 
-        <!-- Rejection reason -->
+        <!-- Rejection reason (only visible for rejected applications) -->
         <div class="rejection-banner" id="modal-rejection-banner">
           <div class="rejection-banner-title">
             <svg class="icon-notice" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" stroke-linecap="round" stroke-linejoin="round"></path></svg>
@@ -290,7 +290,7 @@
       <!-- Approval / rejection actions -->
       <div class="review-footer" id="modal-action-bar">
         <div>
-          <span class="review-decision" id="modal-decision-state">Status: Under Review</span>
+          <span class="review-decision" id="modal-decision-state">Status: Pending</span>
         </div>
         <div class="review-buttons">
           <button class="button button-reject" id="open-reject-btn" type="button">Reject Application</button>
@@ -391,7 +391,7 @@
   </div>
 
 
-  <!-- Popup 4: Reject confirmation -->
+  <!-- Popup 4: Reject confirmation (asks for the reason) -->
   <div class="modal-overlay modal-overlay-confirm" id="rejectConfirmModal">
     <div class="modal-dialog confirm-dialog" role="dialog" aria-labelledby="reject-modal-title">
       <div class="confirm-icon is-reject">✕</div>
@@ -412,6 +412,7 @@
 
 <script src="../static/js/sidebar.js"></script>
 
+<!-- Page script: status filter, review popup, document preview, approve / reject -->
 <script>
 /* ==========================================================================
    Table of contents
@@ -433,17 +434,16 @@
   var therapistsData = {
     1: { name: 'Dr. Zayne Li', role: 'Licensed Clinical Therapist', specialty: 'Anxiety · Depression', license: 'LIC-12345', experience: '6 Years', hours: '8:00 AM - 5:00 PM', status: 'Pending', certSpecialty: 'Psychiatry & Mental Health Counseling', licenseId: 'LIC-98421-MD' },
     2: { name: 'Dr. Clara Oswald', role: 'Licensed Trauma Therapist', specialty: 'Trauma & PTSD', license: 'LIC-23456', experience: '4 Years', hours: '9:00 AM - 6:00 PM', status: 'Pending', certSpecialty: 'Trauma & Stress Disorders', licenseId: 'LIC-77310-TR' },
-    3: { name: 'Dr. Heinz Doofenshmirtz', role: 'Behavioral Therapist', specialty: 'Behavioral Therapy', license: 'LIC-34567', experience: '9 Years', hours: '10:00 AM - 7:00 PM', status: 'In Review', certSpecialty: 'Behavioral Therapy', licenseId: 'LIC-55672-BT' },
-    4: { name: 'Dr. Meredith Grey', role: 'Clinical Psychiatrist', specialty: 'Clinical Psychiatry', license: 'LIC-45678', experience: '12 Years', hours: '8:00 AM - 4:00 PM', status: 'In Review', certSpecialty: 'Clinical Psychiatry', licenseId: 'LIC-40218-CP' },
+    3: { name: 'Dr. Heinz Doofenshmirtz', role: 'Behavioral Therapist', specialty: 'Behavioral Therapy', license: 'LIC-34567', experience: '9 Years', hours: '10:00 AM - 7:00 PM', status: 'Pending', certSpecialty: 'Behavioral Therapy', licenseId: 'LIC-55672-BT' },
+    4: { name: 'Dr. Meredith Grey', role: 'Clinical Psychiatrist', specialty: 'Clinical Psychiatry', license: 'LIC-45678', experience: '12 Years', hours: '8:00 AM - 4:00 PM', status: 'Pending', certSpecialty: 'Clinical Psychiatry', licenseId: 'LIC-40218-CP' },
     5: { name: 'Dr. Shaun Murphy', role: 'Youth Psychologist', specialty: 'Youth Psychology', license: 'LIC-56789', experience: '5 Years', hours: '9:00 AM - 5:00 PM', status: 'Approved', certSpecialty: 'Child & Adolescent Psychology', licenseId: 'LIC-61905-YP' },
     6: { name: 'Dr. Gregory House', role: 'Neuropsychologist', specialty: 'Diagnostics & Neuropsychology', license: 'LIC-67890', experience: '15 Years', hours: '11:00 AM - 7:00 PM', status: 'Approved', certSpecialty: 'Neuropsychology', licenseId: 'LIC-33847-NP' },
     7: { name: 'Dr. Hannibal Lecter', role: 'Forensic Psychologist', specialty: 'Forensic Psychology', license: 'LIC-78901', experience: '20 Years', hours: '6:00 PM - 12:00 AM', status: 'Rejected', rejectionReason: 'Credentials expired or unverified by board registrar.', certSpecialty: 'Forensic Psychology', licenseId: 'LIC-00001-FP' },
     8: { name: 'Dr. Walter White', role: 'Pharmacology Counselor', specialty: 'Substance Abuse & Pharmacology', license: 'LIC-89012', experience: '8 Years', hours: '7:00 AM - 3:00 PM', status: 'Rejected', rejectionReason: 'Submitted license number does not match state board records.', certSpecialty: 'Substance Abuse & Pharmacology', licenseId: 'LIC-00002-SP' }
   };
-  
+
   var STATUS_INFO = {
     'Pending':   { cssClass: 'status-pending',   verification: 'Ongoing',            action: 'Review',       isReview: true },
-    'In Review': { cssClass: 'status-in-review', verification: 'Under Evaluation',   action: 'Review',       isReview: true },
     'Approved':  { cssClass: 'status-approved',  verification: 'Verified',           action: 'View Details', isReview: false },
     'Rejected':  { cssClass: 'status-rejected',  verification: 'Failed Verification', action: 'View Reason', isReview: false }
   };
@@ -578,15 +578,17 @@
     badgeBox.textContent = '';
     badgeBox.appendChild(badgeHtml(t.status, true));
 
+    // Rejection reason is only shown for rejected applications
     var rejected = t.status === 'Rejected';
     $('modal-rejection-banner').classList.toggle('is-visible', rejected);
     if (rejected) $('modal-rejection-text').textContent = t.rejectionReason || 'No reason was recorded.';
 
+    // Approve / Reject buttons are only for applications still waiting for a decision
     var decided = t.status === 'Approved' || t.status === 'Rejected';
     document.querySelector('#modal-action-bar .review-buttons').hidden = decided;
     $('modal-decision-state').textContent =
       t.status === 'Approved' ? 'Status: Verified' :
-      t.status === 'Rejected' ? 'Status: Rejected' : 'Status: Under Review';
+      t.status === 'Rejected' ? 'Status: Rejected' : 'Status: Pending';
 
     openModal('reviewModalOverlay');
   }
@@ -666,7 +668,7 @@
     $('confirm-reject-btn').addEventListener('click', function () {
       var input = $('rejection-reason-input');
       var reason = input.value.trim();
-      if (!reason) { 
+      if (!reason) {
         input.setAttribute('aria-invalid', 'true');
         input.focus();
         return;
@@ -699,7 +701,6 @@
       });
     });
 
-    // Escape closes only the popup on top (highest in the stacking order)
     document.addEventListener('keydown', function (event) {
       if (event.key !== 'Escape') return;
       var order = ['docPreviewModal', 'approveConfirmModal', 'rejectConfirmModal', 'reviewModalOverlay'];
