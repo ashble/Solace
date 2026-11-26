@@ -1,19 +1,9 @@
 /* ==========================================================================
-   Solace - Therapist Verification page, admin
-   (templates/admin-therapist-verification.html)
-
-   This page uses the shared dashboard shell from sidebar.css (sidebar, logo,
-   topbar, user pill, h1, .sub, colour tokens). Only verification-specific
-   components live here, and they are built from the same tokens:
-     --lav  --lav-deep  --plum  --muted  --yellow  --peach  --pink
-   Status colours are the dashboards' own badge colours
-   (Approved / In Progress / Pending) plus the log-out red for Rejected.
-
    Table of contents
      1. Tokens reused from the dashboards
      2. Form reset (sidebar.css does not reset buttons / tables)
      3. Icons and avatars
-     4. Status filter buttons
+     4. Status filter dropdown
      5. Therapist table (rows, status badges, action buttons, pagination)
      6. Popups: shared styles
      7. Popup: Therapist Verification Review
@@ -24,19 +14,18 @@
 
 
 /* ==========================================================================
-   1. TOKENS REUSED FROM THE DASHBOARDS (same literal values as sidebar.css)
+   1. TOKENS REUSED FROM THE DASHBOARDS
    ========================================================================== */
 :root {
-  --tint: #f3ecfa;                       /* active nav item / menu hover */
-  --tint-hover: #eadff6;                 /* nav hover */
-  --danger: #c0394b;                     /* log-out red */
+  --tint: #f3ecfa;
+  --tint-hover: #eadff6;
+  --danger: #c0394b;
 
   /* Status colours: the dashboards' .badge colours */
   --status-approved: #4a9a52;
   --status-approved-bg: #eaf7ea;
-  --status-progress: #c9961c;            /* used for "In Review" */
+  --status-progress: #c9961c;
   --status-progress-bg: #fff7dd;
-  --status-pending: #d0455a;
   --status-pending-bg: #fdeaed;
 
   --shadow-card: 0 2px 8px rgba(74, 53, 96, .08);
@@ -85,8 +74,7 @@ h2, h3, h4, h5 { font-size: inherit; font-weight: inherit; }
   background: var(--lav);
 }
 
-/* Same plum circle as the user pill avatar in the dashboards.
-   The letter is filled in by admin-therapist-verification-page.js. */
+/* Same plum circle as the user pill avatar in the dashboards. */
 .avatar {
   --avatar-size: 28px;
   display: inline-flex;
@@ -104,17 +92,16 @@ h2, h3, h4, h5 { font-size: inherit; font-weight: inherit; }
   user-select: none;
 }
 
-.avatar-sm { --avatar-size: 28px; }   /* user pill */
-.avatar-md { --avatar-size: 32px; }   /* table rows */
-.avatar-xl { --avatar-size: 80px; }   /* review popup */
+.avatar-sm { --avatar-size: 28px; }
+.avatar-md { --avatar-size: 32px; }
+.avatar-xl { --avatar-size: 80px; }
 
 .avatar-on-table { border: 1px solid var(--lav); }
 .avatar-on-popup { border: 2px solid var(--lav); box-shadow: var(--shadow-card); }
 
 
 /* ==========================================================================
-   4. STATUS FILTER BUTTONS - All / Pending / In Review / Approved / Rejected
-   The selected button gets .is-active (set by the script)
+   4. STATUS FILTER DROPDOWN - All / Verified / Pending / Rejected
    ========================================================================== */
 .main-canvas {
   display: flex;
@@ -123,15 +110,17 @@ h2, h3, h4, h5 { font-size: inherit; font-weight: inherit; }
   margin-top: 22px;
 }
 
-.filter-group {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 10px;
+.filter-dropdown {
+  position: relative;
+  align-self: flex-start;
 }
 
-.filter-pill {
-  padding: 7px 20px;
+/* Closed state */
+.filter-select {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
   border: 1px solid var(--lav);
   border-radius: 999px;
   font-size: 12px;
@@ -140,27 +129,51 @@ h2, h3, h4, h5 { font-size: inherit; font-weight: inherit; }
   background: #fff;
 }
 
-.filter-pill:hover { background: var(--tint-hover); }
+.filter-select:hover { background: var(--tint-hover); }
 
-/* One colour per status, same as the badge colours */
-.filter-pill-pending { color: var(--status-pending); border-color: var(--status-pending); }
-.filter-pill-in-review { color: var(--status-progress); border-color: var(--status-progress); }
-.filter-pill-approved { color: var(--status-approved); border-color: var(--status-approved); }
-.filter-pill-rejected { color: var(--danger); border-color: var(--danger); }
+.filter-select-label { color: var(--muted); }
+.filter-select-value { font-weight: 600; }
 
-.filter-pill-pending:hover { background: var(--status-pending-bg); }
-.filter-pill-in-review:hover { background: var(--status-progress-bg); }
-.filter-pill-approved:hover { background: var(--status-approved-bg); }
-.filter-pill-rejected:hover { background: var(--status-pending-bg); }
-
-/* Selected filter - same as the active day in the therapist dashboard.
-   Must stay after the :hover rules above */
-.filter-pill.is-active {
-  font-weight: 600;
-  color: #fff;
-  border-color: var(--lav-deep);
-  background: var(--lav-deep);
+.filter-select-arrow {
+  width: 14px;
+  height: 14px;
+  transition: transform 150ms;
 }
+
+.filter-select[aria-expanded="true"] { background: var(--tint); border-color: var(--lav-deep); }
+.filter-select[aria-expanded="true"] .filter-select-arrow { transform: rotate(180deg); }
+
+/* Open menu */
+.filter-menu {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  z-index: 5;
+  display: none;
+  min-width: 100%;
+  padding: 6px;
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: var(--shadow-pop);
+}
+
+.filter-menu.is-open { display: block; }
+
+.filter-option {
+  display: block;
+  width: 100%;
+  min-width: 150px;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 13px;
+  text-align: left;
+  color: var(--plum);
+}
+
+.filter-option:hover { background: var(--tint); }
+
+/* Selected option. */
+.filter-option.is-active { font-weight: 600; background: var(--tint); }
 
 
 /* ==========================================================================
@@ -206,7 +219,7 @@ h2, h3, h4, h5 { font-size: inherit; font-weight: inherit; }
 /* Centered columns (Status and Action) */
 .cell-center { text-align: center; }
 
-/* Thin line between rows. Rows hidden by a filter still count as neighbours, as before. */
+/* Thin line between rows. */
 .therapist-row + .therapist-row { border-top: 1px solid var(--lav); }
 .therapist-row:hover { background: var(--tint); }
 .therapist-row.is-hidden { display: none; }
@@ -228,8 +241,7 @@ h2, h3, h4, h5 { font-size: inherit; font-weight: inherit; }
 .cell-specialty,
 .cell-verification { color: var(--plum); }
 
-/* Status badge (Pending / In Review / Approved / Rejected) - also used in the review popup.
-   Same shape as the dashboards' .badge */
+/* Status badge (Pending / Approved / Rejected) */
 .status-badge {
   display: inline-block;
   padding: 3px 14px;
@@ -245,8 +257,7 @@ h2, h3, h4, h5 { font-size: inherit; font-weight: inherit; }
   font-weight: 600;
 }
 
-.status-pending { color: var(--status-pending); background: var(--status-pending-bg); }
-.status-in-review { color: var(--status-progress); background: var(--status-progress-bg); }
+.status-pending { color: var(--status-progress); background: var(--status-progress-bg); }
 .status-approved { color: var(--status-approved); background: var(--status-approved-bg); }
 .status-rejected { color: #fff; background: var(--danger); border-color: var(--danger); }
 
@@ -315,7 +326,6 @@ h2, h3, h4, h5 { font-size: inherit; font-weight: inherit; }
 
 /* ==========================================================================
    6. POPUPS - shared styles
-   Popups are shown by adding the .is-open class (see the script)
    ========================================================================== */
 .modal-overlay {
   position: fixed;
@@ -331,7 +341,7 @@ h2, h3, h4, h5 { font-size: inherit; font-weight: inherit; }
 
 .modal-overlay.is-open { display: flex; }
 
-/* Stacking order: preview is above the confirm popups, which are above the review popup */
+/* Stacking order */
 .modal-overlay-review { z-index: 9999; }
 .modal-overlay-confirm { z-index: 10001; }
 .modal-overlay-preview { z-index: 10002; }
@@ -368,7 +378,7 @@ h2, h3, h4, h5 { font-size: inherit; font-weight: inherit; }
 
 .modal-close-button:hover { color: var(--plum); background: var(--tint); }
 
-/* Cancel / confirm buttons used by the review and confirm popups */
+/* Cancel / confirm buttons */
 .button {
   border-radius: 999px;
   font-size: 12px;
@@ -606,7 +616,6 @@ h2, h3, h4, h5 { font-size: inherit; font-weight: inherit; }
 
 /* ==========================================================================
    8. POPUP: DOCUMENT PREVIEW (mock certificate)
-   The paper uses the dashboards' yellow; fonts are the page fonts.
    ========================================================================== */
 .preview-dialog {
   max-width: 42rem;
@@ -842,7 +851,7 @@ h2, h3, h4, h5 { font-size: inherit; font-weight: inherit; }
 
 .confirm-text strong { color: var(--plum); }
 
-/* The reject popup has a reason box, so its text sits closer to it */
+/* The reject popup has a reason box */
 .confirm-text.is-above-field { margin-bottom: 16px; padding: 0; }
 
 .reason-field { margin-bottom: 22px; text-align: left; }
@@ -901,7 +910,8 @@ h2, h3, h4, h5 { font-size: inherit; font-weight: inherit; }
 /* ==========================================================================
    Shared hover transitions
    ========================================================================== */
-.filter-pill,
+.filter-select,
+.filter-option,
 .therapist-row,
 .row-action-button,
 .page-button,
@@ -917,7 +927,9 @@ h2, h3, h4, h5 { font-size: inherit; font-weight: inherit; }
 
 @media (prefers-reduced-motion: reduce) {
   .modal-dialog { animation: none; }
-  .filter-pill,
+  .filter-select,
+  .filter-option,
+  .filter-select-arrow,
   .therapist-row,
   .row-action-button,
   .page-button,
@@ -932,7 +944,6 @@ h2, h3, h4, h5 { font-size: inherit; font-weight: inherit; }
 /* ==========================================================================
    10. RESPONSIVE STYLES (sidebar.css already stacks the shell at 800px)
    ========================================================================== */
-/* Small screens and up (640px): popup numbers are left-aligned instead of centred */
 @media (min-width: 640px) {
   .review-metrics { text-align: left; }
 }
