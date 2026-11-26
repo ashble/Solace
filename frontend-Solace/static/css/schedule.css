@@ -1,11 +1,4 @@
 /* ==========================================================================
-   Solace - Schedule page (templates/schedule.html)
-
-   This page uses the shared dashboard shell from sidebar.css (sidebar, logo,
-   topbar, user pill, h1, .sub, colour tokens). Only schedule-specific
-   components live here, and they are built from the same tokens:
-     --lav  --lav-deep  --plum  --muted  --yellow  --peach  --pink
-
    Table of contents
      1. Tokens reused from the dashboards
      2. Form reset (sidebar.css does not reset buttons)
@@ -52,7 +45,6 @@ svg { display: block; }
 
 /* ==========================================================================
    3. PANELS - shared look for the calendar, time slots and booking summary
-   (same border, radius and shadow as the dashboards' "Upcoming Appointment")
    ========================================================================== */
 .panel {
   padding: 20px 22px;
@@ -126,7 +118,6 @@ svg { display: block; }
   font-size: 12px;
 }
 
-/* Same muted small label as the day strip in the therapist dashboard */
 .calendar-weekdays {
   margin-bottom: 10px;
   font-size: 11px;
@@ -135,10 +126,9 @@ svg { display: block; }
 
 .calendar-days { row-gap: 6px; }
 
-/* Blank cell before the 1st of the month */
 .calendar-day-empty { height: 32px; }
 
-/* One day button (created by renderCalendar in schedule-page.js) */
+/* One day button */
 .calendar-day {
   display: flex;
   align-items: center;
@@ -154,7 +144,7 @@ svg { display: block; }
 
 .calendar-day:hover { background: var(--tint-hover); }
 
-/* Same as the active day in the therapist dashboard. Must stay after :hover */
+/* Active day in the therapist dashboard */
 .calendar-day.is-selected {
   font-weight: 600;
   color: #fff;
@@ -163,7 +153,7 @@ svg { display: block; }
 
 
 /* ==========================================================================
-   5. TIME SLOTS - grid of time buttons (created by renderTimeSlots)
+   5. TIME SLOTS
    ========================================================================== */
 .time-card-title { margin-bottom: 14px; }
 
@@ -186,7 +176,6 @@ svg { display: block; }
 
 .time-slot:hover { background: var(--tint-hover); }
 
-/* Must stay after :hover */
 .time-slot.is-selected {
   font-weight: 600;
   color: #fff;
@@ -297,7 +286,6 @@ svg { display: block; }
 
 /* ==========================================================================
    7. POPUPS - "Request Appointment" and "Request Submitted"
-   Shown by adding the .is-open class (see schedule-page.js)
    ========================================================================== */
 .modal-overlay {
   position: fixed;
@@ -384,7 +372,7 @@ svg { display: block; }
 
 .modal-button:hover { filter: brightness(.97); }
 
-/* Same colours as the "Approved" and "Pending" badges in the dashboards */
+/* "Approved" and "Pending" badges */
 .modal-button-confirm {
   color: var(--success);
   background: var(--success-bg);
@@ -405,7 +393,6 @@ svg { display: block; }
 
 .modal-button-primary:hover { filter: brightness(1.05); }
 
-/* Round check icon at the top of the success popup */
 .modal-success-icon {
   display: flex;
   align-items: center;
@@ -430,9 +417,7 @@ svg { display: block; }
 
 
 /* ==========================================================================
-   8. RESPONSIVE STYLES (sidebar.css already stacks the shell at 800px)
-   Tablet (768px and up): booking summary becomes one row
-   Desktop (900px and up): calendar and time slots sit side by side
+   8. RESPONSIVE STYLES 
    ========================================================================== */
 @media (min-width: 768px) {
   .booking-summary-body { flex-direction: row; align-items: center; }
