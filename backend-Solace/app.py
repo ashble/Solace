@@ -317,6 +317,7 @@ def update_profile(role):
 # 6. REGISTER MODULAR BLUEPRINTS
 # ==========================================
 
+from routes.starter_routes import starter_bp
 from routes.client_routes import client_bp
 from routes.admin_routes import admin_bp
 from routes.therapist_routes import therapist_bp
@@ -326,6 +327,7 @@ from routes.booking_routes import booking_bp, legacy_booking_bp
 from routes.chat_routes import chat_bp
 from models import Appointment, Report, ReportAttachment, User, TherapistVerification
 
+app.register_blueprint(starter_bp)
 app.register_blueprint(client_bp)
 app.register_blueprint(admin_bp)
 app.register_blueprint(therapist_bp)
