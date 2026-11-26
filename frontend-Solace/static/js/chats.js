@@ -1,6 +1,4 @@
 /* ==========================================================================
-   Solace - Messages page (templates/chats.html)
-
    Table of contents
      1. Conversation data (edit this to change the sample chats)
      2. Small helpers
@@ -18,8 +16,6 @@
 
   /* ======================================================================
      1. CONVERSATION DATA
-     Each key matches a data-contact-id in chats.html.
-     from: "them" (received) or "me" (sent).  flagged: reason text once reported.
      ====================================================================== */
   var conversationData = {
     '235': {
@@ -61,7 +57,7 @@
 
   var activeId = '235';
   var replyIndex = 0;
-  var reportTarget = null;      // { id, index } of the message being reported
+  var reportTarget = null;
   var typingTimer = null;
 
   /* ======================================================================
@@ -80,7 +76,7 @@
   function closeModal(node) { node.classList.remove('is-open'); }
 
   /* ======================================================================
-     3. AVATARS - first letter of the name, ignoring "Dr." and similar
+     3. AVATARS 
      ====================================================================== */
   function letterFor(name) {
     var clean = String(name || '').replace(/^(dr|mr|mrs|ms)\.?\s+/i, '').trim();
