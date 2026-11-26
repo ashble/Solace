@@ -15,11 +15,21 @@
     <a class="logo" href="/" aria-label="Solace home"><img src="{{ url_for('static', filename='img/logo-dark.png') }}" alt="Solace"></a>
     <nav>
       <div class="group">Main Menu</div>
+
       {% if role == 'client' %}
         <a href="/client" class="{{ 'active' if active_tab == 'dashboard' }}"><img class="nav-icon" src="{{ icons }}home.png" alt="">Dashboard</a>
         <a href="/chats"><img class="nav-icon" src="{{ icons }}messages.png" alt="">Messages</a>
         <a href="/schedule"><img class="nav-icon" src="{{ icons }}appointments.png" alt="">Appointments</a>
         <a href="/schedule"><img class="nav-icon" src="{{ icons }}session-history.png" alt="">Session History</a>
+
+      {% elif role == 'admin' %}
+        <a href="/admin" class="{{ 'active' if active_tab == 'dashboard' }}"><img class="nav-icon" src="{{ icons }}home.png" alt="">Dashboard</a>
+        <a href="/admin/messages" class="{{ 'active' if active_tab == 'messages' }}"><img class="nav-icon" src="{{ icons }}messages.png" alt="">Messages</a>
+        <a href="/admin/appointments" class="{{ 'active' if active_tab == 'appointments' }}"><img class="nav-icon" src="{{ icons }}appointments.png" alt="">Appointments</a>
+        <a href="/admin/history" class="{{ 'active' if active_tab == 'history' }}"><img class="nav-icon" src="{{ icons }}session-history.png" alt="">Session History</a>
+        <a href="/admin/users" class="{{ 'active' if active_tab == 'users' }}"><img class="nav-icon" src="{{ icons }}user-management.png" alt="">User Management</a>
+        <a href="/admin/verification" class="{{ 'active' if active_tab == 'verification' }}"><img class="nav-icon" src="{{ icons }}therapist-verification.png" alt="">Therapist Verification</a>
+
       {% else %}
         <a href="/therapist" class="{{ 'active' if active_tab == 'dashboard' }}"><img class="nav-icon" src="{{ icons }}home.png" alt="">Dashboard</a>
         <a href="/therapist/sessions"><img class="nav-icon" src="{{ icons }}sessions.png" alt="">Sessions</a>
@@ -27,9 +37,10 @@
         <a href="/therapist/appointments"><img class="nav-icon" src="{{ icons }}appointments.png" alt="">Schedule</a>
         <a href="/therapist/history"><img class="nav-icon" src="{{ icons }}session-history.png" alt="">Session History</a>
       {% endif %}
+
       <div class="group">Account</div>
-      <a href="/profile?role={{ role }}"><img class="nav-icon" src="{{ icons }}profile.png" alt="">Profile</a>
-      <a href="/settings?role={{ role }}"><img class="nav-icon" src="{{ icons }}settings.png" alt="">Settings</a>
+      <a href="/profile?role={{ role }}" class="{{ 'active' if active_tab == 'profile' }}"><img class="nav-icon" src="{{ icons }}profile.png" alt="">Profile</a>
+      <a href="/settings?role={{ role }}" class="{{ 'active' if active_tab == 'settings' }}"><img class="nav-icon" src="{{ icons }}settings.png" alt="">Settings</a>
     </nav>
     <a class="logout" href="/login"><img class="nav-icon" src="{{ icons }}log-out.png" alt="">Log Out</a>
   </aside>
