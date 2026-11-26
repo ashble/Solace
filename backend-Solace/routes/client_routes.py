@@ -4,11 +4,11 @@ from models import TherapistProfile, User
 
 client_bp = Blueprint("client", __name__)
 
-@client_bp.route("/")
 @client_bp.route("/client")
 def client_dashboard():
     user = {"name": "Binibirocha", "display_name": "User, name", "role": "Client"}
-    return render_template("index.html", role="client", active_tab="dashboard", active_page="dashboard", user=user)
+    return render_template(
+        "client-dashboard.html", role="client", active_tab="dashboard", active_page="dashboard", user=user)
 
 @client_bp.route("/search-therapist")
 def search_therapist():
