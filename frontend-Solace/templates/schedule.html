@@ -52,7 +52,7 @@
     <!-- Calendar (left) and time slots (right) -->
     <div class="booking-picker">
 
-      <!-- Calendar: the day buttons are drawn by the script at the bottom of this page -->
+      <!-- Calendar -->
       <section class="panel calendar-card" id="calendarCard">
         <div class="calendar-header">
           <h2 class="card-title" id="calendarMonthTitle">January 2027</h2>
@@ -84,14 +84,14 @@
         </div>
       </section>
 
-      <!-- Time slots: the buttons are drawn by the script at the bottom of this page (edit AVAILABLE_TIMES there) -->
+      <!-- Time slots -->
       <section class="panel time-card">
         <h2 class="card-title time-card-title">Select Time:</h2>
         <div class="time-slots" id="timeSlotsContainer"></div>
       </section>
     </div>
 
-    <!-- Booking summary: date and time text updates automatically -->
+    <!-- Booking summary -->
     <section class="panel booking-summary">
       <h3 class="booking-summary-title">Booking Summary</h3>
 
@@ -151,7 +151,7 @@
 </div>
 
 
-<!-- ===== POPUPS (hidden until the "is-open" class is added) ===== -->
+<!-- ===== POPUPS ===== -->
 
 <!-- Popup 1: confirm the appointment request -->
 <div class="modal-overlay" id="requestModal">
@@ -205,8 +205,6 @@
 <!-- Page script: calendar, time slots and popups (edit AVAILABLE_TIMES to change the time buttons) -->
 <script>
 /* ==========================================================================
-   Solace - Schedule page script (inline in templates/schedule.html)
-
    Table of contents
      1. Settings (edit AVAILABLE_TIMES to change the time buttons)
      2. State and helpers
@@ -226,7 +224,7 @@
     '9:00 AM', '10:00 AM', '11:00 AM', '1:00 PM',
     '2:00 PM', '3:00 PM', '4:00 PM', '5:00 PM'
   ];
-  var DEFAULT_DATE = new Date(2027, 0, 7);     // January 7, 2027
+  var DEFAULT_DATE = new Date(2027, 0, 7);
   var DEFAULT_TIME = '10:00 AM';
   var DASHBOARD_URL = '/client';
 
@@ -240,7 +238,6 @@
   }
 
   var today = startOfDay(new Date());
-  // If the default date has already passed, start from tomorrow instead
   var selectedDate = DEFAULT_DATE >= today
     ? DEFAULT_DATE
     : new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1);
@@ -269,7 +266,6 @@
     var grid = $('calendarDaysGrid');
     grid.textContent = '';
 
-    // Weeks start on Monday: JS gives Sunday = 0, so shift by one
     var firstWeekday = (new Date(viewYear, viewMonth, 1).getDay() + 6) % 7;
     var daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate();
 
@@ -288,7 +284,7 @@
       button.setAttribute('data-day', String(day));
 
       if (date < today) {
-        button.disabled = true;                       // no booking in the past
+        button.disabled = true;
       } else if (sameDay(date, selectedDate)) {
         button.classList.add('is-selected');
         button.setAttribute('aria-pressed', 'true');
@@ -328,7 +324,7 @@
   }
 
   /* ======================================================================
-     5. BOOKING SUMMARY (page + request popup)
+     5. BOOKING SUMMARY
      ====================================================================== */
   function updateSummary() {
     var dateText = formatDate(selectedDate);
@@ -355,7 +351,6 @@
     $('confirmRequestBtn').addEventListener('click', function () {
       closeModal('requestModal');
       openModal('successModal');
-      // Other code (e.g. a backend call) can listen for this event
       document.dispatchEvent(new CustomEvent('appointment:requested', {
         detail: { date: formatDate(selectedDate), time: selectedTime, therapist: 'Dr. Zayne Li' }
       }));
@@ -379,7 +374,6 @@
   /* ======================================================================
      7. START
      ====================================================================== */
-  // Avatar letter in the user pill (first letter of the name)
   function fillAvatars() {
     document.querySelectorAll('[data-avatar-from]').forEach(function (avatar) {
       var source = $(avatar.getAttribute('data-avatar-from'));
@@ -416,8 +410,6 @@
     setupPopups();
   }
 
-  // Run now if the page is already loaded, otherwise wait for it.
-  // If anything goes wrong, show the reason on the page instead of staying blank.
   function safeStart() {
     try {
       start();
