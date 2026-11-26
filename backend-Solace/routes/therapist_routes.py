@@ -1,4 +1,4 @@
-from datetime import date, timedata
+from datetime import date, timedelta
 from flask import Blueprint, render_template, redirect
 from models import Appointment
 from auth_helpers import current_user, role_required
@@ -35,7 +35,7 @@ def therapist_dashboard():
 
     status_map = {"Confirmed": "Approved", "Pending": "Pending"}
 
-   with get_db() as db:
+    with get_db() as db:
         rows = db.execute(
             "SELECT * FROM appointments WHERE therapist_id = ? ORDER BY created_at DESC LIMIT 3",
             (user_record.id,),
